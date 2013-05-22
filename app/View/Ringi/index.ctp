@@ -1,17 +1,16 @@
 <html>
     <body>
-    <h1>     RINGI TOP    </h1>
-    <p> </p>
-    <p> </p>
+    <h1>Current State Overview</h1>
 
-    <p>Apply Application
+    <p>Create Application
     <form method="post" action="apply" name="apply1"> 
-    <div><input type="submit" value="apply">
+    <input type="submit" value="Apply" class="btn btn-primary" ></input>
+<button class="btn btn-primary">Submit</button>
     </form>
     </p>
    
     <p>Application Progress </p>
-       <table>
+       <table class="table-striped">
         <tr>
         <td>Applicant</td>
         <td>Date</td>
@@ -52,8 +51,8 @@
         </table>
 
         <p>Confirm Waiting List </p>
-        <form method="post" action="./Ringi/confirm" name="confirm2"> 
-        <table>
+        <form method="post" action="confirm" name="confirm2"> 
+        <table class="table-striped">
         <tr>
         <td>List Id</td>
         <td>Applicant</td>
@@ -102,12 +101,12 @@
         <?php endforeach; ?>
         </select>
     <p>
-    <div><input type="submit" value="confirm">
+    <input type="submit" value="confirm">
     </form>
     </p>
  
-    <form method="post" action="./logout" name="logout2">
-        <div><input type="submit" value="Logout">
+    <form method="post" action="logout" name="logout2">
+    <input type="submit" value="Logout">
     </form>
     </p>
     </body>

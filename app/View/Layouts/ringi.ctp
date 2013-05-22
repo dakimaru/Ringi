@@ -9,11 +9,19 @@
   <?php
     echo $this->Html->meta('icon');
     echo $this->Html->css('ringi');
-    echo $scripts_for_layout;
+    echo $this->Html->css('cake.generic');
+		echo $this->Html->css('bootstrap.min');
+		echo $this->Html->css('bootstrap-responsive.min');
+		echo $this->fetch('css');
+		echo $this->Html->script('libs/jquery');
+		echo $this->Html->script('libs/bootstrap.min');
+		echo $this->fetch('meta');
+		echo $this->fetch('script');
+		echo $scripts_for_layout;
   ?>
 </head>
 <body>
-  <div id="container">
+  <div class="containter">
     <div id="header">
       <?php echo $header_for_layout; ?>
     </div>

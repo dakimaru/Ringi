@@ -34,51 +34,6 @@ class RingiController extends AppController {
         $this->Auth->allow('add');
     }
 
-    public function login() {
-        //$this->modelClass = null;
-        //$this->layout = "Ringi";
-        //$this->set("header_for_layout","Application for RINGI");
-        //$this->set("footer_for_layout","copyright by ENSPIREA. 2013.");
-        if ($this->request->is('post')) {
-            if ($this->Auth->login()) {
-                $this->redirect($this->Auth->redirect());
-            } else {
-                $this->Session->setFlash(__('Invalid username or password, try again'));
-            }
-        }
-    }
-
-    public function logout() {
-        if ($this->request->is('post')) {
-            if ($this->Auth->logout()) {
-                $this->redirect($this->Auth->logout());
-            } else {
-                $this->Session->setFlash(__('Expired your session'));
-            }
-        }
-        //$this->redirect($this->Auth->logout());
-    }
-
-     public function view($id = null) {
-        $this->User->id = $id;
-        if (!$this->User->exists()) {
-            throw new NotFoundException(__('Invalid user'));
-        }
-        $this->set('user', $this->User->read(null, $id));
-    }
-
-    public function add() {
-        if ($this->request->is('post')) {
-            $this->User->create();
-            if ($this->User->save($this->request->data)) {
-                $this->Session->setFlash(__('The user has been saved'));
-                $this->redirect(array('controller' => 'Ringi', 'action' => 'index'));
-            } else {
-                $this->Session->setFlash(__('The user could not be saved. Please, try again.'));
-            }
-        }
-    }
-    
     public function edit($id = null) {
         $this->User->id = $id;
         if (!$this->User->exists()) {
@@ -181,6 +136,7 @@ class RingiController extends AppController {
         $this->set('list_confirm',$list_confirm);
     }
 
+
     public function apply_check () {
         $this->modelClass = null;
         $this->layout = "Ringi";
@@ -238,13 +194,6 @@ class RingiController extends AppController {
         $AuthenticationData['AuthenticationData']['date1'] = date("Y-m-d H:i:s");  
         $AuthenticationData['AuthenticationData']['attachmentid'] = $this->AttachmentData->getLastInsertID();
         $this->AuthenticationData->save($AuthenticationData);
-    }
-    //
-    public function form () { 
-        $this->modelClass = null;
-        $this->layout = "Ringi";
-        $this->set("header_for_layout","Application for RINGI");
-        $this->set("footer_for_layout","copyright by ENSPIREA. 2013.");
     }
 
     public function apply () {
