@@ -68,15 +68,24 @@ class RingiController extends AppController {
         //$this->layout = "Ringi";  //THIS CODE SETS LAYOUT FILE TO "Ringi"
         $username = $this->Auth->user('username');
         $userrole = $this->Auth->user('role');
-        //
+        //Setting up so that variables auths and attachments gan be used in view
         $auths = $this->AuthenticationData->find('all');
+				//$attachments = $this->AttachmentData->find('all');
         //
-        
-        $this->set('auths',$auths);
+
+				
+				//$this->set('attachments',$attachments);
         $list_apply = array();
         $list_confirm = array();
+				$indiv_attachment = array();
+				$i=0;
+				
         foreach($auths as $auth){
-            $cflag = 0;
+						$indiv_attachment = $this->AttachmentData->findById($auth['AuthenticationData']['attachmentid']);											
+						$attachmentname = $indiv_attachment['AttachmentData']['fname'];
+
+						array_push($auths[$i]['AuthenticationData'],array('fname'=> $attachmentname));
+						$cflag = 0;
             $dflag = 0;
             if($auth['AuthenticationData']['auth1']==$username){
                 $cflag = 1;
@@ -123,9 +132,13 @@ class RingiController extends AppController {
                 $dflag = 7;
             }
             array_push($list_confirm, $dflag);
+						$i++;
         }
+				$this->set('auths',$auths);
         $this->set('list_apply',$list_apply);
         $this->set('list_confirm',$list_confirm);
+				//$this->set('displaylist',$displaylist);
+				
     }
 
 

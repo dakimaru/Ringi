@@ -7,6 +7,8 @@
 <h5>My Applications</h5>
 <table class="table table-bordered table-hover">
 	<tr class="success">
+		<td>List Id</td>
+		<td>Project Name</td>
 		<td>Applicant</td>
 		<td>Date</td>
 		<td>1st Authorizer</td>
@@ -23,10 +25,13 @@
 		<td>Date</td>
 	</tr>
 	<?php $i =0; ?>
+	<?php $j =1; ?>
 	<?php foreach ($auths as $auth): ?>
 		<?php $i++; ?>
 		<?php if($list_apply[$i-1] == 0) continue; ?>
 		<tr>
+			<td><?php echo $j ?></td>
+			<td><?php echo $auth['AuthenticationData']['0']['fname']; ?></td>
 			<td><?php echo $auth['AuthenticationData']['auth1']; ?></td>
 			<td><?php echo $auth['AuthenticationData']['date1']; ?></td>
 			<td><?php echo $auth['AuthenticationData']['auth2']; ?></td>
@@ -42,6 +47,7 @@
 			<td><?php echo $auth['AuthenticationData']['auth7']; ?></td>
 			<td><?php echo $auth['AuthenticationData']['date7']; ?></td>
 		</tr>
+		<?php $j++ ?>
 	<?php endforeach; ?>
 </table>
 

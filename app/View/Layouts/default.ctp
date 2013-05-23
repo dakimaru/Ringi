@@ -10,7 +10,7 @@
 	echo $this->Html->css('ringi');
 	echo $this->Html->css('cake.generic');
 	echo $this->Html->css('bootstrap.min');
-	echo $this->Html->css('bootstrap-responsive.min');
+	//echo $this->Html->css('bootstrap-responsive.min');
 	echo $this->fetch('css');
 	echo $this->Html->script('libs/jquery');
 	echo $this->Html->script('libs/bootstrap.min');
@@ -39,15 +39,23 @@
 						?></a>
 					</li>
 					<li>
-						<form method="post" action="logout" name="logout2">
-							<button class="btn btn-danger">Logout</button>
+						<?php
+					if(!empty($user)) {
+						echo('<form method="post" action="logout">
+									<button class="btn btn-danger">Logout</button>');
+							}
+					else {
+						echo('<form method="get" action="login">
+									<button class="btn btn-danger">Login</button>');						
+					}
+							?>
 						</form>
 					</li>
 				</ul>
 			</div>
 		</div>
 	</div>
-	<div class="container">
+	<div class="container" style="min-width:940px; padding-left:10px;">
 
 		<?php echo $this->Session->flash(); ?>
 		<?php echo $content_for_layout; ?>
