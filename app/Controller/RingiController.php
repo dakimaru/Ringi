@@ -6,10 +6,6 @@ App::uses('Sanitize', 'Utility');
 class RingiController extends AppController {
 
     public function isAuthorized($user) {
-    // List owner can edit
-        if ($this->action === 'add') {
-            return true;
-        }
 
     // Ower can edit and delete
         if (in_array($this->action, array('edit', 'delete'))) {
@@ -31,7 +27,6 @@ class RingiController extends AppController {
 
     public function beforeFilter() {
         parent::beforeFilter();
-        $this->Auth->allow('add');
     }
 
     public function edit($id = null) {
@@ -70,16 +65,13 @@ class RingiController extends AppController {
 
     public function index() {
         $this->modelClass = null;
-        $this->layout = "Ringi";
+        //$this->layout = "Ringi";  //THIS CODE SETS LAYOUT FILE TO "Ringi"
         $username = $this->Auth->user('username');
         $userrole = $this->Auth->user('role');
-        $this->set("header_for_layout","Application for RINGI: Login User is ".$username);
-        $this->set("footer_for_layout","copyright by ENSPIREA. 2013.");
-        // 
-        $datas = $this->BudgetData->find('all');
+        //
         $auths = $this->AuthenticationData->find('all');
         //
-        $this->set('datas',$datas);
+        
         $this->set('auths',$auths);
         $list_apply = array();
         $list_confirm = array();
@@ -121,10 +113,10 @@ class RingiController extends AppController {
             if($auth['AuthenticationData']['date4'] == NULL && $userrole == 'gm'){
                 $dflag = 4;
             }
-            if($auth['AuthenticationData']['date5'] == NULL && $userrole =='admin'){
+            if($auth['AuthenticationData']['date5'] == NULL && $userrole =='hr'){
                 $dflag = 5;
             }
-            if($auth['AuthenticationData']['date6'] == NULL && $userrole=='admin'){
+            if($auth['AuthenticationData']['date6'] == NULL && $userrole=='pr'){
                 $dflag = 6;
             }
             if($auth['AuthenticationData']['date7'] == NULL && $userrole=='admin' ){
@@ -139,11 +131,8 @@ class RingiController extends AppController {
 
     public function apply_check () {
         $this->modelClass = null;
-        $this->layout = "Ringi";
         $this->set("header_for_layout","Application for RINGI");
-        $this->set("footer_for_layout","copyright by ENSPIREA. 2013.");
-
-        //Set Up Analyisis Data
+				//Set Up Analyisis Data
         $AnalysisData['AnalysisData']['comment'] = $this->data["text20"];
         $AnalysisData['AnalysisData']['freview'] = $this->data["text22"];
         $AnalysisData['AnalysisData']['fmanager'] = $this->data["text23"];
@@ -194,6 +183,7 @@ class RingiController extends AppController {
         $AuthenticationData['AuthenticationData']['date1'] = date("Y-m-d H:i:s");  
         $AuthenticationData['AuthenticationData']['attachmentid'] = $this->AttachmentData->getLastInsertID();
         $this->AuthenticationData->save($AuthenticationData);
+        
     }
 
     public function apply () {
@@ -203,6 +193,8 @@ class RingiController extends AppController {
         $this->set('username', $this->Auth->user('username'));
         $budget_list = $this->BudgetData->find('list');
         $this->set('budget_list',$budget_list);
+
+				
     }
 
     public function analise () {
@@ -238,9 +230,7 @@ class RingiController extends AppController {
 
     public function confirm_check () {
         $this->modelClass = null;
-        $this->layout = "Ringi";
         $this->set("header_for_layout","Application for RINGI");
-        $this->set("footer_for_layout","copyright by ENSPIREA. 2013.");
         $username = $this->Auth->user('username');
         $userrole = $this->Auth->user('role');
         $attachmentid=$this->data["attachmentid"];
@@ -319,10 +309,10 @@ class RingiController extends AppController {
         if($authenticationedit['AuthenticationData']['date4'] == NULL && $userrole == 'gm'){
             $AuthenticationData['AuthenticationData']['date4'] = date("Y-m-d H:i:s");
         }
-        if($authenticationedit['AuthenticationData']['date5'] == NULL && $userrole =='admin'){
+        if($authenticationedit['AuthenticationData']['date5'] == NULL && $userrole =='hr'){
             $AuthenticationData['AuthenticationData']['date5'] = date("Y-m-d H:i:s");
         }
-        if($authenticationedit['AuthenticationData']['date6'] == NULL && $userrole=='admin'){
+        if($authenticationedit['AuthenticationData']['date6'] == NULL && $userrole=='pr'){
              $AuthenticationData['AuthenticationData']['date6'] = date("Y-m-d H:i:s"); 
         }
         if($authenticationedit['AuthenticationData']['date7'] == NULL && $userrole=='admin' ){

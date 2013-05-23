@@ -1756,7 +1756,7 @@ rt
 </head>
 
 <body link=blue vlink=purple class=xl66>
-<form method="post" action="./apply_check" name="apply_check1">
+<form method="post" action="apply_check" name="apply_check1">
 <table border=0 cellpadding=0 cellspacing=0 width=1320 style='border-collapse:
  collapse;table-layout:fixed;width:1320pt'>
  <col class=xl66 width=73 style='mso-width-source:userset;mso-width-alt:3114;
@@ -1901,17 +1901,17 @@ rt
  </tr>
  <tr height=18 style='height:18.0pt'>
   <td height=18 class=xl66 style='height:18.0pt'></td>
-  <td class=xl104 style='border-top:none'>Hayabuchi</td>
+  <td class=xl104 style='border-top:none'>PR</td>
   <td colspan=2 class=xl159 style='border-right:1.0pt solid black'>
   <textarea cols="15" wrap="soft" align="center" name="text10" id="text10"></textarea>
   </td>
   <td colspan=2 class=xl155 style='border-right:1.0pt solid black;border-left:
-  none'>Eto</td>
+  none'>HR</td>
   <td colspan=2 class=xl158 style='border-right:1.0pt solid black;border-left:
   none'>GM</td>
   <td class=xl87 style='border-left:none'>AGM</td>
   <td colspan=2 class=xl92 style='border-right:1.0pt solid black;border-left:
-  none'>Mgr.</td>
+  none'>MGR</td>
   <td colspan=2 class=xl192 style='border-right:1.0pt solid black'>Requester</td>
   <td class=xl66></td>
   <td class=xl66></td>
@@ -2815,7 +2815,7 @@ rt
   <td class=xl66></td>
  </tr>
 </table>
-<div><input type="submit" value="apply">
+<button class="btn btn-success">Apply</button>
 </form>
 </body>
 

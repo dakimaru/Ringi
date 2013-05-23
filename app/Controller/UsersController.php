@@ -4,19 +4,18 @@ App::uses('AppController', 'Controller');
 App::uses('Sanitize', 'Utility');
 
 class UsersController extends AppController {
-
+		
+		
     public function beforeFilter() {
         parent::beforeFilter();
         $this->Auth->allow('add');
     }
 
     public function login() {
-        //$this->modelClass = null;
-        //$this->layout = "Ringi";
-        //$this->set("header_for_layout","Application for RINGI");
-        //$this->set("footer_for_layout","copyright by ENSPIREA. 2013.");
         if ($this->request->is('post')) {
             if ($this->Auth->login()) {
+								// save username entered in the login form
+								$username = $this->Auth->user('username');
                 $this->redirect($this->Auth->redirect());
             } else {
                 $this->Session->setFlash(__('Invalid username or password, try again'));

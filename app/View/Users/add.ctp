@@ -11,7 +11,9 @@
                                'author' => 'Author',
                                'mgr'    => 'Mgr',
                                'agm' => 'AGM',
-                               'gm' => 'GM'
+                               'gm' => 'GM',
+																'hr' => 'HR',
+																'pr' => 'PR'
                                )
         ));
     ?>

@@ -1,35 +1,56 @@
 @charset "utf-8";
-/**
- *
- * Generic CSS for CakePHP
- *
- * CakePHP(tm) : Rapid Development Framework (http://cakephp.org)
- * Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- *
- * Licensed under The MIT License
- * For full copyright and license information, please see the LICENSE.txt
- * Redistributions of files must retain the above copyright notice.
- *
- * @copyright     Copyright (c) Cake Software Foundation, Inc. (http://cakefoundation.org)
- * @link          http://cakephp.org CakePHP(tm) Project
- * @package       app.webroot.css
- * @since         CakePHP(tm)
- * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
- */
-
-* {
-	margin:0;
-	padding:0;
-}
 
 /** General Style Info **/
-body {
-	background: #003d4c;
-	color: #fff;
-	font-family:'lucida grande',verdana,helvetica,arial,sans-serif;
-	font-size:90%;
-	margin: 0;
+
+html,body {
+	min-width:1000px;
+	height:100%; /*needed because otherwise the footer will not work properly. If you just leave out, will not work for safari.*/
+	
+	/*
+	background-repeat: repeat;
+	background-image:url('header/body_texture.jpg');
+	background-size: 10% auto;
+	*/
 }
+
+h1 {
+  color:#660000;
+  font-size:18pt;
+}
+ 
+footer {
+  color:#990000;
+}
+
+td {
+  padding: 2px 5px 2px 5px;
+  background-color: #FFFFFF;
+  color:#660000;
+  border: #ffeeee solid 2px;
+ 
+}
+pre {
+  background-color: #FFFFFF;
+  padding:5px 10px 5px 10px;
+  margin:10px 20px 10px 20px;
+}
+
+.wrapper {
+	background-color:#F5F5F5;
+	min-height: 100%;
+	height: auto !important;
+	height: 100%;
+	margin: 0px auto -20px auto; /* same as the footer */
+}
+
+.push {
+	height: 10px; /* pushes footer so that it does not overlap with content */
+}
+
+.navbar {
+	margin-bottom: 0px;
+}
+
 a {
 	color: #003d4c;
 	text-decoration: underline;
@@ -46,31 +67,8 @@ h1, h2, h3, h4 {
 	font-weight: normal;
 	margin-bottom:0.5em;
 }
-h1 {
-	background:#fff;
-	color: #003d4c;
-	font-size: 100%;
-}
-h2 {
-	background:#fff;
-	color: #e32;
-	font-family:'Gill Sans','lucida grande', helvetica, arial, sans-serif;
-	font-size: 190%;
-}
-h3 {
-	color: #2c6877;
-	font-family:'Gill Sans','lucida grande', helvetica, arial, sans-serif;
-	font-size: 165%;
-}
-h4 {
-	color: #993;
-	font-weight: normal;
-}
 ul, li {
 	margin: 0 12px;
-}
-p {
-	margin: 0 0 1em 0;
 }
 
 /** Layout **/
@@ -78,9 +76,6 @@ p {
 	text-align: left;
 }
 
-#header{
-	padding: 10px 20px;
-}
 #header h1 {
 	line-height:20px;
 	background: #003d4c url('../img/cake.icon.png') no-repeat left;
@@ -104,11 +99,6 @@ p {
 	color: #333;
 	padding: 10px 20px 40px 20px;
 	overflow: auto;
-}
-#footer {
-	clear: both;
-	padding: 6px 10px;
-	text-align: right;
 }
 
 /** containers **/
@@ -137,7 +127,6 @@ table {
 	clear: both;
 	color: #333;
 	margin-bottom: 10px;
-	width: 100%;
 }
 th {
 	border:0;
@@ -257,9 +246,6 @@ dd {
 /** Forms **/
 form {
 	clear: both;
-	margin-right: 20px;
-	padding: 0;
-	width: 95%;
 }
 fieldset {
 	border: none;

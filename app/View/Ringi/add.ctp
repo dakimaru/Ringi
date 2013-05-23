@@ -7,11 +7,14 @@
         <?php echo $this->Form->input('username');
         echo $this->Form->input('password');
         echo $this->Form->input('role', array(
-            'options' => array('admin' => 'Admin', 
-                               'author' => 'Author',
-                               'mgr'    => 'Mgr',
-                               'agm' => 'AGM',
-                               'gm' => 'GM'
+            'options' => array(
+                               	'author' => 'Author',
+                               	'mgr'    => 'MGR',
+                               	'agm' => 'AGM',
+                               	'gm' => 'GM',
+																'hr' => 'HR',
+																'pr' => 'PR',
+																'admin' => 'Admin',
                                )
         ));
     ?>
