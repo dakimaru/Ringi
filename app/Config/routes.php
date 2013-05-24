@@ -33,6 +33,7 @@
 	Router::connect('/confirm', array('controller' => 'Ringi', 'action' => 'confirm', 'confirm'));
 	Router::connect('/apply_check', array('controller' => 'Ringi', 'action' => 'apply_check', 'apply_check'));
 	Router::connect('/confirm_check', array('controller' => 'Ringi', 'action' => 'confirm_check', 'confirm_check'));
+	Router::connect('/pass_back_check', array('controller' => 'Ringi', 'action' => 'pass_back_check', 'pass_back_check'));
 /**
  * ...and connect the rest of 'Pages' controller's urls.
  */

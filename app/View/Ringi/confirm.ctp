@@ -2870,9 +2870,23 @@
 																																																																																																																																																																										<td class=xl66></td>
 																																																																																																																																																																										<td class=xl66></td>
 																																																																																																																																																																									</tr>
-																																																																																																																																																																								</table>
-																																																																																																																																																																								<div><input type="submit" value="confirm">
+																																																																																																																																																																												</table>
+
+<div><input type="submit" value="Confirm">																																																																																																																																																																							
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							</form>
+
+
+
+<form method="post" action="./pass_back_check" name="confirm_check1">
+																																																																																																																																																																									<p>Enter your comment below</p>
+																																																																																																																																																																									<textarea wrap="soft" cols="55" rows="10" align="center" name="passback1" id="passback1"></textarea>
+
+<input type="hidden" name="idlist2" value =<?php echo($idlist2); ?>>
+<div><input type="submit" action= "pass_back" value="Pass Back">
 																																																																																																																																																																								</form>
-																																																																																																																																																																							</body>
+
+																																																																																																																																																																								<p></p>
+																																																																																																																																																																																																																																																																																																																																																		
+																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																		</body>
 
 																																																																																																																																																																							</html>

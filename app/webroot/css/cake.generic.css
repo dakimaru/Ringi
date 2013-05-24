@@ -146,6 +146,7 @@ th a.desc:after {
 	content: ' ⇡';
 }
 table tr td {
+	min-width: 6em;
 	padding: 6px;
 	text-align: left;
 	vertical-align: top;

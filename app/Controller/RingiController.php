@@ -22,7 +22,8 @@ class RingiController extends AppController {
                         'AuthenticationData',
                         'BudgetData',
                         'DisposalData',
-                        'UserData'
+                        'UserData',
+												'PassBackData'
                      );
 
     public function beforeFilter() {
@@ -233,6 +234,7 @@ class RingiController extends AppController {
         $analysisedit = $this->AnalysisData->findById($analysisid);
 
         $this -> set("authedit", $authedit);
+				$this -> set("idlist2", $idlist2);
         $this -> set("attachmentedit", $attachmentedit);
         $this -> set("applyedit", $applyedit);
         $this -> set("budgetid", $budgetid);
@@ -240,6 +242,17 @@ class RingiController extends AppController {
         $this -> set("disposaledit", $disposaledit);
         $this -> set("analysisedit", $analysisedit);
     }
+
+		public function pass_back_check () {
+			  $username = $this->Auth->user('username');
+				$userrole = $this->Auth->user('role');
+				$authid=$this->data["idlist2"];
+				$PassBackData['PassBackData']['username'] = $username;
+				$PassBackData['PassBackData']['userrole'] = $userrole;
+ 				$PassBackData['PassBackData']['comments'] = $this->data["passback1"];
+ 				$PassBackData['PassBackData']['auth_id'] = $authid;
+      	$this->PassBackData->save($PassBackData);
+		}
 
     public function confirm_check () {
         $this->modelClass = null;
