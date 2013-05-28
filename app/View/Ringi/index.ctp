@@ -22,33 +22,33 @@
 	<?php foreach ($auths as $auth): ?>
 		<?php $i++; ?>
 		<?php if($list_apply[$i-1] == 0) continue; ?>
-		
+
 		<?php if ($auth['AuthenticationData']['passbackflag'] == FALSE && $auth['AuthenticationData']['rejectflag'] == FALSE ) {
-			
+
 			echo '<tr>';
-				echo '<td rowspan="2">'. $j . '</td>';
-				echo '<td rowspan="2">' . $auth['AuthenticationData']['0']['fname'] . '</td>';
-				echo '<td>' . $auth['AuthenticationData']['auth1'] . '</td>';
-				echo '<td>' . $auth['AuthenticationData']['auth2'] . '</td>';
-				echo '<td>' . $auth['AuthenticationData']['auth3'] . '</td>';
-				echo '<td>' . $auth['AuthenticationData']['auth4'] . '</td>';
-				echo '<td>' . $auth['AuthenticationData']['auth5'] . '</td>';
-				echo '<td>' . $auth['AuthenticationData']['auth6'] . '</td>';
-				echo '<td>' . $auth['AuthenticationData']['auth7'] . '</td>';
+			echo '<td rowspan="2">'. $j . '</td>';
+			echo '<td rowspan="2">' . $auth['AuthenticationData']['0']['fname'] . '</td>';
+			echo '<td>' . $auth['AuthenticationData']['auth1'] . '</td>';
+			echo '<td>' . $auth['AuthenticationData']['auth2'] . '</td>';
+			echo '<td>' . $auth['AuthenticationData']['auth3'] . '</td>';
+			echo '<td>' . $auth['AuthenticationData']['auth4'] . '</td>';
+			echo '<td>' . $auth['AuthenticationData']['auth5'] . '</td>';
+			echo '<td>' . $auth['AuthenticationData']['auth6'] . '</td>';
+			echo '<td>' . $auth['AuthenticationData']['auth7'] . '</td>';
 			echo '</tr>';
-			
+
 			echo '<tr>';
-				echo '<td>' . $auth['AuthenticationData']['date1'] . '</td>';
-				echo '<td>' . $auth['AuthenticationData']['date2'] . '</td>';
-				echo '<td>' . $auth['AuthenticationData']['date3'] . '</td>';
-				echo '<td>' . $auth['AuthenticationData']['date4'] . '</td>';
-				echo '<td>' . $auth['AuthenticationData']['date5'] . '</td>';
-				echo '<td>' . $auth['AuthenticationData']['date6'] . '</td>';
-				echo '<td>' . $auth['AuthenticationData']['date7'] . '</td>';
+			echo '<td>' . $auth['AuthenticationData']['date1'] . '</td>';
+			echo '<td>' . $auth['AuthenticationData']['date2'] . '</td>';
+			echo '<td>' . $auth['AuthenticationData']['date3'] . '</td>';
+			echo '<td>' . $auth['AuthenticationData']['date4'] . '</td>';
+			echo '<td>' . $auth['AuthenticationData']['date5'] . '</td>';
+			echo '<td>' . $auth['AuthenticationData']['date6'] . '</td>';
+			echo '<td>' . $auth['AuthenticationData']['date7'] . '</td>';
 			echo '</tr>';
-			
-		 $j++;
-		
+
+			$j++;
+
 		}?>
 	<?php endforeach; ?>
 </table>
@@ -72,47 +72,48 @@
 		<?php foreach ($auths as $auth): ?>
 			<?php $i++; ?>
 			<?php if($list_confirm[$i-1] == 0) continue; ?>
-			
+
 			<?php if ($auth['AuthenticationData']['passbackflag'] == FALSE && $auth['AuthenticationData']['rejectflag'] == FALSE ) {
-				
-			echo '<tr>';
-			echo '<td rowspan="2">' . $auth['AuthenticationData']['id'] . '</td>';
-			echo '<td rowspan="2">' . $auth['AuthenticationData']['0']['fname'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['auth1'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['auth2'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['auth3'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['auth4'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['auth5'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['auth6'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['auth7'] . '</td>';
-		echo '</tr>';
-			
-		echo '<tr>';
-			echo '<td>' . $auth['AuthenticationData']['date1'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['date2'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['date3'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['date4'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['date5'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['date6'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['date7'] . '</td>';
-		echo '</tr>';
-		
-	 $j++;
-	array_push($list, $auth['AuthenticationData']['id']);
-	
-	}?>
-	
-			
+
+				echo '<tr>';
+				echo '<td rowspan="2">' . $auth['AuthenticationData']['id'] . '</td>';
+				echo '<td rowspan="2">' . $auth['AuthenticationData']['0']['fname'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['auth1'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['auth2'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['auth3'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['auth4'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['auth5'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['auth6'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['auth7'] . '</td>';
+				echo '</tr>';
+
+				echo '<tr>';
+				echo '<td>' . $auth['AuthenticationData']['date1'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['date2'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['date3'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['date4'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['date5'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['date6'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['date7'] . '</td>';
+				echo '</tr>';
+
+				$j++;
+				array_push($list, $auth['AuthenticationData']['id']);
+
+			}?>
+
+
 		<?php endforeach; ?>
 	</table>
-	
+	<?php if ($list!=NULL): ?>
 		<select style="margin: 0px;" name="idlist2">
 			<?php foreach($list as $id): ?>
 				<option value=<?php echo $id ?> >ID: <?php echo $id; ?></option>
 			<?php endforeach; ?>
 		</select>
 		<button class="btn" style="margin-left: 5px;">Process</button>
-	
+	<?php endif ?>
+
 </form>
 
 
@@ -134,49 +135,49 @@
 		<?php $pass =array(); ?>
 		<?php foreach ($auths as $auth): ?>
 			<?php $i++; ?>
-			<?php // if($list_confirm[$i-1] == 0) continue; ?>
-			
+
 			<?php if ($auth['AuthenticationData']['passbackflag'] == TRUE && $auth['AuthenticationData']['rejectflag'] == FALSE && $auth['AuthenticationData']['auth1'] == $username ) {
-				
-			echo '<tr>';
-			echo '<td rowspan="2">' . $auth['AuthenticationData']['id'] . '</td>';
-			echo '<td rowspan="2">' . $auth['AuthenticationData']['0']['fname'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['auth1'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['auth2'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['auth3'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['auth4'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['auth5'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['auth6'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['auth7'] . '</td>';
-		echo '</tr>';
-			
-		echo '<tr>';
-			echo '<td>' . $auth['AuthenticationData']['date1'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['date2'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['date3'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['date4'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['date5'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['date6'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['date7'] . '</td>';
-		echo '</tr>';
-		
-	 $j++;
-	
-	array_push($pass, $auth['AuthenticationData']['id']); 
-	
-	}?>
-	
-			
+
+				echo '<tr>';
+				echo '<td rowspan="2">' . $auth['AuthenticationData']['id'] . '</td>';
+				echo '<td rowspan="2">' . $auth['AuthenticationData']['0']['fname'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['auth1'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['auth2'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['auth3'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['auth4'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['auth5'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['auth6'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['auth7'] . '</td>';
+				echo '</tr>';
+
+				echo '<tr>';
+				echo '<td>' . $auth['AuthenticationData']['date1'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['date2'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['date3'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['date4'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['date5'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['date6'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['date7'] . '</td>';
+				echo '</tr>';
+
+				$j++;
+
+				array_push($pass, $auth['AuthenticationData']['id']); 
+
+			}?>
+
+
 		<?php endforeach; ?>
 	</table>
-	
+
+	<?php if ($pass!=NULL): ?>
 		<select style="margin: 0px;" name="idlist2">
 			<?php foreach($pass as $id): ?>
 				<option value=<?php echo $id ?> >ID: <?php echo $id; ?></option>
 			<?php endforeach; ?>
 		</select>
-		<button class="btn" style="margin-left: 5px;">Process</button>
-	
+		<button class="btn" style="margin-left: 5px;">Process</button>	
+	<?php endif ?>
 </form>
 
 
@@ -198,42 +199,41 @@
 		<?php $list =array(); ?>
 		<?php foreach ($auths as $auth): ?>
 			<?php $i++; ?>
-			<?php if($list_confirm[$i-1] == 0) continue; ?>
-			
+
 			<?php if ($auth['AuthenticationData']['rejectflag'] == TRUE ) {
-				
-			echo '<tr>';
-			echo '<td rowspan="2">' . $auth['AuthenticationData']['id'] . '</td>';
-			echo '<td rowspan="2">' . $auth['AuthenticationData']['0']['fname'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['auth1'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['auth2'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['auth3'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['auth4'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['auth5'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['auth6'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['auth7'] . '</td>';
-		echo '</tr>';
-			
-		echo '<tr>';
-			echo '<td>' . $auth['AuthenticationData']['date1'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['date2'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['date3'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['date4'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['date5'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['date6'] . '</td>';
-			echo '<td>' . $auth['AuthenticationData']['date7'] . '</td>';
-		echo '</tr>';
-		
-	 $j++;
-	
-	array_push($list, $auth['AuthenticationData']['id']);
-	
-	}?>
-	
-			
+
+				echo '<tr>';
+				echo '<td rowspan="2">' . $auth['AuthenticationData']['id'] . '</td>';
+				echo '<td rowspan="2">' . $auth['AuthenticationData']['0']['fname'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['auth1'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['auth2'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['auth3'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['auth4'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['auth5'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['auth6'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['auth7'] . '</td>';
+				echo '</tr>';
+
+				echo '<tr>';
+				echo '<td>' . $auth['AuthenticationData']['date1'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['date2'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['date3'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['date4'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['date5'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['date6'] . '</td>';
+				echo '<td>' . $auth['AuthenticationData']['date7'] . '</td>';
+				echo '</tr>';
+
+				$j++;
+
+				//array_push($list, $auth['AuthenticationData']['id']);
+
+			}?>
+
+
 		<?php endforeach; ?>
 	</table>
-	
+
 </form>
 
 </body>
