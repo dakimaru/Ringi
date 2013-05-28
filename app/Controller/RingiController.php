@@ -7,7 +7,7 @@ class RingiController extends AppController {
 
     public function isAuthorized($user) {
 
-    // Ower can edit and delete
+    // Owner can edit and delete
         if (in_array($this->action, array('edit', 'delete'))) {
            //  $postId = $this->request->params['pass'][0];
         }
@@ -78,6 +78,8 @@ class RingiController extends AppController {
 				//$this->set('attachments',$attachments);
         $list_apply = array();
         $list_confirm = array();
+				$list_passback = array();
+				$list_reject = array();
 				$indiv_attachment = array();
 				$i=0;
 				
@@ -86,58 +88,62 @@ class RingiController extends AppController {
 						$attachmentname = $indiv_attachment['AttachmentData']['fname'];
 
 						array_push($auths[$i]['AuthenticationData'],array('fname'=> $attachmentname));
-						$cflag = 0;
-            $dflag = 0;
+						
+						$authlevel = 0;
+            $confirmlevel = 0;
+
             if($auth['AuthenticationData']['auth1']==$username){
-                $cflag = 1;
+                $authlevel = 1;
             }
             if($auth['AuthenticationData']['auth2']==$username){
-                $cflag = 2;
+                $authlevel = 2;
             }
             if($auth['AuthenticationData']['auth3']==$username){
-                $cflag = 3;
+                $authlevel = 3;
             }
             if($auth['AuthenticationData']['auth4']==$username){
-                $cflag = 4;
+                $authlevel = 4;
             }
             if($auth['AuthenticationData']['auth5']==$username){
-                $cflag = 5;
+                $authlevel = 5;
             }
             if($auth['AuthenticationData']['auth6']==$username){
-                $cflag = 6;
+                $authlevel = 6;
             }
             if($auth['AuthenticationData']['auth7']==$username){
-                $cflag = 7;
+                $authlevel = 7;
             }
-            array_push($list_apply, $cflag);
+            array_push($list_apply, $authlevel);
 
             if($auth['AuthenticationData']['date1'] == NULL && $auth['AuthenticationData']['auth1']==$username){
-                $dflag = 1;
+                $confirmlevel = 1;
             }
             if($auth['AuthenticationData']['date2'] == NULL && $userrole == 'mgr'){
-                $dflag = 2;
+                $confirmlevel = 2;
             }
             if($auth['AuthenticationData']['date3'] == NULL && $userrole =='agm'){
-                $dflag = 3;
+                $confirmlevel = 3;
             }
             if($auth['AuthenticationData']['date4'] == NULL && $userrole == 'gm'){
-                $dflag = 4;
+                $confirmlevel = 4;
             }
             if($auth['AuthenticationData']['date5'] == NULL && $userrole =='hr'){
-                $dflag = 5;
+                $confirmlevel = 5;
             }
             if($auth['AuthenticationData']['date6'] == NULL && $userrole=='pr'){
-                $dflag = 6;
+                $confirmlevel = 6;
             }
             if($auth['AuthenticationData']['date7'] == NULL && $userrole=='admin' ){
-                $dflag = 7;
+                $confirmlevel = 7;
             }
-            array_push($list_confirm, $dflag);
+            array_push($list_confirm, $confirmlevel);
 						$i++;
         }
 				$this->set('auths',$auths);
         $this->set('list_apply',$list_apply);
         $this->set('list_confirm',$list_confirm);
+				$this->set('username',$username);
+
 				//$this->set('displaylist',$displaylist);
 				
     }
@@ -216,6 +222,8 @@ class RingiController extends AppController {
     }
 
     public function confirm () {
+
+			
         $this->autoLayout = false;
         $idlist2=$this->data["idlist2"];
         $authedit = $this->AuthenticationData->findById($idlist2);
@@ -244,6 +252,11 @@ class RingiController extends AppController {
     }
 
 		public function pass_back_check () {
+				$idlist2=$this->data["idlist2"];
+      	$AuthenticationData = $this->AuthenticationData->findById($idlist2);
+				$AuthenticationData['AuthenticationData']['passbackflag'] = TRUE;
+				$this->AuthenticationData->save($AuthenticationData);
+				
 			  $username = $this->Auth->user('username');
 				$userrole = $this->Auth->user('role');
 				$authid=$this->data["idlist2"];
@@ -253,8 +266,21 @@ class RingiController extends AppController {
  				$PassBackData['PassBackData']['auth_id'] = $authid;
       	$this->PassBackData->save($PassBackData);
 		}
+		
+		public function reject () {
+				$idlist2=$this->data["idlist2"];
+      	$AuthenticationData = $this->AuthenticationData->findById($idlist2);
+				$AuthenticationData['AuthenticationData']['rejectflag'] = TRUE;
+				$this->AuthenticationData->save($AuthenticationData);
+				
+		}
 
     public function confirm_check () {
+				$idlist2=$this->data["idlist2"];
+	    	$AuthenticationData = $this->AuthenticationData->findById($idlist2);
+				$AuthenticationData['AuthenticationData']['passbackflag'] = FALSE;
+				$this->AuthenticationData->save($AuthenticationData);
+				
         $this->modelClass = null;
         $this->set("header_for_layout","Application for RINGI");
         $username = $this->Auth->user('username');

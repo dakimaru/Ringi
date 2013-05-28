@@ -21,19 +21,15 @@
  * @since         CakePHP(tm) v 0.2.9
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-/**
- * Here, we are connecting '/' (base path) to controller called 'Pages',
- * its action called 'display', and we pass a param to select the view file
- * to use (in this case, /app/View/Pages/home.ctp)...
- */
 	Router::connect('/index', array('controller' => 'Ringi', 'action' => 'index', 'index'));
 	Router::connect('/logout', array('controller' => 'Users', 'action' => 'logout', 'logout'));
-	Router::connect('/login', array('controller' => 'Users', 'action' => 'login', 'login'));
+	Router::connect('/login/**', array('controller' => 'Users', 'action' => 'login', 'login'));
 	Router::connect('/apply', array('controller' => 'Ringi', 'action' => 'apply', 'apply'));
 	Router::connect('/confirm', array('controller' => 'Ringi', 'action' => 'confirm', 'confirm'));
 	Router::connect('/apply_check', array('controller' => 'Ringi', 'action' => 'apply_check', 'apply_check'));
 	Router::connect('/confirm_check', array('controller' => 'Ringi', 'action' => 'confirm_check', 'confirm_check'));
 	Router::connect('/pass_back_check', array('controller' => 'Ringi', 'action' => 'pass_back_check', 'pass_back_check'));
+	Router::connect('/reject', array('controller' => 'Ringi', 'action' => 'reject', 'reject'));
 /**
  * ...and connect the rest of 'Pages' controller's urls.
  */

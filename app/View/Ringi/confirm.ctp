@@ -1850,7 +1850,10 @@
 																																																																																																																																																																														</span>Request By:</td>
 																																																																																																																																																																														<td colspan=4 class=xl184 style='border-right:1.0pt solid black;border-left:
 																																																																																																																																																																														none'>
-																																																																																																																																																																														<?php if(($authedit['AuthenticationData']['auth1'] != NULL)){ echo $authedit['AuthenticationData']['auth1']; }?>
+
+<?php // if(($authedit['AuthenticationData']['auth1'] != NULL)){ echo $authedit['AuthenticationData']['auth1']; }?>
+
+<?php if(($authedit['AuthenticationData']['auth1'] != NULL)){ echo '<textarea cols="40" wrap="soft" align="center" name="text1" id="text1">'.$authedit['AuthenticationData']['auth1'] .'</textarea>';}?>
 																																																																																																																																																																														<?php if(($authedit['AuthenticationData']['auth1'])== NULL) {echo '<textarea cols="40" wrap="soft" align="center" name="text1" id="text1"></textarea>';}  ?>
 																																																																																																																																																																													</td>
 																																																																																																																																																																													<td class=xl66></td>
@@ -2873,7 +2876,7 @@
 																																																																																																																																																																												</table>
 
 <div><input type="submit" value="Confirm">																																																																																																																																																																							
-																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							</form>
+<input type="hidden" name="idlist2" value =<?php echo($idlist2); ?>>																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																							</form>
 
 
 
@@ -2885,6 +2888,11 @@
 <div><input type="submit" action= "pass_back" value="Pass Back">
 																																																																																																																																																																								</form>
 
+	
+																																																																																																																																																																								<form method="post" action="./reject" name="reject_check">
+																																																																																																																																														<input type="hidden" name="idlist2" value =<?php echo($idlist2); ?>>
+																																																																																																																																																																								<div><input type="submit" action= "reject" value="Reject">
+																																																																																																																																																																																																																																																																																																																																																</form>
 																																																																																																																																																																								<p></p>
 																																																																																																																																																																																																																																																																																																																																																		
 																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																																		</body>
