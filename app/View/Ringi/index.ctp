@@ -200,7 +200,7 @@
 		<?php foreach ($auths as $auth): ?>
 			<?php $i++; ?>
 
-			<?php if ($auth['AuthenticationData']['rejectflag'] == TRUE ) {
+			<?php if ($auth['AuthenticationData']['rejectflag'] == TRUE &&  $auth['AuthenticationData']['auth1'] == $username) {
 
 				echo '<tr>';
 				echo '<td rowspan="2">' . $auth['AuthenticationData']['id'] . '</td>';
