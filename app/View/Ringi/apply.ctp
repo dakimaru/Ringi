@@ -1,5 +1,3 @@
-<html>
-
 <head>
 <meta http-equiv=Content-Type content="text/html; charset=csShiftJIS">
 <meta name=ProgId content=Excel.Sheet>
@@ -1756,6 +1754,7 @@ rt
 </head>
 
 <body link=blue vlink=purple class=xl66>
+
 <form method="post" action="apply_check" name="apply_check1">
 <table border=0 cellpadding=0 cellspacing=0 width=1320 style='border-collapse:
  collapse;table-layout:fixed;width:1320pt'>
@@ -2816,7 +2815,16 @@ rt
  </tr>
 </table>
 <button class="btn btn-success">Apply</button>
+
+
 </form>
+		
+		
+<?php 
+    //$excel->generate($event['Participant'], 'Participants list '.$event['Event']['name']); 
+?>
+		
+		
 </body>
 
 </html>

@@ -1,10 +1,26 @@
 <?php
-
 App::uses('AppController', 'Controller');
+App::uses('AppHelper', 'Helper');
 App::uses('Sanitize', 'Utility');
 
-class RingiController extends AppController {
 
+App::import('Vendor','PHPExcel',array('file' => 'excel/PHPExcel.php')); 
+App::import('Vendor','PHPExcelWriter',array('file' => 'excel/PHPExcel/Writer/Excel2007.php'));
+
+if (!class_exists('PHPExcel')) {
+        throw new CakeException('Vendor class PHPExcel not found!');
+    }
+
+class RingiController extends AppController {
+		
+		//function show_excel() {
+		//   $data = new Spreadsheet_Excel_Reader('example.xls', true);
+		//   $this->set('data', $data); 
+		//}
+		
+		
+		//public $helpers = array('PhpExcel');
+		
     public function isAuthorized($user) {
 
     // Owner can edit and delete
@@ -23,12 +39,14 @@ class RingiController extends AppController {
                         'BudgetData',
                         'DisposalData',
                         'UserData',
-												'PassBackData'
+												'PassBackData'//,
+												//'data'
                      );
 
     public function beforeFilter() {
         parent::beforeFilter();
     }
+
 
     public function edit($id = null) {
         $this->User->id = $id;
@@ -72,8 +90,6 @@ class RingiController extends AppController {
         //Setting up so that variables auths and attachments gan be used in view
         $auths = $this->AuthenticationData->find('all');
 				//$attachments = $this->AttachmentData->find('all');
-        //
-
 				
 				//$this->set('attachments',$attachments);
         $list_apply = array();
@@ -206,14 +222,17 @@ class RingiController extends AppController {
         
     }
 
+
+
     public function apply () {
-        $this->autoLayout = false;
+        $this->autoLayout = false;				
+				
+								
         $ringino =$this->AuthenticationData->getLastInsertID();
         $this->set('ringino', $ringino);
         $this->set('username', $this->Auth->user('username'));
         $budget_list = $this->BudgetData->find('list');
         $this->set('budget_list',$budget_list);
-
 				
     }
 

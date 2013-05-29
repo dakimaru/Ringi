@@ -150,7 +150,7 @@ table tr td {
 	padding: 6px;
 	text-align: left;
 	vertical-align: top;
-	border-bottom:1px solid #ddd;
+	/*border-bottom:1px solid #ddd; */
 }
 table tr:nth-child(even) {
 	background: #f9f9f9;
