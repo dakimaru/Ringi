@@ -3,24 +3,28 @@ App::uses('AppController', 'Controller');
 App::uses('AppHelper', 'Helper');
 App::uses('Sanitize', 'Utility');
 
-
+//PHPExcel
 App::import('Vendor','PHPExcel',array('file' => 'excel/PHPExcel.php')); 
 App::import('Vendor','PHPExcelWriter',array('file' => 'excel/PHPExcel/Writer/Excel2007.php'));
+App::import('Vendor','excelreader2',array('file' => 'excel/excel_reader2.php')); 
 
 if (!class_exists('PHPExcel')) {
-        throw new CakeException('Vendor class PHPExcel not found!');
-    }
+    throw new CakeException('Vendor class PHPExcel not found!');
+}
+
+if (!class_exists('Spreadsheet_Excel_Reader')) {
+  	throw new CakeException('Vendor class Spreadsheet_Excel_Reader not found!');
+}
+
+//if (!class_exists('setActiveSheetIndex')) {
+ //   throw new CakeException('Vendor class setActiveSheetIndex not found!');
+//}
+
 
 class RingiController extends AppController {
 		
-		//function show_excel() {
-		//   $data = new Spreadsheet_Excel_Reader('example.xls', true);
-		//   $this->set('data', $data); 
-		//}
 		
-		
-		//public $helpers = array('PhpExcel');
-		
+				
     public function isAuthorized($user) {
 
     // Owner can edit and delete
@@ -39,8 +43,8 @@ class RingiController extends AppController {
                         'BudgetData',
                         'DisposalData',
                         'UserData',
-												'PassBackData'//,
-												//'data'
+												'PassBackData',
+												'data'
                      );
 
     public function beforeFilter() {
@@ -222,18 +226,14 @@ class RingiController extends AppController {
         
     }
 
-
-
     public function apply () {
-        $this->autoLayout = false;				
-				
-								
+        $this->autoLayout = false;
+												
         $ringino =$this->AuthenticationData->getLastInsertID();
         $this->set('ringino', $ringino);
         $this->set('username', $this->Auth->user('username'));
         $budget_list = $this->BudgetData->find('list');
         $this->set('budget_list',$budget_list);
-				
     }
 
     public function analise () {

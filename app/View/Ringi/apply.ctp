@@ -2821,9 +2821,12 @@ rt
 		
 		
 <?php 
-    //$excel->generate($event['Participant'], 'Participants list '.$event['Event']['name']); 
+
+echo $this->excel->outputExcel();
+
+//echo $this->excel->showExcel();
+    //$excel->generate($event['AuthenticationData'], 'AuthenticationData'.$event['AuthenticationData']['name']); 
 ?>
-		
 		
 </body>
 
