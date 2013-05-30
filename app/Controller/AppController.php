@@ -21,6 +21,25 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 App::uses('Controller', 'Controller');
+//PHPExcel
+App::import('Vendor','PHPExcel',array('file' => 'excel/PHPExcel.php')); 
+App::import('Vendor','PHPExcelWriter',array('file' => 'excel/PHPExcel/Writer/Excel2007.php'));
+//Php-Excel-Reader
+App::import('Vendor','excelreader2',array('file' => 'excel/excel_reader2.php'));
+
+
+//Testing function loading
+if (!class_exists('PHPExcel')) {
+    throw new CakeException('Vendor class PHPExcel not found!');
+}
+
+if (!class_exists('Spreadsheet_Excel_Reader')) {
+  	throw new CakeException('Vendor class Spreadsheet_Excel_Reader not found!');
+}
+
+//if (!class_exists('setActiveSheetIndex')) {
+//   throw new CakeException('Vendor class setActiveSheetIndex not found!');
+//}
 
 /**
  * Application Controller
@@ -33,7 +52,7 @@ App::uses('Controller', 'Controller');
  */
 class AppController extends Controller {
 		
-		public $helpers = array('excel');
+		public $helpers = array('excel');	//enables usage of helpers
 		
     public $components = array(
         'Session',

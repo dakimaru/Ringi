@@ -3,27 +3,7 @@ App::uses('AppController', 'Controller');
 App::uses('AppHelper', 'Helper');
 App::uses('Sanitize', 'Utility');
 
-//PHPExcel
-App::import('Vendor','PHPExcel',array('file' => 'excel/PHPExcel.php')); 
-App::import('Vendor','PHPExcelWriter',array('file' => 'excel/PHPExcel/Writer/Excel2007.php'));
-App::import('Vendor','excelreader2',array('file' => 'excel/excel_reader2.php')); 
-
-if (!class_exists('PHPExcel')) {
-    throw new CakeException('Vendor class PHPExcel not found!');
-}
-
-if (!class_exists('Spreadsheet_Excel_Reader')) {
-  	throw new CakeException('Vendor class Spreadsheet_Excel_Reader not found!');
-}
-
-//if (!class_exists('setActiveSheetIndex')) {
- //   throw new CakeException('Vendor class setActiveSheetIndex not found!');
-//}
-
-
-class RingiController extends AppController {
-		
-		
+class RingiController extends AppController {	
 				
     public function isAuthorized($user) {
 

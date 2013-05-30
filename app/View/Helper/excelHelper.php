@@ -1,7 +1,4 @@
 <?php  
-App::import('Vendor','PHPExcel',array('file' => 'excel/PHPExcel.php')); 
-App::import('Vendor','PHPExcelWriter',array('file' => 'excel/PHPExcel/Writer/Excel5.php'));
-App::import('Vendor','excelreader2',array('file' => 'excel/excel_reader2.php')); 
 
 class ExcelHelper extends AppHelper { 
      
