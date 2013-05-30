@@ -4,8 +4,6 @@ App::uses('AppHelper', 'Helper');
 App::uses('Sanitize', 'Utility');
 
 
-App::import('Vendor','PHPExcel',array('file' => 'excel/PHPExcel.php')); 
-App::import('Vendor','PHPExcelWriter',array('file' => 'excel/PHPExcel/Writer/Excel2007.php'));
 
 if (!class_exists('PHPExcel')) {
         throw new CakeException('Vendor class PHPExcel not found!');
