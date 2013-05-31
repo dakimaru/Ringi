@@ -2030,8 +2030,7 @@ rt
  </tr>
  <tr height=20 style='mso-height-source:userset;height:20.25pt'>
   <td height=20 class=xl66 style='height:20.25pt'></td>
-  <td colspan=2 class=xl199 style='border-right:1.0pt solid black;border-left:
-  none'>Dept:</td>
+  <td colspan=2 class=xl199 style='border:1.0pt'>Dept:</td>
   <td colspan=4 class=xl193 style='border-right:1.0pt solid black;border-left:
   none'><span style="mso-spacerun:yes">&nbsp;&nbsp;&nbsp; </span>Purchasing
   cost compared</td>
@@ -2061,7 +2060,7 @@ rt
  </tr>
  <tr height=24 style='mso-height-source:userset;height:24.0pt'>
   <td height=24 class=xl66 style='height:24.0pt'></td>
-  <td class=xl97 style='border-top:none'>Budget No:</td>
+  <td class=xl97 >Budget No:</td>
   <td colspan=3 class=xl122 style='border-right:1.0pt solid black'>
   <select name="budgetid2">
         <?php foreach($budget_list as $id): ?>
@@ -2332,49 +2331,18 @@ rt
   <td colspan=6 rowspan=2 height=32 width=458 style='height:32.0pt;width:458pt'
   align=left valign=top><span style='position:absolute;z-index:2;margin-left:
   201px;margin-top:5px;width:229px;height:4px'>
-  <table cellpadding=0 cellspacing=0>
-   <tr>
-    <td width=0 height=0></td>
-    <td width=21></td>
-    <td width=41></td>
-    <td width=21></td>
-    <td width=87></td>
-    <td width=59></td>
-   </tr>
-   <tr>
-    <td height=1></td>
-   </tr>
-   <tr>
-    <td height=1></td>
-    <td></td>
-    <td></td>
-   </tr>
-   <tr>
-    <td height=2></td>
-   </tr>
-  </table>
+  
   </span>
   <table cellpadding=0 cellspacing=0>
    <tr>
     <td colspan=6 rowspan=2 height=32 class=xl144 width=458 style='height:32.0pt;
-    width:458pt'>REASON SHEET</td>
+    width:458pt;'>REASON SHEET</td>
    </tr>
   </table>
   </span></td>
   <td align=left valign=top><span style='position:absolute;z-index:5;
   margin-left:44px;margin-top:6px;width:161px;height:3px'>
-  <table cellpadding=0 cellspacing=0>
-   <tr>
-    <td width=0 height=0></td>
-    <td width=22></td>
-    <td width=86></td>
-    <td width=53></td>
-   </tr>
-   <tr>
-    <td height=3></td>
-    <td></td>
-   </tr>
-  </table>
+
   </span>
   <table cellpadding=0 cellspacing=0>
    <tr>
