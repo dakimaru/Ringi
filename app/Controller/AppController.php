@@ -22,24 +22,34 @@
  */
 App::uses('Controller', 'Controller');
 //PHPExcel
-App::import('Vendor','PHPExcel',array('file' => 'excel/PHPExcel.php')); 
-App::import('Vendor','PHPExcelWriter',array('file' => 'excel/PHPExcel/Writer/Excel2007.php'));
-//Php-Excel-Reader
-App::import('Vendor','excelreader2',array('file' => 'excel/excel_reader2.php'));
+App::import('Vendor','PHPExcel',array('file' => 'excel/phpexcel.php'));
+App::import('Vendor','IOFactory',array('file' => 'excel/PHPExcel/IOFactory.php'));
+App::import('Vendor','PHPExcelWriter',array('file' => 'excel/PHPExcel/Reader/Excel5.php'));
+App::import('Vendor','PHPExcelWriter',array('file' => 'excel/PHPExcel/Writer/Excel5.php'));
 
-
-//Testing function loading
+//Testing class and function loading
 if (!class_exists('PHPExcel')) {
     throw new CakeException('Vendor class PHPExcel not found!');
 }
 
-if (!class_exists('Spreadsheet_Excel_Reader')) {
-  	throw new CakeException('Vendor class Spreadsheet_Excel_Reader not found!');
+if (!method_exists('PHPExcel', 'setActiveSheetIndex')) {
+   throw new CakeException('Vendor function setActiveSheetIndex not found!');
 }
 
-//if (!class_exists('setActiveSheetIndex')) {
-//   throw new CakeException('Vendor class setActiveSheetIndex not found!');
-//}
+//Php-Excel-Reader
+
+App::import('Vendor','php_reader',array('file' => 'excel_reader2.php'));
+//require_once 'phpreader/excel_reader2.php';
+//error_reporting(E_ALL ^ E_NOTICE);
+
+if (!class_exists('Spreadsheet_Excel_Reader')) {
+    throw new CakeException('Vendor class Spreadsheet_Excel_Reader not found!');
+}
+
+if (!method_exists('Spreadsheet_Excel_Reader', 'dump')) {
+   throw new CakeException('Vendor function dump not found!');
+}
+
 
 /**
  * Application Controller

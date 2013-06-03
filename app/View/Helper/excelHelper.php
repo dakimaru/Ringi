@@ -7,12 +7,6 @@ class ExcelHelper extends AppHelper {
     var $data; 
     var $blacklist = array(); 
     
-		function show_excel() {
-		   $data = new Spreadsheet_Excel_Reader('example.xls', true);
-				
-		   return $data; 
-		}
-		
  		function outputExcel() {
  			// Create new PHPExcel object
 			$phpExcel = new PHPExcel();

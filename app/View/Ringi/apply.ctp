@@ -1,17 +1,40 @@
+<?php
+error_reporting(0);
+$data = new Spreadsheet_Excel_Reader("example.xls");
+?>
+<html>
 <head>
-<meta http-equiv=Content-Type content="text/html; charset=csShiftJIS">
-<meta name=ProgId content=Excel.Sheet>
-<meta name=Generator content="Microsoft Excel 14">
-<link rel=File-List href="/Applications/XAMPP/htdocs/Ringi/app/View/Ringi/Ringi_files/filelist.xml">
-<!--[if !mso]>
 <style>
-:* {behavior:url(#default#VML);}
-:* {behavior:url(#default#VML);}
-:* {behavior:url(#default#VML);}
-.shape {behavior:url(#default#VML);}
-</style>
-<![endif]-->
-<style>
+table.excel {
+	border-style:ridge;
+	border-width:1;
+	border-collapse:collapse;
+	font-family:sans-serif;
+	font-size:12px;
+}
+table.excel thead th, table.excel tbody th {
+	background:#CCCCCC;
+	border-style:ridge;
+	border-width:1;
+	text-align: center;
+	vertical-align:bottom;
+}
+table.excel tbody th {
+	text-align:center;
+	width:20px;
+}
+table.excel tbody td {
+	vertical-align:bottom;
+}
+table.excel tbody td {
+    padding: 0 3px;
+	border: 1px solid #EEEEEE;
+}
+
+
+
+/* OLD CSS */
+
 <!--table
 	{mso-displayed-decimal-separator:".";
 	mso-displayed-thousand-separator:",";}
@@ -1753,7 +1776,9 @@ rt
 </style>
 </head>
 
-<body link=blue vlink=purple class=xl66>
+<body>
+<?php echo $data->dump(true,true); ?>
+
 
 <form method="post" action="apply_check" name="apply_check1">
 <table border=0 cellpadding=0 cellspacing=0 width=1320 style='border-collapse:
@@ -2786,14 +2811,21 @@ rt
 
 
 </form>
-		
+
+
 		
 <?php 
 
-echo $this->excel->outputExcel();
+//echo $data->dump($row_numbers=true,$col_letters=true,$sheet=0,$table_class='excel');		
 
-//echo $this->excel->showExcel();
-    //$excel->generate($event['AuthenticationData'], 'AuthenticationData'.$event['AuthenticationData']['name']); 
+//echo $data->dump("example.xls",true);
+
+
+		$objPHPExcel = PHPExcel_IOFactory::load("example.xls");
+		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'HTML');
+		$objWriter->save('php://output');
+		//outputExcel($objPHPExcel);
+		
 ?>
 		
 </body>

@@ -31,7 +31,6 @@ class RingiController extends AppController {
         parent::beforeFilter();
     }
 
-
     public function edit($id = null) {
         $this->User->id = $id;
         if (!$this->User->exists()) {
@@ -207,8 +206,11 @@ class RingiController extends AppController {
     }
 
     public function apply () {
-        $this->autoLayout = false;
-												
+        $this->autoLayout = true;
+				
+				//$data = new Spreadsheet_Excel_Reader('example.xls', true,"UTF-16LE");
+				//$this->set('data', $data);
+				
         $ringino =$this->AuthenticationData->getLastInsertID();
         $this->set('ringino', $ringino);
         $this->set('username', $this->Auth->user('username'));
