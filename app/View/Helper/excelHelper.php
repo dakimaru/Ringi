@@ -1,7 +1,7 @@
 <?php  
 
 class ExcelHelper extends AppHelper { 
-     
+   
     var $xls; 
     var $sheet; 
     var $data; 
@@ -95,7 +95,7 @@ class ExcelHelper extends AppHelper {
             $i++; 
         } 
     } 
-             
+         
     function _output($title) { 
         header("Content-type: application/vnd.ms-excel");  
         header('Content-Disposition: attachment;filename="'.$title.'.xls"'); 

@@ -20,7 +20,7 @@
 </head>
 <body>
 	<div class="wrapper">
-		<div class="navbar navbar-static-top navbar-inverse">
+		<div class="navbar navbar-fixed-top navbar-inverse">
 			<div class="navbar-inner">
 				<div class="container">
 					<a class="brand" href="#"><strong><i>Enspirea</i></strong></a>
@@ -55,7 +55,8 @@
 			</div>
 		</div>
 	</div>
-	<div class="container" style="min-width:940px; padding-left:10px;">
+	<div style="height:3em;"></div>
+	<div class="containers" style="min-width:940px; padding:10px;">
 
 		<?php echo $this->Session->flash(); ?>
 		<?php echo $content_for_layout; ?>
