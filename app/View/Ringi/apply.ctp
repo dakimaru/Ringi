@@ -1,10 +1,10 @@
+<form method="post" action="apply_check" name="apply_check1">
+	
 <?php
-error_reporting(0);
-$excelfile = "Ringi.xls";
-$data = new Spreadsheet_Excel_Reader($excelfile);
-?>
+//$this->Html->script('jquery'); //Include jQuery libarary under webroot/libs
 
-<?php 
+$excelfile = "Ringi.xls";
+$data = new Spreadsheet_Excel_Reader($excelfile); 
 
 		$objPHPExcel = PHPExcel_IOFactory::load($excelfile);
 		
@@ -16,16 +16,20 @@ $data = new Spreadsheet_Excel_Reader($excelfile);
 		$highestColumn = $objPHPExcel->getActiveSheet()->getHighestColumn();
 		$starting_row = 1;
 		
-		$objPHPExcel->getActiveSheet()->SetCellValue('I2', 'Help');
-					/*
+		//$objPHPExcel->getActiveSheet()->SetCellValue('I2', 'xxx');
+		
+		$objPHPExcel->getActiveSheet()->getStyle("A1:$highestColumn$highestRow")->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+					
 					for ($i=1; $i < $highestRow; $i++) { 
-						for ($j='A'; $j < 'M'; $j++) { 
+						for ($j='A'; $j < 'M'; $j++) {
+							
+							
 							if ($objPHPExcel->getActiveSheet()->getCell("$j$i") == 'xxx' or $objPHPExcel->getActiveSheet()->getCell("$j$i") == 'xxxx') {
-								$objPHPExcel->getActiveSheet()->SetCellValue("$j$i", '<textarea cols="40" wrap="soft" align="center" name="text5" id="text5"></textarea> ');
+								$objPHPExcel->getActiveSheet()->SetCellValue("$j$i", 'xxx');
 							}
 						}		
 					}
-					*/
+					
 																	
 $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'HTML');
 		 //$objPHPExcel->getActiveSheet()->getStyle("A".$starting_row.":".$highestColumn.$highestRow)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
@@ -43,11 +47,12 @@ $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'HTML');
 
 		?>
 		
-<div class="text-center">
-	
-<button class="btn btn-success">Apply</button>
+		<div class="text-center">
+		<button class="btn btn-success">Apply</button>
+		</div>
+		
+		</form>
 
-</div>
 	<?//php echo $data->dump(true,true); ?>
 
 <?php /*
@@ -1083,4 +1088,22 @@ $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'HTML');
 
 */ ?>
 
+<script>
+
+document.write('hello world!');
+
+var replaced = $("body").html().replace(/xxx/g,'<textarea class="textarea" id=0 style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none"></textarea>');
+
+
+var i=1;
+while (document.getElementById('0')) {
+	document.getElementById('0').name = 'text'+i;
+	document.getElementById('0').id = 'text'+i;
+	i++;
+};
+
+
+$('body').html(replaced);
+
+</script>
 	

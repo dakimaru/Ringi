@@ -208,8 +208,7 @@ class RingiController extends AppController {
     public function apply () {
         $this->autoLayout = true;
 				
-				//$data = new Spreadsheet_Excel_Reader('example.xls', true,"UTF-16LE");
-				//$this->set('data', $data);
+				
 				
         $ringino =$this->AuthenticationData->getLastInsertID();
         $this->set('ringino', $ringino);
