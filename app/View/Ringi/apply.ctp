@@ -2,21 +2,31 @@
 
 $(document).ready()
 
-	function raplace() {
+	function fixit() {
+				
+		var replaced = $('body').html().replace(/xxx/g,'<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none"></textarea>');
 		
-		var replaced = $("body").html().replace(/xxx/g,'<textarea class="textarea" id=0 style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none"></textarea>');
+		$('body').html(replaced);
 		
-	//$('body').html(replaced);
+		var replacements = document.getElementsByClassName('replacement');
+		var txtArea;
+		
+		for (var i = 0; i < replacements.length; i++) {
+		    txtArea = replacements[i];
+		    txtArea.id = "text" + i;
+		    txtArea.name = "text" + i;
+		}
+		
 	}
 	
-	function changeAtt() {
+	/* function changeAtt() {
 	
 		var i=2;
 		while (document.getElementById('0')) {
 			//$('#0')[0].name = 'text'+i;
 			//$('#0')[0].id = i;
-			document.getElementById("0").name = "text" + i;
-			document.getElementById("0").id = i;
+			//document.getElementById("0").name = "text" + i;
+			//document.getElementById("0").id = i;
 			//document.getElementById("0").setAttribute("name","text"+i);
 			//document.getElementById("0").setAttribute("id",i);
 			i++;
@@ -24,6 +34,7 @@ $(document).ready()
 			
 		};
 	};
+	*/
 	
 </script>
 
@@ -1119,10 +1130,6 @@ $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'HTML');
 
 <script>
 
-
-	raplace();
-	changeAtt();
-
-
+	fixit();
 	
 </script>
