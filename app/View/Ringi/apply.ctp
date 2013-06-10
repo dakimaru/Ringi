@@ -1,3 +1,32 @@
+<script>
+
+$(document).ready()
+
+	function raplace() {
+		
+		var replaced = $("body").html().replace(/xxx/g,'<textarea class="textarea" id=0 style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none"></textarea>');
+		
+	//$('body').html(replaced);
+	}
+	
+	function changeAtt() {
+	
+		var i=2;
+		while (document.getElementById('0')) {
+			//$('#0')[0].name = 'text'+i;
+			//$('#0')[0].id = i;
+			document.getElementById("0").name = "text" + i;
+			document.getElementById("0").id = i;
+			//document.getElementById("0").setAttribute("name","text"+i);
+			//document.getElementById("0").setAttribute("id",i);
+			i++;
+			
+			
+		};
+	};
+	
+</script>
+
 <form method="post" action="apply_check" name="apply_check1">
 	
 <?php
@@ -1084,26 +1113,16 @@ $objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'HTML');
  </tr>
 </table>
 
-</form>
-
 */ ?>
+
+</form>
 
 <script>
 
-document.write('hello world!');
 
-var replaced = $("body").html().replace(/xxx/g,'<textarea class="textarea" id=0 style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none"></textarea>');
-
-
-var i=1;
-while (document.getElementById('0')) {
-	document.getElementById('0').name = 'text'+i;
-	document.getElementById('0').id = 'text'+i;
-	i++;
-};
+	raplace();
+	changeAtt();
 
 
-$('body').html(replaced);
-
-</script>
 	
+</script>

@@ -610,8 +610,7 @@ jQuery.extend({
 			// rather than jQuery in Firefox
 			( window.execScript || function( data ) {
 				window[ "eval" ].call( window, data );
-			} )( data );
-		}
+				})(data);}
 	},
 
 	// Convert dashed to camelCase; used by the css and data modules
@@ -6299,8 +6298,7 @@ jQuery.fn.extend({
 								// Hope ajax is available...
 								jQuery._evalUrl( node.src );
 							} else {
-								jQuery.globalEval( ( node.text || node.textContent || node.innerHTML || "" ).replace( rcleanScript, "" ) );
-							}
+								jQuery.globalEval( ( node.text || node.textContent || node.innerHTML || "" ).replace( rcleanScript, "" ) );							}
 						}
 					}
 				}
@@ -9803,5 +9801,4 @@ if ( typeof module === "object" && module && typeof module.exports === "object" 
 		define( "jquery", [], function () { return jQuery; } );
 	}
 }
-
-})( window );
+})(window);

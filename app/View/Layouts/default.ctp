@@ -5,18 +5,24 @@
 	<title>
 		<?php echo $title_for_layout; ?>
 	</title>
+	
+	<!-- include jquery before bootstrap to avoid error messages -->
+	<script src="//ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js">
+	</script>
+	
 	<?php
+	echo $this->Html->script('libs/jquery');
 	echo $this->Html->meta('icon');
 	echo $this->Html->css('ringi');
 	echo $this->Html->css('cake.generic');
 	echo $this->Html->css('bootstrap.min');
-	//echo $this->Html->css('bootstrap-responsive.min');
+	echo $this->Html->css('bootstrap-responsive.min');
 	echo $this->fetch('css');
-	echo $this->Html->script('libs/jquery');
 	echo $this->Html->script('libs/bootstrap.min');
 	echo $this->fetch('meta');
 	echo $this->fetch('script');
 	?>
+
 </head>
 <body>
 	<div class="wrapper">

@@ -169,7 +169,7 @@ class RingiController extends AppController {
         $this->DisposalData->save($DisposalData);
 
         //Up date Apply Data
-        $ApplyData['ApplyData']['budgetid'] = $this->data["budgetid2"];
+        $ApplyData['ApplyData']['budgetid'] = $this->data["text28"];
         $ApplyData['ApplyData']['assetcurrent'] = $this->data["text34"];
         $ApplyData['ApplyData']['assetafter'] = $this->data["text35"];
         $ApplyData['ApplyData']['expensecurrent'] = $this->data["text36"];
