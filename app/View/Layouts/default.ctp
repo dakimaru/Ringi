@@ -26,7 +26,7 @@
 </head>
 <body>
 	<div class="wrapper">
-		<div class="navbar navbar-fixed-top navbar-inverse">
+		<div class="navbar navbar-static-top navbar-inverse">
 			<div class="navbar-inner">
 				<div class="container">
 					<a class="brand" href="#"><strong><i>Enspirea</i></strong></a>

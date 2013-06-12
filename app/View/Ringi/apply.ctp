@@ -43,42 +43,12 @@ $(document).ready()
 <?php
 //$this->Html->script('jquery'); //Include jQuery libarary under webroot/libs
 
-$excelfile = "Ringi.xls";
-$data = new Spreadsheet_Excel_Reader($excelfile); 
-
-		$objPHPExcel = PHPExcel_IOFactory::load($excelfile);
 		
-		//header('Content-Type: application/vnd.ms-excel'); 
-		//header('Content-Disposition: attachment;filename="myfile.xls"'); 
-		//header('Cache-Control: max-age=0');
-		
-		$highestRow = $objPHPExcel->getActiveSheet()->getHighestRow();
-		$highestColumn = $objPHPExcel->getActiveSheet()->getHighestColumn();
-		$starting_row = 1;
-		
-		//$objPHPExcel->getActiveSheet()->SetCellValue('I2', 'xxx');
-		
-		$objPHPExcel->getActiveSheet()->getStyle("A1:$highestColumn$highestRow")->getAlignment()->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-					
-					for ($i=1; $i < $highestRow; $i++) { 
-						for ($j='A'; $j < 'M'; $j++) {
-							
-							
-							if ($objPHPExcel->getActiveSheet()->getCell("$j$i") == 'xxx' or $objPHPExcel->getActiveSheet()->getCell("$j$i") == 'xxxx') {
-								$objPHPExcel->getActiveSheet()->SetCellValue("$j$i", 'xxx');
-							}
-						}		
-					}
-					
-																	
-$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'HTML');
 		 //$objPHPExcel->getActiveSheet()->getStyle("A".$starting_row.":".$highestColumn.$highestRow)->getFill()->setFillType(PHPExcel_Style_Fill::FILL_SOLID)->getStartColor()->setARGB(PHPExcel_Style_Color::COLOR_RED);
 		//$objPHPExcel->getActiveSheet()->getStyle("A".$starting_row.":".$highestColumn.$highestRow)->getBorders()->getAllBorders()->setBorderStyle(PHPExcel_Style_Border::BORDER_MEDIUM);
 		//$objPHPExcel->getActiveSheet()->getStyle("A".$starting_row.":".$highestColumn.$highestRow)->getBorders()->getAllBorders()->getColor()->setARGB("FFd0d7e5");
 		
-		$objWriter->setUseInlineCSS(true);
-		
-		$objWriter->save('php://output');
+
 		
 		
 		//outputExcel($objWriter);

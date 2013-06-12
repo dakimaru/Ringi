@@ -23,8 +23,8 @@ class RingiController extends AppController {
                         'BudgetData',
                         'DisposalData',
                         'UserData',
-												'PassBackData',
-												'data'
+						'PassBackData',
+						'data'
                      );
 
     public function beforeFilter() {
@@ -205,10 +205,116 @@ class RingiController extends AppController {
         
     }
 
-    public function apply () {
-        $this->autoLayout = true;
-				
-				
+	public function apply () {
+    	$this->autoLayout = true;							//setting layout enabled
+		
+		$host = 'localhost';
+		$username = 'root';
+		$password = '';
+		$database = 'Ringi';
+		$someTable = 'ringisho';
+		$someField = 'project_name';
+		
+		// Connect to MySQL
+		$link = mysql_connect($host, $username, $password);
+		
+		if (!$link) {
+		    die('Could not connect: ' . mysql_error());
+		}
+
+		// Make RingiData the current database
+		$db_selected = mysql_select_db($database, $link);
+
+		if (!$db_selected) {
+		  // If we couldn't, then it either doesn't exist, or we can't see it. 
+		$sql = "CREATE DATABASE $database";
+		
+			if (mysql_query($sql, $link)) {
+				echo "<br>Database $database created successfully";
+			} 
+			else {
+				echo '<br>Error creating database: ' . mysql_error();
+			}
+		}
+		
+		mysql_select_db($database, $link);	//pointing at the right database
+
+		$sql = "CREATE TABLE IF NOT EXISTS $someTable (
+			`id` int unsigned NOT NULL auto_increment PRIMARY KEY,
+			`created_at` timestamp,
+			`updated_at` timestamp	
+		   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8";
+		
+		if (mysql_query($sql, $link)) {
+			echo "<br>Table created successfully";
+		} 
+		else {
+			echo '<br>Error creating table: ' . mysql_error();
+		}
+
+		//PHPExcel conversion from Excel to html, prepared for output
+		$excelfile = "Ringi.xls";
+		
+		$objPHPExcel = PHPExcel_IOFactory::load($excelfile);
+
+		$highestRow = $objPHPExcel->getActiveSheet()->getHighestRow();
+		$highestColumn = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
+		
+		$objPHPExcel->getActiveSheet()->getStyle("A1:$highestColumn$highestRow")->getAlignment()
+		->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+		/*
+		for ($i=1; $i < $highestRow; $i++) { 
+			for ($j='A'; $j < $highestColumn; $j++) {
+				if ($objPHPExcel->getActiveSheet()->getCell("$j$i") == 'xxx' 
+					or $objPHPExcel->getActiveSheet()->getCell("$j$i") == 'xxxx') {
+					$objPHPExcel->getActiveSheet()->SetCellValue("$j$i", 'xxx');
+				}
+			}		
+		}
+		*/
+		
+		$columnNames = array();
+		$columnTypes = array();
+		
+		for ($i=1; $i < $highestRow; $i++) { 
+			for ($j='A'; $j < $highestColumn; $j++) {
+				$cellVal = $objPHPExcel->getActiveSheet()->getCell("$j$i");	//getting as a excel with all the formatting and colors
+				$cellVal = PHPExcel_Shared_String::SanitizeUTF8($cellVal);	//sanitizing to only string value
+				$exploded = explode(':',$cellVal);							//seperating at : creating an Array[0] => input, Array[1] => ...
+				if ($exploded[0] == 'input') {								//if the identifier shows the string input
+					$colName = $exploded[1];
+					$colType = $exploded[2];
+					
+					array_push($columnNames, $colName);
+					array_push($columnTypes, $colType);
+					
+				}
+			}		
+		}
+		
+		echo "<br>";
+		print_r($columnNames);
+		echo "<br>";
+		print_r($columnTypes);
+
+
+		mysql_select_db($database, $link);
+		
+		for ($i=0; $i < count($columnNames); $i++) { 
+			$order1 = "ALTER TABLE $someTable ADD $columnNames[$i] $columnTypes[$i]";
+			$add_field = mysql_db_query($database,$order1);
+		}
+		
+		
+							
+		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'HTML');
+		
+		$objWriter->setUseInlineCSS(true);
+		
+		$objWriter->save('php://output');
+		
+		// normal controller actions
 				
         $ringino =$this->AuthenticationData->getLastInsertID();
         $this->set('ringino', $ringino);
@@ -223,7 +329,6 @@ class RingiController extends AppController {
 
     public function confirm () {
 
-			
         $this->autoLayout = false;
         $idlist2=$this->data["idlist2"];
         $authedit = $this->AuthenticationData->findById($idlist2);
