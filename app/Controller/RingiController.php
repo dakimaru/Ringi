@@ -211,9 +211,8 @@ class RingiController extends AppController {
 		$host = 'localhost';
 		$username = 'root';
 		$password = '';
-		$database = 'Ringi';
-		$someTable = 'ringisho';
-		$someField = 'project_name';
+		$database = 'ringidata';
+		$someTable = 'ringitable';
 		
 		// Connect to MySQL
 		$link = mysql_connect($host, $username, $password);
@@ -302,6 +301,9 @@ class RingiController extends AppController {
 		mysql_select_db($database, $link);
 		
 		for ($i=0; $i < count($columnNames); $i++) { 
+			if ($columnTypes[$i]=="string") {
+				$columnTypes[$i]= "varchar(255)";
+			}
 			$order1 = "ALTER TABLE $someTable ADD $columnNames[$i] $columnTypes[$i]";
 			$add_field = mysql_db_query($database,$order1);
 		}
@@ -319,8 +321,8 @@ class RingiController extends AppController {
         $ringino =$this->AuthenticationData->getLastInsertID();
         $this->set('ringino', $ringino);
         $this->set('username', $this->Auth->user('username'));
-        $budget_list = $this->BudgetData->find('list');
-        $this->set('budget_list',$budget_list);
+        //$budget_list = $this->BudgetData->find('list');
+        //$this->set('budget_list',$budget_list);
     }
 
     public function analise () {
