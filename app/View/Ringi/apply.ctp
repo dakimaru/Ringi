@@ -2,24 +2,31 @@
 
 $(document).ready()
 
+/*
 	function fixit() {
-				
-		var replaced = $('body').html().replace(/xxx/g,'<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none"></textarea>');
-		
-		$('body').html(replaced);
+	
+		var replaced = $('body').html().replace(/input:.+/g,'<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none "></textarea>');
 		
 		var replacements = document.getElementsByClassName('replacement');
 		var txtArea;
 		
 		for (var i = 0; i < replacements.length; i++) {
 		    txtArea = replacements[i];
+			txtArea.class = "replaced";
 		    txtArea.id = "text" + i;
 		    txtArea.name = "text" + i;
+			
 		}
 		
+		console.log(replacements);
+		
+		$('body').html(replaced);
+
 	}
 	
-	/* function changeAtt() {
+/*	===========
+	
+	 function changeAtt() {
 	
 		var i=2;
 		while (document.getElementById('0')) {
@@ -37,8 +44,9 @@ $(document).ready()
 	*/
 	
 </script>
-
-<form method="post" action="apply_check" name="apply_check1">
+<?php
+//$this->redirect(array('controller' => 'user', 'action' => 'timereport'), $data);
+?>
 	
 <?php
 //$this->Html->script('jquery'); //Include jQuery libarary under webroot/libs
@@ -57,13 +65,6 @@ $(document).ready()
 
 		?>
 		
-		<div class="text-center">
-		<button class="btn btn-success">Apply</button>
-		</div>
-		
-		</form>
-
-	<?//php echo $data->dump(true,true); ?>
 
 <?php /*
 <form method="post" action="apply_check" name="apply_check1">
@@ -1097,9 +1098,3 @@ $(document).ready()
 */ ?>
 
 </form>
-
-<script>
-
-	fixit();
-	
-</script>
