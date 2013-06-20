@@ -21,6 +21,7 @@
 	<?php $j =1; ?>
 	<?php foreach ($auths as $auth): ?>
 		<?php $i++; ?>
+		
 		<?php if($list_apply[$i-1] == 0) continue; ?>
 
 		<?php if ($auth['Attribute']['passbackflag'] == FALSE && $auth['Attribute']['rejectflag'] == FALSE ) {
@@ -73,7 +74,7 @@
 			<?php $i++; ?>
 			<?php if($list_confirm[$i-1] == 0) continue; ?>
 
-			<?php if ($auth['Attribute']['passbackflag'] == FALSE && $auth['Attribute']['rejectflag'] == FALSE ) {
+			<?php if ($auth['Attribute']['passbackflag'] == FALSE && $auth['Attribute']['rejectflag'] == FALSE &&$auth['Attribute']['auth1'] != $username  ) {
 
 				echo '<tr>';
 				echo '<td rowspan="2">' . $auth['Attribute']['id'] . '</td>';

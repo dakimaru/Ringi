@@ -26,7 +26,7 @@
 </head>
 <body>
 	<div class="wrapper">
-		<div class="navbar navbar-fixed-top navbar-inverse">	<!-- replace with static -->
+		<div class="navbar navbar-fixed-top navbar-inverse">	<!-- replace with static/fixed -->
 			<div class="navbar-inner">
 				<div class="container">
 					<a class="brand" href="#"><strong><i>Enspirea</i></strong></a>
