@@ -15,11 +15,9 @@ class RingiController extends AppController {
     }   
 
     //Put All Model for this controller
-    var $uses = array(
-                        'Attribute',
+    var $uses = array(  'Attribute',
                         'UserData',
-						'PassBackData'
-                     );
+						'PassBackData');
 
     public function beforeFilter() {
         parent::beforeFilter();
@@ -55,25 +53,26 @@ class RingiController extends AppController {
 
 		$sql = "CREATE TABLE IF NOT EXISTS $someTable (
 			`id` int unsigned NOT NULL auto_increment PRIMARY KEY,
-			`created_at` timestamp,
 			`updated_at` timestamp,
-			`auth1` varchar(255),
-			`auth2` varchar(255),
-			`auth3` varchar(255),
-			`auth4` varchar(255),
-			`auth5` varchar(255),
-			`auth6` varchar(255),
-			`auth7` varchar(255),
-			`date1` date,
-			`date2` date,
-			`date3` date,
-			`date4` date,
-			`date5` date,
-			`date6` date,
-			`date7` date,
-			`attachmentname` varchar(255),
-			`passbackflag` int,
-			`rejectflag` int
+			`created_at` timestamp NULL,
+			`xxxxxauth1` varchar(255),
+			`xxxxxauth2` varchar(255),
+			`xxxxxauth3` varchar(255),
+			`xxxxxauth4` varchar(255),
+			`xxxxxauth5` varchar(255),
+			`xxxxxauth6` varchar(255),
+			`xxxxxauth7` varchar(255),
+			`xxxxxdate1` date,
+			`xxxxxdate2` date,
+			`xxxxxdate3` date,
+			`xxxxxdate4` date,
+			`xxxxxdate5` date,
+			`xxxxxdate6` date,
+			`xxxxxdate7` date,
+			`xxxxxpassbackflag` int,
+			`xxxxxrejectflag` int,
+			`xxxxxtitle` varchar(255),
+			`xxxxxcomment` text
 			
 		   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8";
 		
@@ -87,72 +86,71 @@ class RingiController extends AppController {
 
 	public function XLStoHTML(){
 			//PHPExcel conversion from Excel to html, prepared for output
-			$excelfile = "Ringi.xls";
-			$host = 'localhost';
-			$username = 'root';
-			$password = '';
-			$database = 'ringidata';
-			$someTable = 'attributes';
+		$excelfile = "Ringi.xls";
+		$host = 'localhost';
+		$username = 'root';
+		$password = '';
+		$database = 'ringidata';
+		$someTable = 'attributes';
 
-			// Connect to MySQL
-			$link = mysql_connect($host, $username, $password);
-
-
-			$objPHPExcel = PHPExcel_IOFactory::load($excelfile);
-
-			$highestRow = $objPHPExcel->getActiveSheet()->getHighestRow();
-			$highestColumn = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
-
-			$objPHPExcel->getActiveSheet()->getStyle("A1:$highestColumn$highestRow")->getAlignment()
-			->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+		// Connect to MySQL
+		$link = mysql_connect($host, $username, $password);
 
 
-			for ($i=1; $i < $highestRow; $i++) { 
-				for ($j='A'; $j < $highestColumn; $j++) {
-					if ($objPHPExcel->getActiveSheet()->getCell("$j$i") == 'input: ' 
-						or $objPHPExcel->getActiveSheet()->getCell("$j$i") == ' input') {
-						$objPHPExcel->getActiveSheet()->SetCellValue("$j$i", 'input:');
-					}
-				}		
-			}
+		$objPHPExcel = PHPExcel_IOFactory::load($excelfile);
+
+		$highestRow = $objPHPExcel->getActiveSheet()->getHighestRow();
+		$highestColumn = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
+
+		$objPHPExcel->getActiveSheet()->getStyle("A1:$highestColumn$highestRow")->getAlignment()
+		->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
 
 
-			$columnNames = array();
-			$columnTypes = array();
-
-			for ($i=1; $i < $highestRow; $i++) { 
-				for ($j='A'; $j <= $highestColumn; $j++) {
-					$cellVal = $objPHPExcel->getActiveSheet()->getCell("$j$i");	//getting as a excel with all the formatting and colors
-					$cellVal = PHPExcel_Shared_String::SanitizeUTF8($cellVal);	//sanitizing to only string value
-					$exploded = explode(':',$cellVal);							//seperating at : creating an Array[0] => input, Array[1] => ...
-					if ($exploded[0] == 'input') {								//if the identifier shows the string input
-						$colName = $exploded[1];
-						$colType = $exploded[2];
-
-						array_push($columnNames, $colName);
-						array_push($columnTypes, $colType);
-
-					}
-				}		
-			}
-
-			mysql_select_db($database, $link);
-			for ($i=0; $i < count($columnNames); $i++) { 
-				if ($columnTypes[$i]=="string") {
-					$columnTypes[$i]= "varchar(255)";
+		for ($i=1; $i < $highestRow; $i++) { 
+			for ($j='A'; $j < $highestColumn; $j++) {
+				if ($objPHPExcel->getActiveSheet()->getCell("$j$i") == 'input: ' 
+					or $objPHPExcel->getActiveSheet()->getCell("$j$i") == ' input') {
+					$objPHPExcel->getActiveSheet()->SetCellValue("$j$i", 'input:');
 				}
-				$order1 = "ALTER TABLE $someTable ADD $columnNames[$i] $columnTypes[$i]";
-				mysql_db_query($database,$order1);
+			}		
+		}
+
+
+		$columnNames = array();
+		$columnTypes = array();
+
+		for ($i=1; $i < $highestRow; $i++) { 
+			for ($j='A'; $j <= $highestColumn; $j++) {
+				$cellVal = $objPHPExcel->getActiveSheet()->getCell("$j$i");	//getting as a excel with all the formatting and colors
+				$cellVal = PHPExcel_Shared_String::SanitizeUTF8($cellVal);	//sanitizing to only string value
+				$exploded = explode(':',$cellVal);							//seperating at : creating an Array[0] => input, Array[1] => ...
+				if ($exploded[0] == 'input') {								//if the identifier shows the string input
+					$colName = $exploded[1];
+					$colType = $exploded[2];
+
+					array_push($columnNames, $colName);
+					array_push($columnTypes, $colType);
+
+				}
+			}		
+		}
+
+		mysql_select_db($database, $link);
+		for ($i=0; $i < count($columnNames); $i++) { 
+			if ($columnTypes[$i]=="string") {
+				$columnTypes[$i]= "varchar(255)";
 			}
+			$order1 = "ALTER TABLE $someTable ADD $columnNames[$i] $columnTypes[$i]";
+			mysql_db_query($database,$order1);
+		}
 
 
-			$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'HTML');
+		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'HTML');
 
-			$objWriter->setUseInlineCSS(true);
+		$objWriter->setUseInlineCSS(true);
 
-			$objWriter->save('/tmp/test.php');
+		$objWriter->save('/tmp/test.php');
 	}
-
 	
 	public function initialization(){
 		
@@ -161,7 +159,32 @@ class RingiController extends AppController {
 		$this->XLStoHTML();
 	}
 	
-	
+	public function DuplicateMySQLRecord ($database, $table, $id_field, $id) {
+	  // load the original record into an array  	
+		$search = "SELECT * FROM $table WHERE $id_field=$id";
+		$result = mysql_db_query($database, $search);
+	  	$original_record = mysql_fetch_assoc($result);
+
+	  // insert the new record and get the new auto_increment id
+	  mysql_query("INSERT INTO {$table} (`{$id_field}`) VALUES (NULL)");
+	  $newid = mysql_insert_id();
+
+	  // generate the query to update the new record with the previous values
+	  $query = "UPDATE {$table} SET ";
+	  foreach ($original_record as $key => $value) {
+	    if ($key != $id_field) {
+	        $query .= $key.' = "'.str_replace('"','\"',$value).'", ';
+	echo $query;
+	    }
+	  }
+	  $query = substr($query,0,strlen($query)-2); # lop off the extra trailing comma
+	  $query .= " WHERE {$id_field}={$newid}";
+	  mysql_query($query);
+
+	  // return the new id
+	  return $newid;
+	}
+		
     public function index() {
 		
 		$this->modelClass = null;
@@ -179,56 +202,54 @@ class RingiController extends AppController {
 		$i=0;
 				
         foreach($auths as $auth){
-			//$indiv_attachment = $this->Attribute->findById($auth['Attribute']['attachmentid']);											
-			//$attachmentname = $indiv_attachment['Attribute']['fname'];
+			//$indiv_attachment = $this->Attribute->findById($auth['Attribute']['attachmentid']);
 
-			//array_push($auths[$i]['Attribute'],array('fname'=> $attachmentname));
 						
 			$authlevel = 0;
             $confirmlevel = 0;
 
-            if($auth['Attribute']['auth1']==$username){
+            if($auth['Attribute']['xxxxxauth1']==$username){
                 $authlevel = 1;
             }
-            if($auth['Attribute']['auth2']==$username){
+            if($auth['Attribute']['xxxxxauth2']==$username){
                 $authlevel = 2;
             }
-            if($auth['Attribute']['auth3']==$username){
+            if($auth['Attribute']['xxxxxauth3']==$username){
                 $authlevel = 3;
             }
-            if($auth['Attribute']['auth4']==$username){
+            if($auth['Attribute']['xxxxxauth4']==$username){
                 $authlevel = 4;
             }
-            if($auth['Attribute']['auth5']==$username){
+            if($auth['Attribute']['xxxxxauth5']==$username){
                 $authlevel = 5;
             }
-            if($auth['Attribute']['auth6']==$username){
+            if($auth['Attribute']['xxxxxauth6']==$username){
                 $authlevel = 6;
             }
-            if($auth['Attribute']['auth7']==$username){
+            if($auth['Attribute']['xxxxxauth7']==$username){
                 $authlevel = 7;
             }
             array_push($list_apply, $authlevel);
 
-            if($auth['Attribute']['date1'] == NULL && $auth['Attribute']['auth1']==$username){
+            if($auth['Attribute']['xxxxxdate1'] == NULL && $auth['Attribute']['xxxxxauth1']==$username){
                 $confirmlevel = 1;
             }
-            if($auth['Attribute']['date2'] == NULL && $userrole == 'mgr'){
+            if($auth['Attribute']['xxxxxdate2'] == NULL && $userrole == 'mgr'){
                 $confirmlevel = 2;
             }
-            if($auth['Attribute']['date3'] == NULL && $userrole =='agm'){
+            if($auth['Attribute']['xxxxxdate3'] == NULL && $userrole =='agm'){
                 $confirmlevel = 3;
             }
-            if($auth['Attribute']['date4'] == NULL && $userrole == 'gm'){
+            if($auth['Attribute']['xxxxxdate4'] == NULL && $userrole == 'gm'){
                 $confirmlevel = 4;
             }
-            if($auth['Attribute']['date5'] == NULL && $userrole =='hr'){
+            if($auth['Attribute']['xxxxxdate5'] == NULL && $userrole =='hr'){
                 $confirmlevel = 5;
             }
-            if($auth['Attribute']['date6'] == NULL && $userrole=='pr'){
+            if($auth['Attribute']['xxxxxdate6'] == NULL && $userrole=='pr'){
                 $confirmlevel = 6;
             }
-            if($auth['Attribute']['date7'] == NULL && $userrole=='admin' ){
+            if($auth['Attribute']['xxxxxdate7'] == NULL && $userrole=='admin' ){
                 $confirmlevel = 7;
             }
             array_push($list_confirm, $confirmlevel);
@@ -242,19 +263,20 @@ class RingiController extends AppController {
 				
     }
 
-
 	public function apply () {
-
+	
+	
+		$this->set("header_for_layout","Application for RINGI");
+        $this->set('username', $this->Auth->user('username'));
 		$this->initialization();
 		
+		
 		echo "<br>";
 		echo "<br>";
 		
-    	$this->autoLayout = true;							//setting layout enabled
 		
 		//$ringino =$this->Attribute->getLastInsertID();
         //$this->set('ringino', $ringino);
-        $this->set('username', $this->Auth->user('username'));
 		
 		//creating a doc string.
 		$doc = file_get_contents('/tmp/test.php');
@@ -262,7 +284,17 @@ class RingiController extends AppController {
 		$formstart = '<form method="post" action="apply_check">';
 		$formend = '</form>';
 		
-		$doc = "$formstart $doc" . '<div class="text-center"><button class="btn btn-success">Apply</button></div>' . "$formend";
+		$doc = $formstart .
+				'<div class="text-center">
+					<textarea class="span6" style="resize: none; font-size:30px;" 
+					placeholder = "Enter title of this application" wrap="off" rows="1"
+					name="xxxxxtitle"></textarea>
+				</div>
+				<hr>'
+				. $doc .
+				'<div class="text-center"><button class="btn btn-success">Apply</button>'
+				. $formend .
+				'</div>';
 		
 		//if input:...is found
 		while (preg_match('/input:.+:.+/', $doc, $matches) == 1) {	//strpos($doc, 'input:'.':') ==false
@@ -279,10 +311,9 @@ class RingiController extends AppController {
 		
     }
 
-
-   public function apply_check () {
-        $this->modelClass = null;
+   	public function apply_check () {
         $this->set("header_for_layout","Application for RINGI");
+		$this->set('username', $this->Auth->user('username'));
 
 		$host = 'localhost';
 		$username = 'root';
@@ -295,7 +326,13 @@ class RingiController extends AppController {
 
 		// Make Attributes the current database
 		mysql_select_db($database, $link);
-		$selectcols = "SELECT * FROM attributes";
+		if (mysql_query("SELECT id FROM attributes WHERE id=1")) {
+			$selectcols = "SELECT * FROM attributes WHERE id=1";
+		}
+		else {
+			$selectcols = "SELECT * FROM attributes";
+		}
+		
 		$tempcols = mysql_query($selectcols) or die(mysql_error());
 
 		$attrnumbers = mysql_num_fields($tempcols);		//this has the number of columns!!!		
@@ -308,29 +345,42 @@ class RingiController extends AppController {
 		}
 
 
-		for ($i=20; $i < $attrnumbers; $i++) { 
+		for ($i=21; $i < $attrnumbers; $i++) {
 			$column = $columnNames[$i];
 			$Attribute['Attribute'][$column] = $this->data[$column];		
 		}
-
-		$Attribute['Attribute']['auth1'] = $this->Auth->user('username');
-		$Attribute['Attribute']['date1'] = date("Y-m-d H:i:s"); 
-		$Attribute['Attribute']['attachmentid'] = $this->Attribute->getLastInsertID();
 		
+		$Attribute['Attribute']['xxxxxauth1'] = $this->Auth->user('username');
+		$Attribute['Attribute']['xxxxxdate1'] = date("Y-m-d H:i:s"); 
+		$Attribute['Attribute']['xxxxxtitle'] = $this->data['xxxxxtitle'];;
 		
 		$this->Attribute->save($Attribute);
-
-		//print_r($Attribute);
-
+		//print_r($this->Attribute->getLastInsertID());
+		
+		
+		$latestid = mysql_query("SELECT MAX(id) FROM attributes");
+		$querystring = mysql_fetch_assoc($latestid);
+		$number = $querystring['MAX(id)'];
+		$updatedtime = mysql_query("SELECT updated_at FROM attributes WHERE id="."$number");
+		$updated_at = mysql_fetch_assoc($updatedtime);
+		$updated_final = $updated_at['updated_at'];
+		
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		//if (mysql_query("SELECT created_at FROM attributes WHERE id=$latestid") == NULL) {
+		//	mysql_query("UPDATE attributes SET created_at=$updated_final WHERE id=$latestid");
+		//}
     }
-
 
     public function analise () {
         $this->autoLayout = true;
     }
 
     public function confirm () {
-
+		echo "<br>";
+		echo "<br>";
+		echo "<br>";
+		echo "<br>";
+		
 		$host = 'localhost';
 		$username = 'root';
 		$password = '';
@@ -341,30 +391,75 @@ class RingiController extends AppController {
 		$link = mysql_connect($host, $username, $password);
 
 		$id = $this->data['idlist2'];
+		$id_field = 'id';
+		$table = 'attributes';
+		
+		//dublicate selected application data from database
+		$newentryid = $this->DuplicateMySQLRecord($database, $table, $id_field, $id);
+		
 		//creating a doc string.
 		$doc = file_get_contents('/tmp/test.php');
-				
+		
+		$titlequery = mysql_db_query($database, "SELECT xxxxxtitle FROM attributes WHERE id=$newentryid");
+		$title = mysql_fetch_assoc($titlequery);
 		$formstart = '<form method="post" action="./confirm_check" name="confirm_check1">';
 		$formend = '</form>';
-		
-		$doc = "$formstart $doc" . '<div class="text-center"><button class="btn btn-success">Confirm</button></div>' . "$formend";
+				
+		$doc = 	'<div style="padding-left: 1em;"><h1 class="text-center">' . "$title[xxxxxtitle]" . "</h1><hr>"
+				. "$formstart $doc" . 
+				'<div class="text-center">
+					<hr>
+					<br>
+					<textarea class="span9" style="resize: none; font-size:20px;" 
+					placeholder = "Enter comment here" rows="8" name="xxxxxcomment"></textarea>
+				</div>'
+				. '<div class="text-center">
+					<button class="btn btn-success">Confirm</button>
+				</div>'
+				."$formend" . '</div>';
 
-		//if input:...is found
-		while (preg_match('/input:.+:.+/', $doc, $matches) == 1) {	//strpos($doc, 'input:'.':') ==false
+		//Code to input the database info.
+		//if input:...is found in $doc, split it at ":" and get the column. Then do a query that gets the
+		//value, and replace it in $doc 
+		while (preg_match('/input:.+:.+/', $doc, $matches) == 1) {
 			$temp = preg_split('/[:]/',$matches[0]);
 			$query = mysql_db_query($database, "SELECT $temp[1] FROM attributes WHERE id=$id");
 			$fix = mysql_fetch_assoc($query);
 			$doc = preg_replace('/input:(.+):.+/', $fix[$temp[1]], $doc, 1);
 		}
 		
+		//create dublicate row
+		//
 		print_r("$doc");
+    }
 
+   	public function confirm_check () {
+		$host = 'localhost';
+		$username = 'root';
+		$password = '';
+		$database = 'ringidata';
+		$someTable = 'attributes';
+
+		$Attribute['Attribute']['xxxxxauth2'] = $this->Auth->user('username');
+		$Attribute['Attribute']['xxxxxdate2'] = date("Y-m-d H:i:s"); 
+		$Attribute['Attribute']['xxxxxattachmentid'] = $this->data['idlist2'];
+		$Attribute['Attribute']['xxxxxcomment'] = $this->data['xxxxxcomment'];
+		
+		// Connect to MySQL
+		$link = mysql_connect($host, $username, $password);
+
+		// Make Attributes the current database
+		mysql_select_db($database, $link);
+		
+		$tempcols = mysql_query("SELECT * FROM attributes") or die(mysql_error());
+		
+		$this->Attribute->save($Attribute);
     }
 
 	public function pass_back_check () {
 			$idlist2=$this->data["idlist2"];
      	$Attribute = $this->Attribute->findById($idlist2);
-			$Attribute['Attribute']['passbackflag'] = TRUE;
+			$Attribute['Attribute']['xxxxxpassbackflag'] = TRUE;
 			$this->Attribute->save($Attribute);
 			
 		  $username = $this->Auth->user('username');
@@ -372,117 +467,18 @@ class RingiController extends AppController {
 			$authid=$this->data["idlist2"];
 			$PassBackData['PassBackData']['username'] = $username;
 			$PassBackData['PassBackData']['userrole'] = $userrole;
-				$PassBackData['PassBackData']['comments'] = $this->data["passback1"];
-				$PassBackData['PassBackData']['auth_id'] = $authid;
+				$PassBackData['PassBackData']['xxxxxcomments'] = $this->data["xxxxxpassback1"];
+				$PassBackData['PassBackData']['xxxxxauth_id'] = $authid;
      	$this->PassBackData->save($PassBackData);
 	}
 	
 	public function reject () {
 			$idlist2=$this->data["idlist2"];
      	$Attribute = $this->Attribute->findById($idlist2);
-			$Attribute['Attribute']['rejectflag'] = TRUE;
+			$Attribute['Attribute']['xxxxxrejectflag'] = TRUE;
 			$this->Attribute->save($Attribute);
 			
 	}
-
-   	public function confirm_check () {
-		$idlist2=$this->data["idlist2"];
-    	$Attribute = $this->Attribute->findById($idlist2);
-		$Attribute['Attribute']['passbackflag'] = FALSE;
-		$this->Attribute->save($Attribute);
-			
-       $this->modelClass = null;
-       $this->set("header_for_layout","Application for RINGI");
-       $username = $this->Auth->user('username');
-       $userrole = $this->Auth->user('role');
-       $attachmentid=$this->data["attachmentid"];
-       $this -> set("attachmentid", $attachmentid); 
-
-       $authenticationedit = $this->Attribute->findById($attachmentid);
-       $attachment =$authenticationedit['Attribute']['attachmentid']; 
-       $attachmentedit=$this->Attribute->findById($attachment);
-       $applyid = $attachmentedit['Attribute']['applyid'];
-       $applyedit = $this->Attribute->findById($applyid);
-
-       $budgetid = $applyedit['Attribute']['budgetid'];
-       $disposalid = $applyedit['Attribute']['disposalid'];
-       $analysisid = $applyedit['Attribute']['analysisid'];
-       $budgetedit = $this->Attribute->findById($budgetid);
-       $disposaledit = $this->Attribute->findById($disposalid);
-       $analysisedit = $this->Attribute->findById($analysisid);
-
-       //Set Up Analyisis Data
-       $Attribute['Attribute']['id'] = $analysisid;
-       if(array_key_exists('text20', $this->data)){$Attribute['Attribute']['comment'] = $this->data["text20"];}
-       if(array_key_exists('text22', $this->data)){$Attribute['Attribute']['freview'] = $this->data["text22"];}
-       if(array_key_exists('text23', $this->data)){$Attribute['Attribute']['fmanager'] = $this->data["text23"];}
-       if(array_key_exists('text24', $this->data)){$Attribute['Attribute']['fdate'] = $this->data["text24"];}
-       if(array_key_exists('text21', $this->data)){$Attribute['Attribute']['fdep'] = $this->data["text21"];}
-       if(array_key_exists('text26', $this->data)){$Attribute['Attribute']['pcompare'] = $this->data["text26"];}
-       if(array_key_exists('text27', $this->data)){$Attribute['Attribute']['pmanager'] = $this->data["text27"];}
-       if(array_key_exists('text29', $this->data)){$Attribute['Attribute']['pdate'] = $this->data["text29"];}
-       if(array_key_exists('text25', $this->data)){$Attribute['Attribute']['pdep'] = $this->data["text25"];}
-       $this->Attribute->save($Attribute);
-
-       //Set up Disposal Data
-       $Attribute['Attribute']['id'] = $disposalid;
-       if(array_key_exists('text40', $this->data)){$Attribute['Attribute']['current'] = $this->data["text40"];}
-       if(array_key_exists('text41', $this->data)){$Attribute['Attribute']['after'] = $this->data["text41"];}
-       $this->Attribute->save($Attribute);
-
-       //Up date Apply Data
-       $Attribute['Attribute']['id'] = $applyid; 
-       if(array_key_exists('text34', $this->data)){$Attribute['Attribute']['assetcurrent'] = $this->data["text34"];}
-       if(array_key_exists('text35', $this->data)){$Attribute['Attribute']['assetafter'] = $this->data["text35"];}
-       if(array_key_exists('text36', $this->data)){$Attribute['Attribute']['expensecurrent'] = $this->data["text36"];}
-       if(array_key_exists('text37', $this->data)){$Attribute['Attribute']['expenseafter'] = $this->data["text37"];}
-       if(array_key_exists('text47', $this->data)){$Attribute['Attribute']['start'] = $this->data["text47"];}
-       if(array_key_exists('text48', $this->data)){$Attribute['Attribute']['end'] = $this->data["text48"];}
-       if(array_key_exists('text44', $this->data)){$Attribute['Attribute']['asset'] = $this->data["text44"];}
-       if(array_key_exists('text45', $this->data)){$Attribute['Attribute']['expense'] = $this->data["text45"];}
-       if(array_key_exists('text46', $this->data)){$Attribute['Attribute']['accountno'] = $this->data["text46"];}
-       $this->Attribute->save($Attribute);
-
-       //Set up Attachement Data
-       $Attribute['Attribute']['id'] = $attachment;
-       if(array_key_exists('text18', $this->data)){$Attribute['Attribute']['fname'] = $this->data["text18"];}
-       if(array_key_exists('text19', $this->data)){$Attribute['Attribute']['fpurpose'] = $this->data["text19"];}
-       if(array_key_exists('text51', $this->data)){$Attribute['Attribute']['name'] = $this->data["text51"];}
-       if(array_key_exists('text53', $this->data)){$Attribute['Attribute']['dec'] = $this->data["text53"];}
-       if(array_key_exists('text52', $this->data)){$Attribute['Attribute']['purpose'] = $this->data["text52"];}
-       if(array_key_exists('text55', $this->data)){$Attribute['Attribute']['schedule'] = $this->data["text54"];}
-       if(array_key_exists('text55', $this->data)){$Attribute['Attribute']['responsibility'] = $this->data["text55"];}
-       if(array_key_exists('text50', $this->data)){$Attribute['Attribute']['dep'] = $this->data["text50"];}
-       $this->Attribute->save($Attribute);
-
-       //Set up Authentication Data
-       $Attribute['Attribute']['id'] = $attachmentid;
-       if(array_key_exists('text10', $this->data)){$Attribute['Attribute']['auth6'] = $this->data["text10"];}
-       
-       if($authenticationedit['Attribute']['date1'] == NULL && $auth['Attribute']['auth1']==$username){
-           $Attribute['Attribute']['date1'] = date("Y-m-d H:i:s");
-       }
-       if($authenticationedit['Attribute']['date2'] == NULL && $userrole == 'mgr'){
-           $Attribute['Attribute']['date2'] = date("Y-m-d H:i:s");
-       }
-       if($authenticationedit['Attribute']['date3'] == NULL && $userrole =='agm'){
-           $Attribute['Attribute']['date3'] = date("Y-m-d H:i:s");
-       }
-       if($authenticationedit['Attribute']['date4'] == NULL && $userrole == 'gm'){
-           $Attribute['Attribute']['date4'] = date("Y-m-d H:i:s");
-       }
-       if($authenticationedit['Attribute']['date5'] == NULL && $userrole =='hr'){
-           $Attribute['Attribute']['date5'] = date("Y-m-d H:i:s");
-       }
-       if($authenticationedit['Attribute']['date6'] == NULL && $userrole=='pr'){
-            $Attribute['Attribute']['date6'] = date("Y-m-d H:i:s"); 
-       }
-       if($authenticationedit['Attribute']['date7'] == NULL && $userrole=='admin' ){
-            $Attribute['Attribute']['date7'] = date("Y-m-d H:i:s");
-       }
-       $this->Attribute->save($Attribute);
-    }
-
 
     public function edit($id = null) {
         $this->User->id = $id;

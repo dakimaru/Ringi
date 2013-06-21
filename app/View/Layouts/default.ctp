@@ -26,7 +26,7 @@
 </head>
 <body>
 	<div class="wrapper">
-		<div class="navbar navbar-fixed-top navbar-inverse">	<!-- replace with static/fixed -->
+		<div class="navbar navbar-static-top navbar-inverse">	<!-- replace with static/fixed -->
 			<div class="navbar-inner">
 				<div class="container">
 					<a class="brand" href="#"><strong><i>Enspirea</i></strong></a>
@@ -39,14 +39,14 @@
 						<?php $user = $this->Session->read('Auth.User'); ?>
 						<li>
 							<a><?php
-						if(!empty($user)) {
+							if(!empty($user)) {
 							echo 'Logged in as: ', $user['username'], ' (', $user['role'], ')';
 						}
 						?></a>
 					</li>
 					<li>
 						<?php
-					if(!empty($user)) {
+						if(!empty($user)) {
 						echo('<form method="post" action="logout">
 									<button class="btn btn-danger">Logout</button>');
 							}
@@ -66,7 +66,6 @@
 
 		<?php echo $this->Session->flash(); ?>
 		<?php echo $content_for_layout; ?>
-		<?php //echo $this->fetch('content'); ?>
 	</div>
 	<div class="push"></div>	
 </div>
