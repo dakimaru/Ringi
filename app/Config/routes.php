@@ -21,6 +21,21 @@
  * @since         CakePHP(tm) v 0.2.9
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+	Router::connect('/setup', array('controller' => 'Ringi', 'action' => 'setup', 'setup'));
+	Router::connect('/main_menu', array('controller' => 'Ringi', 'action' => 'main_menu', 'main_menu'));
+	Router::connect('/upload_layout', array('controller' => 'Ringi', 'action' => 'upload_layout', 'upload_layout'));
+	Router::connect('/change_privileges', array('controller' => 'Ringi', 'action' => 'change_privileges', 'change_privileges'));
+	Router::connect('/processed', array('controller' => 'Ringi', 'action' => 'processed', 'processed'));
+	Router::connect('/confirm_applications', array('controller' => 'Ringi', 'action' => 'confirm_applications', 'confirm_applications'));
+	Router::connect('/pending', array('controller' => 'Ringi', 'action' => 'pending', 'pending'));
+	Router::connect('/passed_back', array('controller' => 'Ringi', 'action' => 'passed_back', 'passed_back'));
+	Router::connect('/accepted', array('controller' => 'Ringi', 'action' => 'accepted', 'accepted'));
+	Router::connect('/rejected', array('controller' => 'Ringi', 'action' => 'rejected', 'rejected'));
+	Router::connect('/database_log', array('controller' => 'Ringi', 'action' => 'database_log', 'database_log'));
+	Router::connect('/support', array('controller' => 'Ringi', 'action' => 'support', 'support'));
+	Router::connect('/credit', array('controller' => 'Ringi', 'action' => 'credit', 'credit'));
+	
+	
 	Router::connect('/index', array('controller' => 'Ringi', 'action' => 'index', 'index'));
 	Router::connect('/logout', array('controller' => 'Users', 'action' => 'logout', 'logout'));
 	Router::connect('/login/**', array('controller' => 'Users', 'action' => 'login', 'login'));

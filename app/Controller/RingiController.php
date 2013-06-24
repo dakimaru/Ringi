@@ -4,6 +4,58 @@ App::uses('AppHelper', 'Helper');
 App::uses('Sanitize', 'Utility');
 
 class RingiController extends AppController {	
+	
+	public function setup() {
+		$this->autoLayout = false;
+		
+		$host = 'localhost';
+		$username = 'root';
+		$password = '';
+		$database = 'ringidata';
+		$table1 = 'users';
+		$table2 = 'attributes';
+
+		// Connect to MySQL
+		$link = mysql_connect($host, $username, $password);
+
+		if (!$link) {
+		    die('Could not connect: ' . mysql_error());
+		}
+
+		// Make RingiData the current database
+		$db_selected = mysql_select_db($database, $link);
+
+		if (!$db_selected) {
+			// If we couldn't, then it either doesn't exist, or we can't see it. 
+			$sql = "CREATE DATABASE $database";
+
+			if (mysql_query($sql, $link)) {
+				echo '<br><h3 align="center">Database '.$database. ' created successfully!</h3>';
+			} 
+			else {
+				echo '<br>Error creating database: ' . mysql_error();
+			}
+		}
+
+		mysql_select_db($database, $link);	//pointing at the right database
+
+		$sql = "CREATE TABLE IF NOT EXISTS $table1 (
+			`id` int unsigned NOT NULL auto_increment PRIMARY KEY,
+			`username` char(255),
+			`password` char(255),
+			`role` char(255),
+			`created_at` timestamp,
+			`updated_at` timestamp
+		   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8";
+		
+		if (!mysql_query($sql, $link)) {
+			echo '<br>Error creating table: ' . mysql_error();
+		}
+		else {
+			echo '<h3 align="center">Datatable '.$table1.' created successfully!<h/3>';
+			echo '<h2 align="center">Setup has been completed. Thank you!</h2><br>';
+		}	
+	}
 			
     public function isAuthorized($user) {
 
@@ -174,7 +226,6 @@ class RingiController extends AppController {
 	  foreach ($original_record as $key => $value) {
 	    if ($key != $id_field) {
 	        $query .= $key.' = "'.str_replace('"','\"',$value).'", ';
-	echo $query;
 	    }
 	  }
 	  $query = substr($query,0,strlen($query)-2); # lop off the extra trailing comma
@@ -184,6 +235,30 @@ class RingiController extends AppController {
 	  // return the new id
 	  return $newid;
 	}
+	
+	public function main_menu() {}
+		
+	public function upload_layout() {}
+		
+	public function change_privileges() {}
+		
+	public function processed() {}
+		
+	public function confirm_applications() {}
+		
+	public function pending() {}
+		
+	public function passed_back() {}
+	
+	public function accepted() {}
+
+	public function rejected() {}
+
+	public function database_log() {}
+
+	public function support() {}
+
+	public function credit() {}
 		
     public function index() {
 		
@@ -513,6 +588,5 @@ class RingiController extends AppController {
         $this->Session->setFlash(__('User was not deleted'));
         $this->redirect(array('action' => 'index'));
     }
-
 
 }

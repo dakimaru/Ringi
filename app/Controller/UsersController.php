@@ -19,7 +19,7 @@ class UsersController extends AppController {
 								$username = $this->Auth->user('username');
                 $this->redirect($this->Auth->redirect());
             } else {
-                $this->Session->setFlash(__('Invalid username or password, try again'));
+                //$this->Session->setFlash(__('Invalid username or password, try again'));
             }
         }
     }
@@ -49,51 +49,7 @@ class UsersController extends AppController {
     }
 
     public function add() {
-	
-		$host = 'localhost';
-		$username = 'root';
-		$password = '';
-		$database = 'ringidata';
-		$someTable = 'users';
-		
-		// Connect to MySQL
-		$link = mysql_connect($host, $username, $password);
-		
-		if (!$link) {
-		    die('Could not connect: ' . mysql_error());
-		}
-
-		// Make RingiData the current database
-		$db_selected = mysql_select_db($database, $link);
-
-		if (!$db_selected) {
-			// If we couldn't, then it either doesn't exist, or we can't see it. 
-			$sql = "CREATE DATABASE $database";
-
-			if (mysql_query($sql, $link)) {
-				echo "<br>Database $database created successfully";
-			} 
-			else {
-				echo '<br>Error creating database: ' . mysql_error();
-			}
-		}
-				
-		mysql_select_db($database, $link);	//pointing at the right database
-
-		$sql = "CREATE TABLE IF NOT EXISTS $someTable (
-			`id` int unsigned NOT NULL auto_increment PRIMARY KEY,
-			`username` char(255),
-			`password` char(255),
-			`role` char(255),
-			`created_at` timestamp,
-			`updated_at` timestamp
-		   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8";
-	
-		if (!mysql_query($sql, $link)) {
-			echo '<br>Error creating table: ' . mysql_error();
-		}	
-	
-		
+			
         if ($this->request->is('post')) {
             $this->User->create();
             if ($this->User->save($this->request->data)) {
