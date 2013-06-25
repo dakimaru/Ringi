@@ -1,6 +1,6 @@
 <h2 align="center">Admin Pannel</h2>
 <div class="row-fluid">
-	<div class="span2 offset2">
+	<div class="span1 offset1">
 		<p><a href="./users/add" class="btn btn-primary" style="width:100%">Add User</a></p><br>
 	</div>
 	<div class="span2 offset1">
@@ -9,7 +9,8 @@
 	<div class="span2 offset1">
 		<p><a href="./change_privileges" class="btn btn-primary" style="width:100%">Change Privileges</a></p><br>
 	</div>
-	<div class="span2">	
+	<div class="span2 offset1">
+		<p><a href="./workflow" class="btn btn-primary" style="width:100%">Add Workflow</a></p><br>
 	</div>
 </div>
 <hr>

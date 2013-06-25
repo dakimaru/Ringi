@@ -148,7 +148,6 @@ class RingiController extends AppController {
 		// Connect to MySQL
 		$link = mysql_connect($host, $username, $password);
 
-
 		$objPHPExcel = PHPExcel_IOFactory::load($excelfile);
 
 		$highestRow = $objPHPExcel->getActiveSheet()->getHighestRow();
@@ -238,9 +237,12 @@ class RingiController extends AppController {
 	
 	public function main_menu() {}
 		
-	public function upload_layout() {}
+	public function upload_layout() {
+	}
 		
 	public function change_privileges() {}
+		
+	public function workflow() {}
 		
 	public function processed() {}
 		
@@ -259,6 +261,19 @@ class RingiController extends AppController {
 	public function support() {}
 
 	public function credit() {}
+		
+	public function preview() {
+		if ($_POST["submit"] == "Upload") { //**** User Clicked the Upload Button
+			$info = pathinfo($_FILES['file']['name']);
+			$ext = $info['extension']; // get the extension of the file
+			$newname = "upload.".$ext;		//$ext;
+			print_r($info);
+			print_r($ext);
+			print_r($newname);
+			if (move_uploaded_file( $_FILES["file"]["tmp_name"], $_SERVER['DOCUMENT_ROOT']."/uploads/".$newname)) {
+			}
+		}
+	}
 		
     public function index() {
 		
