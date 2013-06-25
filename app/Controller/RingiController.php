@@ -268,8 +268,6 @@ class RingiController extends AppController {
 			$ext = $info['extension']; // get the extension of the file
 			$newname = "upload.".$ext;		//$ext;
 			print_r($info);
-			print_r($ext);
-			print_r($newname);
 			if (move_uploaded_file( $_FILES["file"]["tmp_name"], $_SERVER['DOCUMENT_ROOT']."/uploads/".$newname)) {
 			}
 		}
