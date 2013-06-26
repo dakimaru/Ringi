@@ -37,6 +37,7 @@
 	
 	Router::connect('/upload_layout', array('controller' => 'Ringi', 'action' => 'upload_layout', 'upload_layout'));
 	Router::connect('/preview', array('controller' => 'Ringi', 'action' => 'preview', 'preview'));
+	Router::connect('/upload_confirmation', array('controller' => 'Ringi', 'action' => 'upload_confirmation', 'upload_confirmation'));
 	
 	
 	Router::connect('/index', array('controller' => 'Ringi', 'action' => 'index', 'index'));

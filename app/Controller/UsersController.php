@@ -15,11 +15,11 @@ class UsersController extends AppController {
 	
         if ($this->request->is('post')) {
             if ($this->Auth->login()) {
-								// save username entered in the login form
-								$username = $this->Auth->user('username');
-                $this->redirect($this->Auth->redirect());
+				// save username entered in the login form
+				$username = $this->Auth->user('username');
+                $this->redirect(array('controller' => 'Ringi', 'action' => 'main_menu'));
             } else {
-                //$this->Session->setFlash(__('Invalid username or password, try again'));
+                $this->Session->setFlash(__('Invalid username or password, try again'));
             }
         }
     }
@@ -55,7 +55,6 @@ class UsersController extends AppController {
             if ($this->User->save($this->request->data)) {
                 $this->Session->setFlash(__('The user has been saved'));
                 $this->login();
-//$this->redirect(array('controller' => 'Ringi', 'action' => 'index'));
             } else {
                 $this->Session->setFlash(__('The user could not be saved. Please, try again.'));
             }

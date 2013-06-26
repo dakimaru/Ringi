@@ -47,7 +47,7 @@
 					<li>
 						<?php
 						if(!empty($user)) {
-						echo('<form method="post" action="logout">
+						echo('<form method="post" action="/Ringi/users/logout">
 									<button class="btn btn-danger">Logout</button>');
 							}
 					else {

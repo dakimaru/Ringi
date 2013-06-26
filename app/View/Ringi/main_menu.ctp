@@ -1,7 +1,7 @@
 <h2 align="center">Admin Pannel</h2>
 <div class="row-fluid">
 	<div class="span1 offset1">
-		<p><a href="./users/add" class="btn btn-primary" style="width:100%">Add User</a></p><br>
+		<p><a href="/Ringi/users/add" class="btn btn-primary" style="width:100%">Add User</a></p><br>
 	</div>
 	<div class="span2 offset1">
 		<p><a href="./upload_layout" class="btn btn-primary" style="width:100%">Upload Layout</a></p><br>

@@ -1,38 +1,19 @@
 <?php
-$excelfile = "upload.xls";
-$host = 'localhost';
-$username = 'root';
-$password = '';
-$database = 'ringidata';
-$someTable = 'attributes';
 
+$doc = file_get_contents($_SERVER['DOCUMENT_ROOT']."/uploads/upload.php");
 
-$path = $_SERVER['DOCUMENT_ROOT']."/uploads/";
-$d = dir($path); 
-
-$latest_ctime = 0;
-$latest_filename = '';    
-
-while (false !== ($entry = $d->read())) {
-  $filepath = "{$path}/{$entry}";
-  // could do also other checks than just checking whether the entry is a file
-  if (is_file($filepath) && filectime($filepath) > $latest_ctime) {
-    $latest_ctime = filectime($filepath);
-    $latest_filename = $entry;
-  }
+//if input:...is found
+while (preg_match('/input:.+:.+/', $doc, $matches) == 1) {
+	$temp = preg_split('/[:]/',$matches[0]);
+	
+	 $doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none;" id='. $temp[1] .' name='. $temp[1] .'></textarea>' , $doc, 1);
+	
 }
 
-echo $latest_filename;
+print_r("$doc");
 
-if (preg_match("/.+xls/",$latest_filename)) {
-
-$objPHPExcel = PHPExcel_IOFactory::load($_SERVER['DOCUMENT_ROOT']."/uploads/".$latest_filename);
-
-$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'HTML');
-
-$objWriter->setUseInlineCSS(true);
-
-$objWriter->save('php://output');
-
-}
 ?>
+
+<form action="upload_confirmation" method="post" align="center">
+	<button class="btn btn-primary" name="submit" value="confirm">Confirm</button>
+</form>

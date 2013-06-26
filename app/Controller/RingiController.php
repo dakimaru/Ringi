@@ -75,70 +75,8 @@ class RingiController extends AppController {
         parent::beforeFilter();
     }
 
-	public function createRingiTable(){
-		
-		$host = 'localhost';
-		$username = 'root';
-		$password = '';
-		$database = 'ringidata';
-		$someTable = 'attributes';
-		
-		// Connect to MySQL
-		$link = mysql_connect($host, $username, $password);
-
-		// Make RingiData the current database
-		$db_selected = mysql_select_db($database, $link);
-
-		if (!$db_selected) {
-		  // If we couldn't, then it either doesn't exist, or we can't see it. 
-		$sql = "CREATE DATABASE $database";
-		
-			if (mysql_query($sql, $link)) {
-				echo "<br>Database $database created successfully";
-			} 
-			else {
-				echo '<br>Error creating database: ' . mysql_error();
-			}
-		}
-		
-		mysql_select_db($database, $link);	//pointing at the right database
-
-		$sql = "CREATE TABLE IF NOT EXISTS $someTable (
-			`id` int unsigned NOT NULL auto_increment PRIMARY KEY,
-			`updated_at` timestamp,
-			`created_at` timestamp NULL,
-			`xxxxxauth1` varchar(255),
-			`xxxxxauth2` varchar(255),
-			`xxxxxauth3` varchar(255),
-			`xxxxxauth4` varchar(255),
-			`xxxxxauth5` varchar(255),
-			`xxxxxauth6` varchar(255),
-			`xxxxxauth7` varchar(255),
-			`xxxxxdate1` date,
-			`xxxxxdate2` date,
-			`xxxxxdate3` date,
-			`xxxxxdate4` date,
-			`xxxxxdate5` date,
-			`xxxxxdate6` date,
-			`xxxxxdate7` date,
-			`xxxxxpassbackflag` int,
-			`xxxxxrejectflag` int,
-			`xxxxxtitle` varchar(255),
-			`xxxxxcomment` text
-			
-		   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8";
-		
-		if (mysql_query($sql, $link)) {
-			echo "<br>Table created successfully";
-		} 
-		else {
-			echo '<br>Error creating table: ' . mysql_error();
-		}
-	}
-
-	public function XLStoHTML(){
+	public function XLStoHTML($excelfile){
 			//PHPExcel conversion from Excel to html, prepared for output
-		$excelfile = "Ringi.xls";
 		$host = 'localhost';
 		$username = 'root';
 		$password = '';
@@ -200,45 +138,109 @@ class RingiController extends AppController {
 
 		$objWriter->setUseInlineCSS(true);
 
-		$objWriter->save('/tmp/test.php');
-	}
-	
-	public function initialization(){
-		
-		$this->createRingiTable();
-
-		$this->XLStoHTML();
+		$objWriter->save($_SERVER['DOCUMENT_ROOT']."/uploads/"."upload.php");
 	}
 	
 	public function DuplicateMySQLRecord ($database, $table, $id_field, $id) {
-	  // load the original record into an array  	
+		// load the original record into an array  	
 		$search = "SELECT * FROM $table WHERE $id_field=$id";
 		$result = mysql_db_query($database, $search);
-	  	$original_record = mysql_fetch_assoc($result);
+		$original_record = mysql_fetch_assoc($result);
 
-	  // insert the new record and get the new auto_increment id
-	  mysql_query("INSERT INTO {$table} (`{$id_field}`) VALUES (NULL)");
-	  $newid = mysql_insert_id();
+		// insert the new record and get the new auto_increment id
+		mysql_query("INSERT INTO {$table} (`{$id_field}`) VALUES (NULL)");
+		$newid = mysql_insert_id();
 
-	  // generate the query to update the new record with the previous values
-	  $query = "UPDATE {$table} SET ";
-	  foreach ($original_record as $key => $value) {
-	    if ($key != $id_field) {
-	        $query .= $key.' = "'.str_replace('"','\"',$value).'", ';
-	    }
-	  }
-	  $query = substr($query,0,strlen($query)-2); # lop off the extra trailing comma
-	  $query .= " WHERE {$id_field}={$newid}";
-	  mysql_query($query);
+		// generate the query to update the new record with the previous values
+		$query = "UPDATE {$table} SET ";
+		foreach ($original_record as $key => $value) {
+			if ($key != $id_field) {
+				$query .= $key.' = "'.str_replace('"','\"',$value).'", ';
+			}
+		}
+		$query = substr($query,0,strlen($query)-2); # lop off the extra trailing comma
+			$query .= " WHERE {$id_field}={$newid}";
+		mysql_query($query);
 
-	  // return the new id
-	  return $newid;
+		// return the new id
+		return $newid;
+	}
+
+	public function upload_confirmation() {
+		$this->createRingiTable();
+		$this->from_upload_layout();
+	}
+	
+	public function from_upload_layout(){
+		
+		$name_before = $_SERVER['DOCUMENT_ROOT']."/uploads/upload.php";
+		$name_after = $_SERVER['DOCUMENT_ROOT']."/uploads/active.php";
+		
+		if ($_POST["submit"] == "confirm" && file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/upload.php")) { //**** User Clicked the Confirm Button
+			rename($name_before, $name_after);
+		}
+	}
+	
+	public function createRingiTable(){
+		
+		$host = 'localhost';
+		$username = 'root';
+		$password = '';
+		$database = 'ringidata';
+		$someTable = 'attributes';
+		
+		// Connect to MySQL
+		$link = mysql_connect($host, $username, $password);
+
+		// Make RingiData the current database
+		$db_selected = mysql_select_db($database, $link);
+
+		if (!$db_selected) {
+		  // If we couldn't, then it either doesn't exist, or we can't see it. 
+		$sql = "CREATE DATABASE $database";
+		
+			if (mysql_query($sql, $link)) {
+				echo "<br>Database $database created successfully";
+			} 
+			else {
+				echo '<br>Error creating database: ' . mysql_error();
+			}
+		}
+		
+		mysql_select_db($database, $link);	//pointing at the right database
+
+		$sql = "CREATE TABLE IF NOT EXISTS $someTable (
+			`id` int unsigned NOT NULL auto_increment PRIMARY KEY,
+			`updated_at` timestamp,
+			`created_at` timestamp NULL,
+			`xxxxxauth1` varchar(255),
+			`xxxxxauth2` varchar(255),
+			`xxxxxauth3` varchar(255),
+			`xxxxxauth4` varchar(255),
+			`xxxxxauth5` varchar(255),
+			`xxxxxauth6` varchar(255),
+			`xxxxxauth7` varchar(255),
+			`xxxxxdate1` date,
+			`xxxxxdate2` date,
+			`xxxxxdate3` date,
+			`xxxxxdate4` date,
+			`xxxxxdate5` date,
+			`xxxxxdate6` date,
+			`xxxxxdate7` date,
+			`xxxxxpassbackflag` int,
+			`xxxxxrejectflag` int,
+			`xxxxxtitle` varchar(255),
+			`xxxxxcomment` text
+			
+		   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8";
+		
+		mysql_query($sql, $link);	//creates table called: "attributes" and all entities
+
 	}
 	
 	public function main_menu() {}
 		
-	public function upload_layout() {
-	}
+	public function upload_layout() {}
 		
 	public function change_privileges() {}
 		
@@ -263,14 +265,38 @@ class RingiController extends AppController {
 	public function credit() {}
 		
 	public function preview() {
+		//this part gets the uploaded file, and creates file upload."ext" in /uploads/
 		if ($_POST["submit"] == "Upload") { //**** User Clicked the Upload Button
 			$info = pathinfo($_FILES['file']['name']);
+			$this->set('info',$info);
 			$ext = $info['extension']; // get the extension of the file
-			$newname = "upload.".$ext;		//$ext;
-			print_r($info);
+			$newname = "upload.".$ext;
 			if (move_uploaded_file( $_FILES["file"]["tmp_name"], $_SERVER['DOCUMENT_ROOT']."/uploads/".$newname)) {
 			}
 		}
+		
+		//The following piece gets the most recently added file in directory /uploads/
+		$path = $_SERVER['DOCUMENT_ROOT']."/uploads/";
+		$d = dir($path); 
+
+		$latest_ctime = 0;
+		$latest_filename = '';    
+
+		while (false !== ($entry = $d->read())) {
+		  $filepath = "{$path}/{$entry}";
+		  // could do also other checks than just checking whether the entry is a file
+		  if (is_file($filepath) && filectime($filepath) > $latest_ctime) {
+		    $latest_ctime = filectime($filepath);
+		    $latest_filename = $entry;
+		  }
+		}
+
+		if (preg_match("/.+xls/",$latest_filename)) { //if xls... extention file exists
+			
+		$this->XLStoHTML($_SERVER['DOCUMENT_ROOT']."/uploads/".$latest_filename);
+		
+		}
+	
 	}
 		
     public function index() {
@@ -355,19 +381,13 @@ class RingiController extends AppController {
 	
 	
 		$this->set("header_for_layout","Application for RINGI");
-        $this->set('username', $this->Auth->user('username'));
-		$this->initialization();
-		
+        $this->set('username', $this->Auth->user('username'));		
 		
 		echo "<br>";
 		echo "<br>";
-		
-		
-		//$ringino =$this->Attribute->getLastInsertID();
-        //$this->set('ringino', $ringino);
-		
+
 		//creating a doc string.
-		$doc = file_get_contents('/tmp/test.php');
+		$doc = file_get_contents($_SERVER['DOCUMENT_ROOT']."/uploads/active.php");
 				
 		$formstart = '<form method="post" action="apply_check">';
 		$formend = '</form>';
