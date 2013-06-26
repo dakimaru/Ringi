@@ -75,8 +75,43 @@ class RingiController extends AppController {
         parent::beforeFilter();
     }
 
-	public function XLStoHTML($excelfile){
-			//PHPExcel conversion from Excel to html, prepared for output
+	public function main_menu() {}
+		
+	public function upload_layout() {}
+	
+	public function preview() {
+		//this part gets the uploaded file, and creates file upload."ext" in /uploads/
+		if ($_POST["submit"] == "Upload") { //**** User Clicked the Upload Button
+			$info = pathinfo($_FILES['file']['name']);
+			$this->set('info',$info);
+			$ext = $info['extension']; // get the extension of the file
+			$newname = "upload.".$ext;
+			if (move_uploaded_file( $_FILES["file"]["tmp_name"], $_SERVER['DOCUMENT_ROOT']."/uploads/".$newname)) {
+			}
+		}
+		
+		//The following piece gets the most recently added file in directory /uploads/
+		$path = $_SERVER['DOCUMENT_ROOT']."/uploads/";
+		$d = dir($path); 
+
+		$latest_ctime = 0;
+		$latest_filename = '';    
+
+		while (false !== ($entry = $d->read())) {
+		  $filepath = "{$path}/{$entry}";
+		  // could do also other checks than just checking whether the entry is a file
+		  if (is_file($filepath) && filectime($filepath) > $latest_ctime) {
+		    $latest_ctime = filectime($filepath);
+		    $latest_filename = $entry;
+		  }
+		}
+
+		if (preg_match("/.+xls/",$latest_filename)) { //if xls... extention file exists
+			$this->tempXLStoPHP($_SERVER['DOCUMENT_ROOT']."/uploads/".$latest_filename);
+		}
+	}
+
+	public function tempXLStoPHP($excelfile) {
 		$host = 'localhost';
 		$username = 'root';
 		$password = '';
@@ -94,7 +129,7 @@ class RingiController extends AppController {
 		$objPHPExcel->getActiveSheet()->getStyle("A1:$highestColumn$highestRow")->getAlignment()
 		->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
 
-
+		//showing some possible processes that can be made
 		for ($i=1; $i < $highestRow; $i++) { 
 			for ($j='A'; $j < $highestColumn; $j++) {
 				if ($objPHPExcel->getActiveSheet()->getCell("$j$i") == 'input: ' 
@@ -103,7 +138,6 @@ class RingiController extends AppController {
 				}
 			}		
 		}
-
 
 		$columnNames = array();
 		$columnTypes = array();
@@ -124,7 +158,90 @@ class RingiController extends AppController {
 			}		
 		}
 
+		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'HTML');
+
+		$objWriter->setUseInlineCSS(true);
+
+		$objWriter->save($_SERVER['DOCUMENT_ROOT']."/uploads/"."upload.php");
+	}
+	
+	public function upload_confirmation() {
+		$this->createRingiTable();
+		
+		$this->XLStoHTML();
+		
+		$this->from_upload_layout();
+	}
+	
+	public function XLStoHTML(){
+
+			//PHPExcel conversion from Excel to html, prepared for output
+		$host = 'localhost';
+		$username = 'root';
+		$password = '';
+		$database = 'ringidata';
+		$someTable = 'attributes';
+
+		// Connect to MySQL
+		$link = mysql_connect($host, $username, $password);
+		
+		//The following piece gets the most recently added file in directory /uploads/
+		$path = $_SERVER['DOCUMENT_ROOT']."/uploads/";
+		$d = dir($path); 
+
+		$latest_ctime = 0;
+		$latest_filename = '';    
+
+		while (false !== ($entry = $d->read())) {
+		  $filepath = "{$path}/{$entry}";
+		  // could do also other checks than just checking whether the entry is a file
+		  if (is_file($filepath) && filectime($filepath) > $latest_ctime) {
+			if (preg_match("/.+xls/",$entry)){
+		    $latest_ctime = filectime($filepath);
+		    $latest_filename = $entry;
+			}
+		  }
+		}
+		
+		$objPHPExcel = PHPExcel_IOFactory::load($_SERVER['DOCUMENT_ROOT']."/uploads/".$latest_filename);
+		
+		$highestRow = $objPHPExcel->getActiveSheet()->getHighestRow();
+		$highestColumn = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
+
+		$objPHPExcel->getActiveSheet()->getStyle("A1:$highestColumn$highestRow")->getAlignment()
+		->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+		//showing some possible processes that can be made
+		for ($i=1; $i < $highestRow; $i++) { 
+			for ($j='A'; $j < $highestColumn; $j++) {
+				if ($objPHPExcel->getActiveSheet()->getCell("$j$i") == 'input: ' 
+					or $objPHPExcel->getActiveSheet()->getCell("$j$i") == ' input') {
+					$objPHPExcel->getActiveSheet()->SetCellValue("$j$i", 'input:');
+				}
+			}		
+		}
+
+		$columnNames = array();
+		$columnTypes = array();
+		
+		for ($i=1; $i < $highestRow; $i++) { 
+			for ($j='A'; $j <= $highestColumn; $j++) {
+				$cellVal = $objPHPExcel->getActiveSheet()->getCell("$j$i");	//getting as a excel with all the formatting and colors
+				$cellVal = PHPExcel_Shared_String::SanitizeUTF8($cellVal);	//sanitizing to only string value
+				$exploded = explode(':',$cellVal);							//seperating at : creating an Array[0] => input, Array[1] => ...
+				if ($exploded[0] == 'input') {								//if the identifier shows the string input
+					$colName = $exploded[1];
+					$colType = $exploded[2];
+
+					array_push($columnNames, $colName);
+					array_push($columnTypes, $colType);
+
+				}
+			}		
+		}
+		
 		mysql_select_db($database, $link);
+		
 		for ($i=0; $i < count($columnNames); $i++) { 
 			if ($columnTypes[$i]=="string") {
 				$columnTypes[$i]= "varchar(255)";
@@ -133,54 +250,13 @@ class RingiController extends AppController {
 			mysql_db_query($database,$order1);
 		}
 
-
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'HTML');
 
 		$objWriter->setUseInlineCSS(true);
 
 		$objWriter->save($_SERVER['DOCUMENT_ROOT']."/uploads/"."upload.php");
 	}
-	
-	public function DuplicateMySQLRecord ($database, $table, $id_field, $id) {
-		// load the original record into an array  	
-		$search = "SELECT * FROM $table WHERE $id_field=$id";
-		$result = mysql_db_query($database, $search);
-		$original_record = mysql_fetch_assoc($result);
 
-		// insert the new record and get the new auto_increment id
-		mysql_query("INSERT INTO {$table} (`{$id_field}`) VALUES (NULL)");
-		$newid = mysql_insert_id();
-
-		// generate the query to update the new record with the previous values
-		$query = "UPDATE {$table} SET ";
-		foreach ($original_record as $key => $value) {
-			if ($key != $id_field) {
-				$query .= $key.' = "'.str_replace('"','\"',$value).'", ';
-			}
-		}
-		$query = substr($query,0,strlen($query)-2); # lop off the extra trailing comma
-			$query .= " WHERE {$id_field}={$newid}";
-		mysql_query($query);
-
-		// return the new id
-		return $newid;
-	}
-
-	public function upload_confirmation() {
-		$this->createRingiTable();
-		$this->from_upload_layout();
-	}
-	
-	public function from_upload_layout(){
-		
-		$name_before = $_SERVER['DOCUMENT_ROOT']."/uploads/upload.php";
-		$name_after = $_SERVER['DOCUMENT_ROOT']."/uploads/active.php";
-		
-		if ($_POST["submit"] == "confirm" && file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/upload.php")) { //**** User Clicked the Confirm Button
-			rename($name_before, $name_after);
-		}
-	}
-	
 	public function createRingiTable(){
 		
 		$host = 'localhost';
@@ -238,10 +314,143 @@ class RingiController extends AppController {
 
 	}
 	
-	public function main_menu() {}
+	public function from_upload_layout(){
 		
-	public function upload_layout() {}
+		$name_before = $_SERVER['DOCUMENT_ROOT']."/uploads/upload.php";
+		$name_after = $_SERVER['DOCUMENT_ROOT']."/uploads/active.php";
 		
+		if ($_POST["submit"] == "confirm" && file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/upload.php")) { //**** User Clicked the Confirm Button
+			rename($name_before, $name_after);
+		}
+	}
+	
+	public function apply () {
+	
+	
+		$this->set("header_for_layout","Application for RINGI");
+        $this->set('username', $this->Auth->user('username'));		
+		
+		echo "<br>";
+		echo "<br>";
+
+		//creating a doc string.
+		$doc = file_get_contents($_SERVER['DOCUMENT_ROOT']."/uploads/active.php");
+				
+		$formstart = '<form method="post" action="apply_check">';
+		$formend = '</form>';
+		
+		$doc = $formstart .
+				'<div class="text-center">
+					<textarea class="span6" style="resize: none; font-size:30px;" 
+					placeholder = "Enter title of this application" wrap="off" rows="1"
+					name="xxxxxtitle"></textarea>
+				</div>
+				<hr>'
+				. $doc .
+				'<div class="text-center"><button class="btn btn-success">Apply</button>'
+				. $formend .
+				'</div>';
+		
+		//if input:...is found
+		while (preg_match('/input:.+:.+/', $doc, $matches) == 1) {	//strpos($doc, 'input:'.':') ==false
+			
+			//$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none;" id='. findcolname($doc) .' name='. findcolname($doc) .'></textarea>' , $doc);
+			
+			$temp = preg_split('/[:]/',$matches[0]);
+			
+			 $doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none;" id='. $temp[1] .' name='. $temp[1] .'></textarea>' , $doc, 1);
+			
+		}
+		
+		print_r("$doc");
+		
+    }
+
+	public function apply_check () {
+        $this->set("header_for_layout","Application for RINGI");
+		$this->set('username', $this->Auth->user('username'));
+
+		$host = 'localhost';
+		$username = 'root';
+		$password = '';
+		$database = 'ringidata';
+		$someTable = 'attributes';
+
+		// Connect to MySQL
+		$link = mysql_connect($host, $username, $password);
+
+		// Make Attributes the current database
+		mysql_select_db($database, $link);
+		if (mysql_query("SELECT id FROM attributes WHERE id=1")) {
+			$selectcols = "SELECT * FROM attributes WHERE id=1";
+		}
+		else {
+			$selectcols = "SELECT * FROM attributes";
+		}
+				
+		$tempcols = mysql_query($selectcols) or die(mysql_error());
+
+		$attrnumbers = mysql_num_fields($tempcols);		//this has the number of columns!!!		
+
+		$columnNames = array();
+
+		for ($i=0; $i < $attrnumbers; $i++) { 
+			$test = mysql_field_name($tempcols,$i);	
+			array_push($columnNames, $test);
+		}
+
+
+		for ($i=21; $i < $attrnumbers; $i++) {
+			$column = $columnNames[$i];
+			$Attribute['Attribute'][$column] = $this->data[$column];		
+		}
+		
+		$Attribute['Attribute']['xxxxxauth1'] = $this->Auth->user('username');
+		$Attribute['Attribute']['xxxxxdate1'] = date("Y-m-d H:i:s"); 
+		$Attribute['Attribute']['xxxxxtitle'] = $this->data['xxxxxtitle'];;
+		
+		$this->Attribute->save($Attribute);
+		//print_r($this->Attribute->getLastInsertID());
+		
+		
+		$latestid = mysql_query("SELECT MAX(id) FROM attributes");
+		$querystring = mysql_fetch_assoc($latestid);
+		$number = $querystring['MAX(id)'];
+		$updatedtime = mysql_query("SELECT updated_at FROM attributes WHERE id="."$number");
+		$updated_at = mysql_fetch_assoc($updatedtime);
+		$updated_final = $updated_at['updated_at'];
+		
+		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+		//if (mysql_query("SELECT created_at FROM attributes WHERE id=$latestid") == NULL) {
+		//	mysql_query("UPDATE attributes SET created_at=$updated_final WHERE id=$latestid");
+		//}
+    }
+
+	public function DuplicateMySQLRecord ($database, $table, $id_field, $id) {
+		// load the original record into an array  	
+		$search = "SELECT * FROM $table WHERE $id_field=$id";
+		$result = mysql_db_query($database, $search);
+		$original_record = mysql_fetch_assoc($result);
+
+		// insert the new record and get the new auto_increment id
+		mysql_query("INSERT INTO {$table} (`{$id_field}`) VALUES (NULL)");
+		$newid = mysql_insert_id();
+
+		// generate the query to update the new record with the previous values
+		$query = "UPDATE {$table} SET ";
+		foreach ($original_record as $key => $value) {
+			if ($key != $id_field) {
+				$query .= $key.' = "'.str_replace('"','\"',$value).'", ';
+			}
+		}
+		$query = substr($query,0,strlen($query)-2); # lop off the extra trailing comma
+			$query .= " WHERE {$id_field}={$newid}";
+		mysql_query($query);
+
+		// return the new id
+		return $newid;
+	}
+	
 	public function change_privileges() {}
 		
 	public function workflow() {}
@@ -263,42 +472,7 @@ class RingiController extends AppController {
 	public function support() {}
 
 	public function credit() {}
-		
-	public function preview() {
-		//this part gets the uploaded file, and creates file upload."ext" in /uploads/
-		if ($_POST["submit"] == "Upload") { //**** User Clicked the Upload Button
-			$info = pathinfo($_FILES['file']['name']);
-			$this->set('info',$info);
-			$ext = $info['extension']; // get the extension of the file
-			$newname = "upload.".$ext;
-			if (move_uploaded_file( $_FILES["file"]["tmp_name"], $_SERVER['DOCUMENT_ROOT']."/uploads/".$newname)) {
-			}
-		}
-		
-		//The following piece gets the most recently added file in directory /uploads/
-		$path = $_SERVER['DOCUMENT_ROOT']."/uploads/";
-		$d = dir($path); 
-
-		$latest_ctime = 0;
-		$latest_filename = '';    
-
-		while (false !== ($entry = $d->read())) {
-		  $filepath = "{$path}/{$entry}";
-		  // could do also other checks than just checking whether the entry is a file
-		  if (is_file($filepath) && filectime($filepath) > $latest_ctime) {
-		    $latest_ctime = filectime($filepath);
-		    $latest_filename = $entry;
-		  }
-		}
-
-		if (preg_match("/.+xls/",$latest_filename)) { //if xls... extention file exists
-			
-		$this->XLStoHTML($_SERVER['DOCUMENT_ROOT']."/uploads/".$latest_filename);
-		
-		}
-	
-	}
-		
+				
     public function index() {
 		
 		$this->modelClass = null;
@@ -375,108 +549,6 @@ class RingiController extends AppController {
         $this->set('list_confirm',$list_confirm);
 		$this->set('username',$username);
 				
-    }
-
-	public function apply () {
-	
-	
-		$this->set("header_for_layout","Application for RINGI");
-        $this->set('username', $this->Auth->user('username'));		
-		
-		echo "<br>";
-		echo "<br>";
-
-		//creating a doc string.
-		$doc = file_get_contents($_SERVER['DOCUMENT_ROOT']."/uploads/active.php");
-				
-		$formstart = '<form method="post" action="apply_check">';
-		$formend = '</form>';
-		
-		$doc = $formstart .
-				'<div class="text-center">
-					<textarea class="span6" style="resize: none; font-size:30px;" 
-					placeholder = "Enter title of this application" wrap="off" rows="1"
-					name="xxxxxtitle"></textarea>
-				</div>
-				<hr>'
-				. $doc .
-				'<div class="text-center"><button class="btn btn-success">Apply</button>'
-				. $formend .
-				'</div>';
-		
-		//if input:...is found
-		while (preg_match('/input:.+:.+/', $doc, $matches) == 1) {	//strpos($doc, 'input:'.':') ==false
-			
-			//$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none;" id='. findcolname($doc) .' name='. findcolname($doc) .'></textarea>' , $doc);
-			
-			$temp = preg_split('/[:]/',$matches[0]);
-			
-			 $doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none;" id='. $temp[1] .' name='. $temp[1] .'></textarea>' , $doc, 1);
-			
-		}
-		
-		print_r("$doc");
-		
-    }
-
-   	public function apply_check () {
-        $this->set("header_for_layout","Application for RINGI");
-		$this->set('username', $this->Auth->user('username'));
-
-		$host = 'localhost';
-		$username = 'root';
-		$password = '';
-		$database = 'ringidata';
-		$someTable = 'attributes';
-
-		// Connect to MySQL
-		$link = mysql_connect($host, $username, $password);
-
-		// Make Attributes the current database
-		mysql_select_db($database, $link);
-		if (mysql_query("SELECT id FROM attributes WHERE id=1")) {
-			$selectcols = "SELECT * FROM attributes WHERE id=1";
-		}
-		else {
-			$selectcols = "SELECT * FROM attributes";
-		}
-		
-		$tempcols = mysql_query($selectcols) or die(mysql_error());
-
-		$attrnumbers = mysql_num_fields($tempcols);		//this has the number of columns!!!		
-
-		$columnNames = array();
-
-		for ($i=0; $i < $attrnumbers; $i++) { 
-			$test = mysql_field_name($tempcols,$i);	
-			array_push($columnNames, $test);
-		}
-
-
-		for ($i=21; $i < $attrnumbers; $i++) {
-			$column = $columnNames[$i];
-			$Attribute['Attribute'][$column] = $this->data[$column];		
-		}
-		
-		$Attribute['Attribute']['xxxxxauth1'] = $this->Auth->user('username');
-		$Attribute['Attribute']['xxxxxdate1'] = date("Y-m-d H:i:s"); 
-		$Attribute['Attribute']['xxxxxtitle'] = $this->data['xxxxxtitle'];;
-		
-		$this->Attribute->save($Attribute);
-		//print_r($this->Attribute->getLastInsertID());
-		
-		
-		$latestid = mysql_query("SELECT MAX(id) FROM attributes");
-		$querystring = mysql_fetch_assoc($latestid);
-		$number = $querystring['MAX(id)'];
-		$updatedtime = mysql_query("SELECT updated_at FROM attributes WHERE id="."$number");
-		$updated_at = mysql_fetch_assoc($updatedtime);
-		$updated_final = $updated_at['updated_at'];
-		
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		//if (mysql_query("SELECT created_at FROM attributes WHERE id=$latestid") == NULL) {
-		//	mysql_query("UPDATE attributes SET created_at=$updated_final WHERE id=$latestid");
-		//}
     }
 
     public function analise () {

@@ -1,16 +1,19 @@
 <h2 align="center">Admin Pannel</h2>
 <div class="row-fluid">
 	<div class="span1 offset1">
+		<p><a href="/Ringi/setup" class="btn btn-primary" style="width:100%">Set Up</a></p><br>
+	</div>
+	<div class="span1 offset1">
 		<p><a href="/Ringi/users/add" class="btn btn-primary" style="width:100%">Add User</a></p><br>
 	</div>
-	<div class="span2 offset1">
-		<p><a href="./upload_layout" class="btn btn-primary" style="width:100%">Upload Layout</a></p><br>
+	<div class="span1 offset1">
+		<p><a href="./upload_layout" class="btn btn-primary" style="width:100%">Layouts</a></p><br>
 	</div>
-	<div class="span2 offset1">
-		<p><a href="./change_privileges" class="btn btn-primary" style="width:100%">Change Privileges</a></p><br>
+	<div class="span1 offset1">
+		<p><a href="./change_privileges" class="btn btn-primary" style="width:100%">Privileges</a></p><br>
 	</div>
-	<div class="span2 offset1">
-		<p><a href="./workflow" class="btn btn-primary" style="width:100%">Add Workflow</a></p><br>
+	<div class="span1 offset1">
+		<p><a href="./workflow" class="btn btn-primary" style="width:100%">Workflow</a></p><br>
 	</div>
 </div>
 <hr>

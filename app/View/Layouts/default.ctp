@@ -29,7 +29,7 @@
 		<div class="navbar navbar-static-top navbar-inverse">	<!-- replace with static/fixed -->
 			<div class="navbar-inner">
 				<div class="container">
-					<a class="brand" href="#"><strong><i>Enspirea</i></strong></a>
+					<a class="brand" href="/Ringi/main_menu"><strong><i>Enspirea</i></strong></a>
 					<ul class="nav">
 						<li class="active"><a href="#">Ringi</a></li>
 						<li><a href="#">Jinji</a></li>
