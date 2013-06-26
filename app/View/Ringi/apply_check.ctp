@@ -1,6 +1,6 @@
 <html>
   <body> 
-  <form method="post" action="./index" name="index1"> 
+  <form method="post" action="main_menu" name="index1"> 
 	<h3>
 		Your submission has been saved and is being reviewed.
 	</h3>

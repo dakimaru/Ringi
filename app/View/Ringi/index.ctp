@@ -236,6 +236,3 @@
 	</table>
 
 </form>
-
-</body>
-</html>

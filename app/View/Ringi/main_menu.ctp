@@ -33,7 +33,7 @@
 			<p><a href="./passed_back" class="btn btn-inverse" style="width:100%">Passed Back</a></p><br>
 
 		</div>
-		<div class="offset4 span2">
+		<div class="offset3 span2">
 			<p><a href="./accepted" class="btn btn-success" style="width:100%">Accepted</a></p><br>
 
 			<p><a href="./rejected" class="btn btn-danger" style="width:100%">Rejected</a></p><br>

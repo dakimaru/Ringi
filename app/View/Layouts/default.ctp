@@ -26,7 +26,7 @@
 </head>
 <body>
 	<div class="wrapper">
-		<div class="navbar navbar-static-top navbar-inverse">	<!-- replace with static/fixed -->
+		<div class="navbar navbar-fixed-top navbar-inverse">	<!-- replace with static/fixed -->
 			<div class="navbar-inner">
 				<div class="container">
 					<a class="brand" href="/Ringi/main_menu"><strong><i>Enspirea</i></strong></a>
@@ -62,7 +62,7 @@
 		</div>
 	</div>
 	<div style="height:3em;"></div>
-	<div class="containers" style="min-width:940px; padding:10px;">
+	<div class="containers" style="min-width:940px; padding:20px; ">
 
 		<?php echo $this->Session->flash(); ?>
 		<?php echo $content_for_layout; ?>

@@ -153,7 +153,6 @@ class RingiController extends AppController {
 
 					array_push($columnNames, $colName);
 					array_push($columnTypes, $colType);
-
 				}
 			}		
 		}
@@ -168,12 +167,12 @@ class RingiController extends AppController {
 	public function upload_confirmation() {
 		$this->createRingiTable();
 		
-		$this->XLStoHTML();
+		$this->addNewColumns();
 		
 		$this->from_upload_layout();
 	}
 	
-	public function XLStoHTML(){
+	public function addNewColumns(){
 
 			//PHPExcel conversion from Excel to html, prepared for output
 		$host = 'localhost';
@@ -326,44 +325,39 @@ class RingiController extends AppController {
 	
 	public function apply () {
 	
-	
+
 		$this->set("header_for_layout","Application for RINGI");
-        $this->set('username', $this->Auth->user('username'));		
-		
-		echo "<br>";
-		echo "<br>";
+	       $this->set('username', $this->Auth->user('username'));
 
 		//creating a doc string.
 		$doc = file_get_contents($_SERVER['DOCUMENT_ROOT']."/uploads/active.php");
-				
+			
 		$formstart = '<form method="post" action="apply_check">';
 		$formend = '</form>';
-		
+	
 		$doc = $formstart .
 				'<div class="text-center">
 					<textarea class="span6" style="resize: none; font-size:30px;" 
 					placeholder = "Enter title of this application" wrap="off" rows="1"
 					name="xxxxxtitle"></textarea>
-				</div>
-				<hr>'
+				</div>'
 				. $doc .
 				'<div class="text-center"><button class="btn btn-success">Apply</button>'
 				. $formend .
 				'</div>';
-		
+	
 		//if input:...is found
 		while (preg_match('/input:.+:.+/', $doc, $matches) == 1) {	//strpos($doc, 'input:'.':') ==false
-			
+		
 			//$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none;" id='. findcolname($doc) .' name='. findcolname($doc) .'></textarea>' , $doc);
-			
+		
 			$temp = preg_split('/[:]/',$matches[0]);
-			
-			 $doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none;" id='. $temp[1] .' name='. $temp[1] .'></textarea>' , $doc, 1);
-			
+		
+			 $doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none; background-color:white;" id='. $temp[1] .' name='. $temp[1] .'></textarea>' , $doc, 1);
+		
 		}
-		
-		print_r("$doc");
-		
+		$this->set('doc',$doc);
+	
     }
 
 	public function apply_check () {
@@ -455,19 +449,33 @@ class RingiController extends AppController {
 		
 	public function workflow() {}
 		
-	public function processed() {}
+	public function processed() {
+		$this->index();
+	}
 		
-	public function confirm_applications() {}
+	public function confirm_applications() {
+		$this->index();
+	}
 		
-	public function pending() {}
+	public function pending() {
+		$this->index();
+	}
 		
-	public function passed_back() {}
+	public function passed_back() {
+		$this->index();
+	}
 	
-	public function accepted() {}
+	public function accepted() {
+		$this->index();
+	}
 
-	public function rejected() {}
+	public function rejected() {
+		$this->index();
+	}
 
-	public function database_log() {}
+	public function database_log() {
+		$this->index();
+	}
 
 	public function support() {}
 
@@ -556,10 +564,6 @@ class RingiController extends AppController {
     }
 
     public function confirm () {
-		echo "<br>";
-		echo "<br>";
-		echo "<br>";
-		echo "<br>";
 		
 		$host = 'localhost';
 		$username = 'root';
@@ -578,7 +582,7 @@ class RingiController extends AppController {
 		$newentryid = $this->DuplicateMySQLRecord($database, $table, $id_field, $id);
 		
 		//creating a doc string.
-		$doc = file_get_contents('/tmp/test.php');
+		$doc = file_get_contents($_SERVER['DOCUMENT_ROOT']."/uploads/active.php");
 		
 		$titlequery = mysql_db_query($database, "SELECT xxxxxtitle FROM attributes WHERE id=$newentryid");
 		$title = mysql_fetch_assoc($titlequery);
