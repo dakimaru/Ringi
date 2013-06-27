@@ -1,4 +1,4 @@
-<h2 align="center">Pending Applications</h2>
+<h2 align="center">Applications in Process</h2>
 
 <form method="post" action="apply" name="apply1"> 
 	<button class="btn btn-primary">Create Application</button>
