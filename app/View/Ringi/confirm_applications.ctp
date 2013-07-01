@@ -4,6 +4,7 @@
 	<table class="table table-bordered table-hover">
 		<tr class="info">
 			<td></td>
+			<td></td>
 			<td>Name</td>
 			<td>Applicant</td>
 			<td>Authorizer1</td>
@@ -23,6 +24,7 @@
 			<?php if ($auth['Attribute']['xxxxxpassbackflag'] == FALSE && $auth['Attribute']['xxxxxrejectflag'] == FALSE &&$auth['Attribute']['xxxxxauth1'] != $username  ) {
 
 				echo '<tr>';
+				echo '<td rowspan="2">'. $j . '</td>';
 				echo '<td rowspan="2">' . $auth['Attribute']['id'] . '</td>';
 				echo '<td rowspan="2">' . $auth['Attribute']['xxxxxtitle'] . '</td>';
 				echo '<td>' . $auth['Attribute']['xxxxxauth1'] . '</td>';

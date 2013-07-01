@@ -6,9 +6,8 @@
 
 <table class="table table-bordered table-hover">
 	<tr class="success">
-		<td></td>
 		<td>Name</td>
-		<td>Applicant</td>
+		<td>Application Date</td>
 		<td>Authorizer1</td>
 		<td>Authorizer2</td>
 		<td>Authorizer3</td>
@@ -22,11 +21,10 @@
 		<?php $i++; ?>
 		
 		<?php if($list_apply[$i-1] == 0) continue; ?>
-
+		
 		<?php if ($auth['Attribute']['xxxxxpassbackflag'] == FALSE && $auth['Attribute']['xxxxxrejectflag'] == FALSE ) {
 
 			echo '<tr>';
-			echo '<td rowspan="2">'. $j . '</td>';
 			echo '<td rowspan="2">' . $auth['Attribute']['xxxxxtitle'] . '</td>';
 			echo '<td>' . $auth['Attribute']['xxxxxauth1'] . '</td>';
 			echo '<td>' . $auth['Attribute']['xxxxxauth2'] . '</td>';

@@ -288,6 +288,8 @@ class RingiController extends AppController {
 			`id` int unsigned NOT NULL auto_increment PRIMARY KEY,
 			`updated_at` timestamp,
 			`created_at` timestamp NULL,
+			`xxxxxapplicant` varchar(255),
+			`xxxxxapplication_date` date,
 			`xxxxxauth1` varchar(255),
 			`xxxxxauth2` varchar(255),
 			`xxxxxauth3` varchar(255),
@@ -399,8 +401,11 @@ class RingiController extends AppController {
 			$Attribute['Attribute'][$column] = $this->data[$column];		
 		}
 		
-		$Attribute['Attribute']['xxxxxauth1'] = $this->Auth->user('username');
-		$Attribute['Attribute']['xxxxxdate1'] = date("Y-m-d H:i:s"); 
+		$Attribute['Attribute']['xxxxxauth1'] = $this->Auth->user('username');// should be deleted
+		$Attribute['Attribute']['xxxxxdate1'] = date("Y-m-d H:i:s"); // should be deleted
+		
+		$Attribute['Attribute']['xxxxxapplicant'] = $this->Auth->user('username');
+		$Attribute['Attribute']['xxxxxapplication_date'] = date("Y-m-d H:i:s"); 
 		$Attribute['Attribute']['xxxxxtitle'] = $this->data['xxxxxtitle'];;
 		
 		$this->Attribute->save($Attribute);
@@ -526,7 +531,8 @@ class RingiController extends AppController {
                 $authlevel = 7;
             }
             array_push($list_apply, $authlevel);
-
+			
+			
             if($auth['Attribute']['xxxxxdate1'] == NULL && $auth['Attribute']['xxxxxauth1']==$username){
                 $confirmlevel = 1;
             }
@@ -551,7 +557,6 @@ class RingiController extends AppController {
             array_push($list_confirm, $confirmlevel);
 						$i++;
         }
-		
 		$this->set('auths',$auths);
         $this->set('list_apply',$list_apply);
         $this->set('list_confirm',$list_confirm);
