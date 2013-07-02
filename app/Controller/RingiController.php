@@ -75,7 +75,11 @@ class RingiController extends AppController {
         parent::beforeFilter();
     }
 
-	public function main_menu() {}
+	public function login() {}
+
+	public function main_menu() {
+		$this->index();
+	}
 		
 	public function upload_layout() {}
 	

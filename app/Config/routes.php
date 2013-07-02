@@ -22,6 +22,7 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 	Router::connect('/setup', array('controller' => 'Ringi', 'action' => 'setup', 'setup'));
+	//Router::connect('/login', array('controller' => 'Ringi', 'action' => 'login', 'login'));
 	Router::connect('/main_menu', array('controller' => 'Ringi', 'action' => 'main_menu', 'main_menu'));
 	Router::connect('/change_privileges', array('controller' => 'Ringi', 'action' => 'change_privileges', 'change_privileges'));
 	Router::connect('/workflow', array('controller' => 'Ringi', 'action' => 'workflow', 'workflow'));
