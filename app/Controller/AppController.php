@@ -73,11 +73,11 @@ class AppController extends Controller {
     );
 
     public function beforeFilter() {
-        $this->Auth->allow('setup', 'login');
+        $this->Auth->allow('setup', 'login', 'main_menu');
     }
 
     public function isAuthorized($user) {
-    if (isset($user['role']) && $user['role'] === 'admin') {
+    if (isset($user['title']) && $user['title'] === 'admin') {
         return true;
     }
 

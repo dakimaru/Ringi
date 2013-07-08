@@ -18,7 +18,7 @@
 			<?php $i++; ?>
 
 			<?php if ($auth['Attribute']['xxxxxrejectflag'] == TRUE &&  $auth['Attribute']['xxxxxauth1'] == $username) {
-
+				
 				echo '<tr>';
 				echo '<td rowspan="2">' . $auth['Attribute']['id'] . '</td>';
 				echo '<td rowspan="2">' . $auth['Attribute']['xxxxxtitle'] . '</td>';

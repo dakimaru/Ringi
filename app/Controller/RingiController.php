@@ -14,6 +14,8 @@ class RingiController extends AppController {
 		$database = 'ringidata';
 		$table1 = 'users';
 		$table2 = 'attributes';
+		$script_path="/Users/enspirea/python/";
+		$scriptfile="importADToMySql.sh";
 
 		// Connect to MySQL
 		$link = mysql_connect($host, $username, $password);
@@ -41,9 +43,16 @@ class RingiController extends AppController {
 
 		$sql = "CREATE TABLE IF NOT EXISTS $table1 (
 			`id` int unsigned NOT NULL auto_increment PRIMARY KEY,
-			`username` char(255),
-			`password` char(255),
-			`role` char(255),
+			`username` varchar(255),
+			`password` varchar(255),
+			`DN` varchar(255),
+			`manager` varchar(255),
+			`name` varchar(255),
+			`title` varchar(255),
+			`department` varchar(255),
+			`mail` varchar(255),
+			`active` int,
+			
 			`created_at` timestamp,
 			`updated_at` timestamp
 		   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8";
@@ -54,7 +63,14 @@ class RingiController extends AppController {
 		else {
 			echo '<h3 align="center">Datatable '.$table1.' created successfully!<h/3>';
 			echo '<h2 align="center">Setup has been completed. Thank you!</h2><br>';
-		}	
+		}
+		
+		exec('cd /Users/enspirea/python/ ; sh importADToMySql.sh');
+		
+		echo shell_exec('cd /Users/enspirea/python/ ; sh importADToMySql.sh 2>&1');
+
+		//exec('cd ' . $script_path . '; sh' . $scriptfile);
+		
 	}
 			
     public function isAuthorized($user) {
@@ -78,7 +94,6 @@ class RingiController extends AppController {
 	public function login() {}
 
 	public function main_menu() {
-		$this->index();
 	}
 		
 	public function upload_layout() {}
@@ -400,9 +415,9 @@ class RingiController extends AppController {
 		}
 
 
-		for ($i=21; $i < $attrnumbers; $i++) {
+		for ($i=23; $i < $attrnumbers; $i++) {
 			$column = $columnNames[$i];
-			$Attribute['Attribute'][$column] = $this->data[$column];		
+				$Attribute['Attribute'][$column] = $this->data[$column];
 		}
 		
 		$Attribute['Attribute']['xxxxxauth1'] = $this->Auth->user('username');// should be deleted
@@ -456,7 +471,9 @@ class RingiController extends AppController {
 	
 	public function change_privileges() {}
 		
-	public function workflow() {}
+	public function overview() {
+		$this->index();
+	}
 		
 	public function processed() {
 		$this->index();
@@ -494,7 +511,7 @@ class RingiController extends AppController {
 		
 		$this->modelClass = null;
         $username = $this->Auth->user('username');
-        $userrole = $this->Auth->user('role');
+        $userrole = $this->Auth->user('title');
         //Setting up so that variables auths and attachments can be used in view
         $auths = $this->Attribute->find('all');
 				
@@ -595,9 +612,9 @@ class RingiController extends AppController {
 		
 		$titlequery = mysql_db_query($database, "SELECT xxxxxtitle FROM attributes WHERE id=$newentryid");
 		$title = mysql_fetch_assoc($titlequery);
+		$attachmentid = $this->data['idlist2'];
 		$formstart = '<form method="post" action="./confirm_check" name="confirm_check1">';
 		$formend = '</form>';
-				
 		$doc = 	'<div style="padding-left: 1em;"><h1 class="text-center">' . "$title[xxxxxtitle]" . "</h1><hr>"
 				. "$formstart $doc" . 
 				'<div class="text-center">
@@ -606,6 +623,7 @@ class RingiController extends AppController {
 					<textarea class="span9" style="resize: none; font-size:20px;" 
 					placeholder = "Enter comment here" rows="8" name="xxxxxcomment"></textarea>
 				</div>'
+				. '<input type="hidden" name="idlist2" value='.$attachmentid.'>'
 				. '<div class="text-center">
 					<button class="btn btn-success">Confirm</button>
 				</div>'
@@ -621,9 +639,8 @@ class RingiController extends AppController {
 			$doc = preg_replace('/input:(.+):.+/', $fix[$temp[1]], $doc, 1);
 		}
 		
-		//create dublicate row
-		//
-		print_r("$doc");
+		$this->set('doc',$doc);
+
     }
 
    	public function confirm_check () {
@@ -647,6 +664,7 @@ class RingiController extends AppController {
 		$tempcols = mysql_query("SELECT * FROM attributes") or die(mysql_error());
 		
 		$this->Attribute->save($Attribute);
+		echo $this->data['idlist2'];	//contains the application id
     }
 
 	public function pass_back_check () {
@@ -656,7 +674,7 @@ class RingiController extends AppController {
 			$this->Attribute->save($Attribute);
 			
 		  $username = $this->Auth->user('username');
-			$userrole = $this->Auth->user('role');
+			$userrole = $this->Auth->user('title');
 			$authid=$this->data["idlist2"];
 			$PassBackData['PassBackData']['username'] = $username;
 			$PassBackData['PassBackData']['userrole'] = $userrole;

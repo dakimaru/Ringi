@@ -5,14 +5,13 @@
 		<tr class="info">
 			<td></td>
 			<td></td>
-			<td>Name</td>
-			<td>Applicant</td>
-			<td>Authorizer1</td>
-			<td>Authorizer2</td>
-			<td>Authorizer3</td>
-			<td>Authorizer4</td>
-			<td>Authorizer5</td>
-			<td>FinAuthorizer</td>
+			<td>Project Name</td>
+			<td>Applicant Name</td>
+			<td>Application Date</td>
+			<td>Approver</td>
+			<td>Approval Date</td>
+			<td>Requested Amount</td>
+			<td>Status</td>
 		</tr>
 		<?php $i =0; ?>
 		<?php $j =1; ?>
@@ -33,7 +32,6 @@
 				echo '<td>' . $auth['Attribute']['xxxxxauth4'] . '</td>';
 				echo '<td>' . $auth['Attribute']['xxxxxauth5'] . '</td>';
 				echo '<td>' . $auth['Attribute']['xxxxxauth6'] . '</td>';
-				echo '<td>' . $auth['Attribute']['xxxxxauth7'] . '</td>';
 				echo '</tr>';
 
 				echo '<tr>';
@@ -43,7 +41,6 @@
 				echo '<td>' . $auth['Attribute']['xxxxxdate4'] . '</td>';
 				echo '<td>' . $auth['Attribute']['xxxxxdate5'] . '</td>';
 				echo '<td>' . $auth['Attribute']['xxxxxdate6'] . '</td>';
-				echo '<td>' . $auth['Attribute']['xxxxxdate7'] . '</td>';
 				echo '</tr>';
 
 				$j++;
@@ -62,5 +59,6 @@
 		</select>
 		<button class="btn" style="margin-left: 5px;">Process</button>
 	<?php endif ?>
+</form>
 
 </form>
