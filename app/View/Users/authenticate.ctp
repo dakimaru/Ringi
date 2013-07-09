@@ -26,15 +26,6 @@ function authenticate($user, $password) {
 		$entries = ldap_get_entries($ldap, $result);
 		ldap_unbind($ldap);
 
-		// check groups
-		foreach($entries[0]['memberof'] as $grps) {
-			// is manager, break loop
-			if (strpos($grps, $ldap_manager_group)) { $access = 2; break; }
-
-			// is user
-			if (strpos($grps, $ldap_user_group)) $access = 1;
-		}
-
 		$access=1;
 
 		if ($access != 0) {
