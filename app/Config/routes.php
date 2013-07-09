@@ -21,8 +21,12 @@
  * @since         CakePHP(tm) v 0.2.9
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+	Router::connect('/login', array('controller' => 'Users', 'action' => 'login', 'login'));
+	Router::connect('/login', array('controller' => 'Ringi', 'action' => 'login', 'login'));
+	Router::connect('/secure_login', array('controller' => 'Users', 'action' => 'secure_login', 'secure_login'));
+	Router::connect('/logout', array('controller' => 'Users', 'action' => 'logout', 'logout'));
+
 	Router::connect('/setup', array('controller' => 'Ringi', 'action' => 'setup', 'setup'));
-	//Router::connect('/login', array('controller' => 'Ringi', 'action' => 'login', 'login'));
 	Router::connect('/main_menu', array('controller' => 'Ringi', 'action' => 'main_menu', 'main_menu'));
 	Router::connect('/overview', array('controller' => 'Ringi', 'action' => 'overview', 'overview'));
 	Router::connect('/processed', array('controller' => 'Ringi', 'action' => 'processed', 'processed'));
@@ -38,21 +42,15 @@
 	Router::connect('/upload_layout', array('controller' => 'Ringi', 'action' => 'upload_layout', 'upload_layout'));
 	Router::connect('/preview', array('controller' => 'Ringi', 'action' => 'preview', 'preview'));
 	Router::connect('/upload_confirmation', array('controller' => 'Ringi', 'action' => 'upload_confirmation', 'upload_confirmation'));
-	
-	
 	Router::connect('/index', array('controller' => 'Ringi', 'action' => 'index', 'index'));
-	Router::connect('/logout', array('controller' => 'Users', 'action' => 'logout', 'logout'));
-	Router::connect('/login/**', array('controller' => 'Users', 'action' => 'login', 'login'));
 	Router::connect('/apply', array('controller' => 'Ringi', 'action' => 'apply', 'apply'));
 	Router::connect('/confirm', array('controller' => 'Ringi', 'action' => 'confirm', 'confirm'));
 	Router::connect('/apply_check', array('controller' => 'Ringi', 'action' => 'apply_check', 'apply_check'));
 	Router::connect('/confirm_check', array('controller' => 'Ringi', 'action' => 'confirm_check', 'confirm_check'));
 	Router::connect('/pass_back_check', array('controller' => 'Ringi', 'action' => 'pass_back_check', 'pass_back_check'));
 	Router::connect('/reject', array('controller' => 'Ringi', 'action' => 'reject', 'reject'));
-/**
- * ...and connect the rest of 'Pages' controller's urls.
- */
-	//Router::connect('/Ringi/*', array('controller' => 'Ringi', 'action' => 'login', 'logout', 'apply','index'));
+	Router::connect('/application_details', array('controller' => 'Ringi', 'action' => 'application_details', 'application_details'));
+
 
 /**
  * Load all plugin routes. See the CakePlugin documentation on

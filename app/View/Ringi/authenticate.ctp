@@ -1,8 +1,7 @@
-<?php
+<?php 
 
 function authenticate($user, $password) {
 	include("credentials.ctp");
-
 	// Active Directory user group
 	$ldap_user_group = "WebUsers";
 
@@ -13,10 +12,12 @@ function authenticate($user, $password) {
 	$ldap_usr_dom = "";
 
 	// connect to active directory
-	$ldap = ldap_connect($ldap_host);
+	$ldap = ldap_connect($ldap_host) or die("Could not connect to LDAP server.");
 
 	// verify user and password
+
 	if($bind = @ldap_bind($ldap, $user . $ldap_usr_dom, $password)) {
+
 		// valid
 		// check presence in groups
 		$filter = "(sAMAccountName=" . $user . ")";
@@ -45,8 +46,10 @@ function authenticate($user, $password) {
 		}
 
 	} else {
+		echo "string";
 		// invalid name or password
 		return false;
 	}
 }
+
 ?>

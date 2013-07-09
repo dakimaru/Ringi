@@ -25,7 +25,7 @@
 				echo '<td>' . $auth['Attribute']['xxxxxauth2'] . '</td>';
 				echo '<td>' . $auth['Attribute']['xxxxxdate2'] . '</td>';
 				echo '<td>' . $auth['Attribute']['total_asset'] . '</td>';
-				echo '<td>' . '<a href="main_menu">Pending</a>' . '</td>';
+				echo '<td>' . '<a href="application_details">Pending</a>' . '</td>';
 				echo '</tr>';
 
 				array_push($pass, $auth['Attribute']['id']); 

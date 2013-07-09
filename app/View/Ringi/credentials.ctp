@@ -9,7 +9,7 @@ $ldappass     = '820Davis';
 $ldap_dn = "ou=SBSUsers,ou=Users,ou=MyBusiness,dc=enspirea,dc=local";
 */
 
-$ldap_host = "192.168.1.3";
+$ldap_host = "192.168.1.2";
 $ldapuser      = 'cn=Manager,dc=enspirea,dc=com';  
 $ldappass     = '820davis';
 

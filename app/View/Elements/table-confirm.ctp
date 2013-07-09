@@ -2,6 +2,7 @@
 <form method="post" action="confirm" name="confirm2"> 
 	<table class="table table-bordered table-hover">
 		<tr class="info">
+			<td></td>
 			<td>Project Name</td>
 			<td>Applicant Name</td>
 			<td>Application Date</td>
@@ -16,17 +17,17 @@
 			<?php $i++; ?>
 			<?php if($list_confirm[$i-1] == 0) continue; ?>
 
-			<?php if ($auth['Attribute']['xxxxxpassbackflag'] == FALSE && $auth['Attribute']['xxxxxrejectflag'] == FALSE &&$auth['Attribute']['xxxxxauth1'] != $username  ) {
+			<?php if ($auth['Attribute']['xxxxxpassbackflag'] == FALSE && $auth['Attribute']['xxxxxrejectflag'] == FALSE &&$auth['Attribute']['xxxxxapplicant'] != $username  ) {
 
 				echo '<tr>';
 				echo '<td rowspan="">' . $auth['Attribute']['id'] . '</td>';
 				echo '<td>' . $auth['Attribute']['xxxxxtitle'] . '</td>';
-				echo '<td>' . $auth['Attribute']['xxxxxauth1'] . '</td>';
+				echo '<td>' . $auth['Attribute']['xxxxxapplicant'] . '</td>';
+				echo '<td>' . $auth['Attribute']['xxxxxapplication_date'] . '</td>';
 				echo '<td>' . $auth['Attribute']['xxxxxauth2'] . '</td>';
-				echo '<td>' . $auth['Attribute']['xxxxxauth3'] . '</td>';
-				echo '<td>' . $auth['Attribute']['xxxxxauth4'] . '</td>';
-				echo '<td>' . $auth['Attribute']['xxxxxauth5'] . '</td>';
-				echo '<td>' . $auth['Attribute']['xxxxxauth6'] . '</td>';
+				echo '<td>' . $auth['Attribute']['xxxxxdate2'] . '</td>';
+				echo '<td>' . $auth['Attribute']['total_asset'] . '</td>';
+				echo '<td>' . '<a href="application_details">Details</a>' . '</td>';
 				echo '</tr>';
 
 				array_push($list, $auth['Attribute']['id']);

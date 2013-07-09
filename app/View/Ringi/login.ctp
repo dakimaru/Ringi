@@ -16,7 +16,7 @@ if(isset($_POST['userLogin'])){
     if(authenticate($_POST['userLogin'],$_POST['userPassword']))
     {
         // authentication passed
-        header("Location: main_menu");
+        header("Location: overview.ctp");
         die();
     } else {
         // authentication failed

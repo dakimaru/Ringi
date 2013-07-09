@@ -613,21 +613,10 @@ class RingiController extends AppController {
 		$titlequery = mysql_db_query($database, "SELECT xxxxxtitle FROM attributes WHERE id=$newentryid");
 		$title = mysql_fetch_assoc($titlequery);
 		$attachmentid = $this->data['idlist2'];
+		$project_name = $title['xxxxxtitle'];
+		
 		$formstart = '<form method="post" action="./confirm_check" name="confirm_check1">';
 		$formend = '</form>';
-		$doc = 	'<div style="padding-left: 1em;"><h1 class="text-center">' . "$title[xxxxxtitle]" . "</h1><hr>"
-				. "$formstart $doc" . 
-				'<div class="text-center">
-					<hr>
-					<br>
-					<textarea class="span9" style="resize: none; font-size:20px;" 
-					placeholder = "Enter comment here" rows="8" name="xxxxxcomment"></textarea>
-				</div>'
-				. '<input type="hidden" name="idlist2" value='.$attachmentid.'>'
-				. '<div class="text-center">
-					<button class="btn btn-success">Confirm</button>
-				</div>'
-				."$formend" . '</div>';
 
 		//Code to input the database info.
 		//if input:...is found in $doc, split it at ":" and get the column. Then do a query that gets the
@@ -639,6 +628,8 @@ class RingiController extends AppController {
 			$doc = preg_replace('/input:(.+):.+/', $fix[$temp[1]], $doc, 1);
 		}
 		
+		$this->set('project_name',$project_name);
+		$this->set('attachmentid',$attachmentid);
 		$this->set('doc',$doc);
 
     }
@@ -725,4 +716,7 @@ class RingiController extends AppController {
         $this->redirect(array('action' => 'index'));
     }
 
+	public function application_details() {
+		
+	}
 }

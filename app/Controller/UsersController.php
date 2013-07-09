@@ -24,6 +24,8 @@ class UsersController extends AppController {
         }
     }
 
+    public function secure_login() {   }
+
     public function logout() {
         if ($this->request->is('post')) {
             if ($this->Auth->logout()) {

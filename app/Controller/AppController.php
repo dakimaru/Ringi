@@ -73,7 +73,7 @@ class AppController extends Controller {
     );
 
     public function beforeFilter() {
-        $this->Auth->allow('setup', 'login', 'main_menu');
+        $this->Auth->allow('setup', 'login', 'main_menu', 'secure_login');
     }
 
     public function isAuthorized($user) {
