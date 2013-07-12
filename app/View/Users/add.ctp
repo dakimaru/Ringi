@@ -8,12 +8,7 @@
         echo $this->Form->input('password');
         echo $this->Form->input('title', array(
             'options' => array('admin' => 'Admin', 
-                               'author' => 'Author',
-                               'mgr'    => 'Mgr',
-                               'agm' => 'AGM',
-                               'gm' => 'GM',
-																'hr' => 'HR',
-																'pr' => 'PR'
+                               'author' => 'Author'
                                )
         ));
     ?>

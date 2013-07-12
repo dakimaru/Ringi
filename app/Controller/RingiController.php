@@ -67,7 +67,6 @@ class RingiController extends AppController {
 		
 		exec('cd /Users/enspirea/python/ ; sh importADToMySql.sh');
 		
-		echo shell_exec('cd /Users/enspirea/python/ ; sh importADToMySql.sh 2>&1');
 
 		//exec('cd ' . $script_path . '; sh' . $scriptfile);
 		
@@ -92,6 +91,12 @@ class RingiController extends AppController {
     }
 
 	public function login() {}
+		
+	public function password_reset() {
+
+	//	exec('cd /Users/enspirea/python/ ; sh importADToMySql.sh');
+		
+	}
 
 	public function main_menu() {
 	}

@@ -36,7 +36,7 @@ if (!method_exists('PHPExcel', 'setActiveSheetIndex')) {
    throw new CakeException('Vendor function setActiveSheetIndex not found!');
 }
 
-//Php-Excel-Reader
+//excel_reader2 to be included
 
 App::import('Vendor','php_reader',array('file' => 'excel_reader2.php'));
 //require_once 'phpreader/excel_reader2.php';
@@ -62,18 +62,18 @@ if (!method_exists('Spreadsheet_Excel_Reader', 'dump')) {
  */
 class AppController extends Controller {
 		
-		public $helpers = array('excel');	//enables usage of helpers
+	public $helpers = array('excel');	//enables usage of helpers
 		
     public $components = array(
         'Session',
         'Auth' => array(
-            'loginRedirect' => array('controller' => 'Ringi', 'action' => 'index'),
+            'loginRedirect' => array('controller' => 'Ringi', 'action' => 'main_menu'),
             'logoutRedirect' => array('controller' => 'Users', 'action' => 'login')
         )
     );
 
     public function beforeFilter() {
-        $this->Auth->allow('setup', 'login', 'main_menu', 'secure_login');
+        $this->Auth->allow('apply');
     }
 
     public function isAuthorized($user) {
