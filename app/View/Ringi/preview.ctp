@@ -9,6 +9,8 @@ while (preg_match('/input:.+:.+/', $doc, $matches) == 1) {
 	 $doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none;" id='. $temp[1] .' name='. $temp[1] .'></textarea>' , $doc, 1);
 	
 }
+echo "Changes: ";
+print_r($diff);
 
 print_r("$doc");
 

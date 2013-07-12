@@ -5,20 +5,27 @@ App::uses('Sanitize', 'Utility');
 
 class RingiController extends AppController {	
 	
-	public function setup() {
-		$this->autoLayout = false;
-		
+	public function openSQLconnection() {
 		$host = 'localhost';
 		$username = 'root';
 		$password = '';
 		$database = 'ringidata';
+		$someTable = 'attributes';
+
+		// Connect to MySQL
+		return mysql_connect($host, $username, $password);
+	}
+	
+	public function setup() {
+		$this->autoLayout = false;
+		
+		$database = 'ringidata';		
 		$table1 = 'users';
 		$table2 = 'attributes';
 		$script_path="/Users/enspirea/python/";
 		$scriptfile="importADToMySql.sh";
 
-		// Connect to MySQL
-		$link = mysql_connect($host, $username, $password);
+		$link = $this->openSQLconnection();
 
 		if (!$link) {
 		    die('Could not connect: ' . mysql_error());
@@ -90,8 +97,6 @@ class RingiController extends AppController {
         parent::beforeFilter();
     }
 
-	public function login() {}
-		
 	public function password_reset() {
 
 	//	exec('cd /Users/enspirea/python/ ; sh importADToMySql.sh');
@@ -104,16 +109,7 @@ class RingiController extends AppController {
 	public function upload_layout() {}
 	
 	public function preview() {
-		//this part gets the uploaded file, and creates file upload."ext" in /uploads/
-		if ($_POST["submit"] == "Upload") { //**** User Clicked the Upload Button
-			$info = pathinfo($_FILES['file']['name']);
-			$this->set('info',$info);
-			$ext = $info['extension']; // get the extension of the file
-			$newname = "upload.".$ext;
-			if (move_uploaded_file( $_FILES["file"]["tmp_name"], $_SERVER['DOCUMENT_ROOT']."/uploads/".$newname)) {
-			}
-		}
-		
+
 		//The following piece gets the most recently added file in directory /uploads/
 		$path = $_SERVER['DOCUMENT_ROOT']."/uploads/";
 		$d = dir($path); 
@@ -121,51 +117,61 @@ class RingiController extends AppController {
 		$latest_ctime = 0;
 		$latest_filename = '';    
 
-		while (false !== ($entry = $d->read())) {
-		  $filepath = "{$path}/{$entry}";
-		  // could do also other checks than just checking whether the entry is a file
-		  if (is_file($filepath) && filectime($filepath) > $latest_ctime) {
-		    $latest_ctime = filectime($filepath);
-		    $latest_filename = $entry;
-		  }
-		}
-
-		if (preg_match("/.+xls/",$latest_filename)) { //if xls... extention file exists
-			$this->tempXLStoPHP($_SERVER['DOCUMENT_ROOT']."/uploads/".$latest_filename);
+		//this part gets the uploaded file, and creates file upload."ext" in /uploads/
+		if ($_POST["submit"] == "Upload") { //**** User Clicked the Upload Button
+			$info = pathinfo($_FILES['file']['name']);
+			$ext = $info['extension']; // get the extension of the file
+			if (preg_match("/xls/",$ext)) {
+				//saving upload.xls
+				move_uploaded_file( $_FILES["file"]["tmp_name"], $_SERVER['DOCUMENT_ROOT']."/uploads/"."upload.".$ext);
+				
+				while ($entry = $d->read()) {
+					
+					if (preg_match("/upload.xls/",$entry)) {	// find the file that is called upload.xls
+						$uploadxls=$entry;
+						$uploadfilepath = "{$path}{$entry}";	//not in use but may be handy to have
+					}
+					if (preg_match("/active.xls/",$entry)) {	// find the file that is called active.xls
+						$activexls=$entry;
+						$activefilepath = "{$path}{$entry}";	//not in use but may be handy to have
+					}
+				}
+				
+				if (isset($activexls)) {
+					//Returns the column names of OLD sheet. Also saves upload.php. This file will later be overwritten.
+					$oldColumns = $this->tempXLStoPHP($_SERVER['DOCUMENT_ROOT']."/uploads/".$activexls);
+					//print_r ($oldColumns);
+				}
+				
+				//Returns the column names of NEW sheet. Here we overwrite upload.xls and make it up to date!
+				$latestColumns = $this->tempXLStoPHP($_SERVER['DOCUMENT_ROOT']."/uploads/".$uploadxls);
+				//print_r ($latestColumns);
+								
+				$diff=array_diff($oldColumns, $latestColumns);
+				$this->set('diff',$diff);
+				if ($diff) {
+					$this->Session->setFlash(__("There are some changed columns dude! You sure?"));
+				}
+			}
+			else {
+				$this->Session->setFlash(__('Invalid file type! Please upload a file with the correct extension.'));
+				$this->redirect(array('controller' => 'Ringi', 'action' => 'upload_layout'));				
+			}
 		}
 	}
 
 	public function tempXLStoPHP($excelfile) {
-		$host = 'localhost';
-		$username = 'root';
-		$password = '';
-		$database = 'ringidata';
-		$someTable = 'attributes';
+		
+		$link = $this->openSQLconnection();
 
-		// Connect to MySQL
-		$link = mysql_connect($host, $username, $password);
-
-		$objPHPExcel = PHPExcel_IOFactory::load($excelfile);
+		$objPHPExcel = $this->XLmodify($excelfile);
 
 		$highestRow = $objPHPExcel->getActiveSheet()->getHighestRow();
 		$highestColumn = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
-
-		$objPHPExcel->getActiveSheet()->getStyle("A1:$highestColumn$highestRow")->getAlignment()
-		->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-
-		//showing some possible processes that can be made
-		for ($i=1; $i < $highestRow; $i++) { 
-			for ($j='A'; $j < $highestColumn; $j++) {
-				if ($objPHPExcel->getActiveSheet()->getCell("$j$i") == 'input: ' 
-					or $objPHPExcel->getActiveSheet()->getCell("$j$i") == ' input') {
-					$objPHPExcel->getActiveSheet()->SetCellValue("$j$i", 'input:');
-				}
-			}		
-		}
-
+		
 		$columnNames = array();
 		$columnTypes = array();
-
+		
 		for ($i=1; $i < $highestRow; $i++) { 
 			for ($j='A'; $j <= $highestColumn; $j++) {
 				$cellVal = $objPHPExcel->getActiveSheet()->getCell("$j$i");	//getting as a excel with all the formatting and colors
@@ -177,15 +183,43 @@ class RingiController extends AppController {
 
 					array_push($columnNames, $colName);
 					array_push($columnTypes, $colType);
+
 				}
 			}		
-		}
-
+		}	
+		
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'HTML');
 
 		$objWriter->setUseInlineCSS(true);
 
 		$objWriter->save($_SERVER['DOCUMENT_ROOT']."/uploads/"."upload.php");
+		
+		return $columnNames;
+	}
+	
+	public function XLmodify($XLfile) {
+
+		$link = $this->openSQLconnection();
+
+		$objPHPExcel = PHPExcel_IOFactory::load($XLfile);
+
+		$highestRow = $objPHPExcel->getActiveSheet()->getHighestRow();
+		$highestColumn = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
+
+		$objPHPExcel->getActiveSheet()->getStyle("A1:$highestColumn$highestRow")->getAlignment()
+		->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
+
+		//showing some possible processes that can be made
+		for ($i=1; $i < $highestRow; $i++) { 
+			for ($j='A'; $j < $highestColumn; $j++) {
+				//eliminating spaces before and after 'input:'
+				if ($objPHPExcel->getActiveSheet()->getCell("$j$i") == 'input: ' 
+					or $objPHPExcel->getActiveSheet()->getCell("$j$i") == ' input') { 
+					$objPHPExcel->getActiveSheet()->SetCellValue("$j$i", 'input:');
+				}
+			}		
+		}
+		return $objPHPExcel;
 	}
 	
 	public function upload_confirmation() {
@@ -197,16 +231,11 @@ class RingiController extends AppController {
 	}
 	
 	public function addNewColumns(){
-
-			//PHPExcel conversion from Excel to html, prepared for output
-		$host = 'localhost';
-		$username = 'root';
-		$password = '';
+		
 		$database = 'ringidata';
 		$someTable = 'attributes';
-
-		// Connect to MySQL
-		$link = mysql_connect($host, $username, $password);
+		
+		$link = $this->openSQLconnection();
 		
 		//The following piece gets the most recently added file in directory /uploads/
 		$path = $_SERVER['DOCUMENT_ROOT']."/uploads/";
@@ -215,35 +244,20 @@ class RingiController extends AppController {
 		$latest_ctime = 0;
 		$latest_filename = '';    
 
-		while (false !== ($entry = $d->read())) {
-		  $filepath = "{$path}/{$entry}";
-		  // could do also other checks than just checking whether the entry is a file
-		  if (is_file($filepath) && filectime($filepath) > $latest_ctime) {
-			if (preg_match("/.+xls/",$entry)){
-		    $latest_ctime = filectime($filepath);
-		    $latest_filename = $entry;
+		while ($entry = $d->read()) {
+			if (preg_match("/upload.xls/",$entry)) {	// find the file that is called upload.xls
+				$uploadxls=$entry;
+				$uploadfilepath = "{$path}{$entry}";	//not in use but may be handy to have
 			}
-		  }
 		}
 		
-		$objPHPExcel = PHPExcel_IOFactory::load($_SERVER['DOCUMENT_ROOT']."/uploads/".$latest_filename);
-		
+		$objPHPExcel = $this->XLmodify($uploadfilepath);
+
 		$highestRow = $objPHPExcel->getActiveSheet()->getHighestRow();
 		$highestColumn = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
-
-		$objPHPExcel->getActiveSheet()->getStyle("A1:$highestColumn$highestRow")->getAlignment()
-		->setVertical(PHPExcel_Style_Alignment::VERTICAL_CENTER);
-
-		//showing some possible processes that can be made
-		for ($i=1; $i < $highestRow; $i++) { 
-			for ($j='A'; $j < $highestColumn; $j++) {
-				if ($objPHPExcel->getActiveSheet()->getCell("$j$i") == 'input: ' 
-					or $objPHPExcel->getActiveSheet()->getCell("$j$i") == ' input') {
-					$objPHPExcel->getActiveSheet()->SetCellValue("$j$i", 'input:');
-				}
-			}		
-		}
-
+		
+		//$objPHPExcel = PHPExcel_IOFactory::load($_SERVER['DOCUMENT_ROOT']."/uploads/".$latest_filename);
+		
 		$columnNames = array();
 		$columnTypes = array();
 		
@@ -269,8 +283,8 @@ class RingiController extends AppController {
 			if ($columnTypes[$i]=="string") {
 				$columnTypes[$i]= "varchar(255)";
 			}
-			$order1 = "ALTER TABLE $someTable ADD $columnNames[$i] $columnTypes[$i]";
-			mysql_db_query($database,$order1);
+			$query = "ALTER TABLE $someTable ADD $columnNames[$i] $columnTypes[$i]";
+			mysql_db_query($database,$query);
 		}
 
 		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'HTML');
@@ -282,14 +296,10 @@ class RingiController extends AppController {
 
 	public function createRingiTable(){
 		
-		$host = 'localhost';
-		$username = 'root';
-		$password = '';
 		$database = 'ringidata';
 		$someTable = 'attributes';
 		
-		// Connect to MySQL
-		$link = mysql_connect($host, $username, $password);
+		$link = $this->openSQLconnection();
 
 		// Make RingiData the current database
 		$db_selected = mysql_select_db($database, $link);
@@ -341,11 +351,19 @@ class RingiController extends AppController {
 	
 	public function from_upload_layout(){
 		
-		$name_before = $_SERVER['DOCUMENT_ROOT']."/uploads/upload.php";
-		$name_after = $_SERVER['DOCUMENT_ROOT']."/uploads/active.php";
+		
+		$name_before_xls = $_SERVER['DOCUMENT_ROOT']."/uploads/upload.xls";
+		$name_after_xls = $_SERVER['DOCUMENT_ROOT']."/uploads/active.xls";
+		
+		$name_before_php = $_SERVER['DOCUMENT_ROOT']."/uploads/upload.php";
+		$name_after_php = $_SERVER['DOCUMENT_ROOT']."/uploads/active.php";
+		
+		if ($_POST["submit"] == "confirm" && file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/upload.xls")) { //**** User Clicked the Confirm Button
+			rename($name_before_xls, $name_after_xls);		
+		}
 		
 		if ($_POST["submit"] == "confirm" && file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/upload.php")) { //**** User Clicked the Confirm Button
-			rename($name_before, $name_after);
+			rename($name_before_php, $name_after_php);			
 		}
 	}
 	
