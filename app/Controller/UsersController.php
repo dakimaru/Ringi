@@ -28,7 +28,6 @@ class UsersController extends AppController {
 	public function login() {
 		include("authenticate.ctp");
 		if ($this->request->is('post')) {
-
 			$usr = $this->data['User']['username'];
 			$pass = $this->data['User']['password'];
 
@@ -37,7 +36,7 @@ class UsersController extends AppController {
 			if(authenticate($usr,$pass))
 			{
 				// authentication passed
-
+				
 				$host = 'localhost';
 				$username = 'root';
 				$password = '';
@@ -63,13 +62,15 @@ class UsersController extends AppController {
 					if ($this->Auth->login()) {
 						// save username entered in the login form
 						$username = $this->Auth->user('username');
+						
 						return $this->redirect($this->Auth->redirectUrl());
 						//return $this->redirect(array('controller' => 'Ringi', 'action' => 'overview'));
-					} 
-					else {
-						$this->Session->setFlash(__('Invalid username or password, try again'));
 					}
 				}
+			}	
+			else {
+				
+				$this->Session->setFlash(__('Invalid username or password, try again'));
 			}
 		}
 	}

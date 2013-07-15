@@ -22,7 +22,7 @@ class RingiController extends AppController {
 		$database = 'ringidata';		
 		$table1 = 'users';
 		$table2 = 'attributes';
-		$script_path="/Users/enspirea/python/";
+		$script_path="../Vendor/";
 		$scriptfile="importADToMySql.sh";
 
 		$link = $this->openSQLconnection();
@@ -71,9 +71,8 @@ class RingiController extends AppController {
 			echo '<h3 align="center">Datatable '.$table1.' created successfully!<h/3>';
 			echo '<h2 align="center">Setup has been completed. Thank you!</h2><br>';
 		}
-		
-		exec('cd /Users/enspirea/python/ ; sh importADToMySql.sh');
-		
+
+		$bar = exec('cd ../Vendor/ ; sh importADToMySql.sh');
 
 		//exec('cd ' . $script_path . '; sh' . $scriptfile);
 		

@@ -51,7 +51,7 @@
 									<button class="btn btn-danger">Logout</button>');
 							}
 					else {
-						echo('<form method="get" action="login">
+						echo('<form method="get" action="/Ringi/users/login">
 									<button class="btn btn-danger">Login</button>');						
 					}
 							?>
