@@ -1,4 +1,4 @@
-<h2 align="center">Admin Pannel</h2><br>
+<h2 align="center">Admin Panel</h2><br>
 <div class="row-fluid">
 	<div class="span1 offset1">
 		<p><a href="/Ringi/setup" class="btn btn-primary btn-large" style="width:100%">Set Up</a></p><br>

@@ -12,6 +12,7 @@ class UsersController extends AppController {
 
 	}
 
+	//not used anymore
 	public function secure_login() {
 		if ($this->request->is('post')) {
 			if ($this->Auth->login()) {

@@ -98,7 +98,23 @@ class RingiController extends AppController {
 
 	public function password_reset() {
 
-	//	exec('cd /Users/enspirea/python/ ; sh importADToMySql.sh');
+	if (isset($_POST["newpass"])) {
+		if ($_POST["newpass"]!=="" and $_POST["confirmpass"]!=="") {
+			if ($_POST["newpass"]==$_POST["confirmpass"]) {
+				$userDN = $this->Auth->user('DN');
+				$newpassword=$_POST["newpass"];
+				echo $newpassword;
+				print_r($userDN);
+				exec('cd ../Vendor/ ; sh resetPassword.sh "' .$userDN.'" '.$newpassword);
+			}
+			else {
+				$this->Session->setFlash(__("Your passwords don't match!"));
+			}
+		}
+		else {
+			$this->Session->setFlash(__('Invalid entries'));
+		}
+	}
 		
 	}
 
@@ -146,11 +162,12 @@ class RingiController extends AppController {
 				$latestColumns = $this->tempXLStoPHP($_SERVER['DOCUMENT_ROOT']."/uploads/".$uploadxls);
 				//print_r ($latestColumns);
 								
-				$diff=array_diff($oldColumns, $latestColumns);
-				$this->set('diff',$diff);
-				if ($diff) {
-					$this->Session->setFlash(__("There are some changed columns dude! You sure?"));
-				}
+				$diff1=array_diff($oldColumns, $latestColumns);
+				$diff2=array_diff($latestColumns, $oldColumns);
+				
+				$this->set('diff1',$diff1);
+				$this->set('diff2',$diff2);
+				
 			}
 			else {
 				$this->Session->setFlash(__('Invalid file type! Please upload a file with the correct extension.'));
@@ -159,6 +176,7 @@ class RingiController extends AppController {
 		}
 	}
 
+	
 	public function tempXLStoPHP($excelfile) {
 		
 		$link = $this->openSQLconnection();
@@ -437,9 +455,11 @@ class RingiController extends AppController {
 		}
 
 
-		for ($i=23; $i < $attrnumbers; $i++) {
+		for ($i=1; $i < $attrnumbers; $i++) {
 			$column = $columnNames[$i];
+			if (isset($this->data[$column])) {
 				$Attribute['Attribute'][$column] = $this->data[$column];
+			}
 		}
 		
 		$Attribute['Attribute']['xxxxxauth1'] = $this->Auth->user('username');// should be deleted
@@ -453,12 +473,12 @@ class RingiController extends AppController {
 		//print_r($this->Attribute->getLastInsertID());
 		
 		
-		$latestid = mysql_query("SELECT MAX(id) FROM attributes");
-		$querystring = mysql_fetch_assoc($latestid);
-		$number = $querystring['MAX(id)'];
-		$updatedtime = mysql_query("SELECT updated_at FROM attributes WHERE id="."$number");
-		$updated_at = mysql_fetch_assoc($updatedtime);
-		$updated_final = $updated_at['updated_at'];
+		//$latestid = mysql_query("SELECT MAX(id) FROM attributes");
+		//$querystring = mysql_fetch_assoc($latestid);
+		//$number = $querystring['MAX(id)'];
+		//$updatedtime = mysql_query("SELECT updated_at FROM attributes WHERE id="."$number");
+		//$updated_at = mysql_fetch_assoc($updatedtime);
+		//$updated_final = $updated_at['updated_at'];
 		
 		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 		//if (mysql_query("SELECT created_at FROM attributes WHERE id=$latestid") == NULL) {
