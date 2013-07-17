@@ -7,9 +7,14 @@ if (isset($success2)) {
 	echo $success2;
 }
 
+if (isset($success3)) {
+	echo $success3;
+}
+
+
  ?>
 
 
 <form action="/Ringi/users/add" method="get" style="text-align: center;">
-	<button type="submit" style="font-size: 20px">Next</button>
+	<button class="btn-example" type="submit" style="font-size: 20px">Next</button>
 </form>

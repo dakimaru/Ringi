@@ -16,12 +16,11 @@ class RingiController extends AppController {
 	
 	public function setup() {
 		
-		$database = 'ringidata';		
-		$table1 = 'users';
+		$database = 'ringidata';
 		$table2 = 'attributes';
 		$script_path="../Vendor/";
 		$scriptfile="importADToMySql.sh";
-
+		$table1 = "users";
 		$link = $this->openSQLconnection();
 
 		if (!$link) {
@@ -36,7 +35,7 @@ class RingiController extends AppController {
 			$sql = "CREATE DATABASE $database";
 
 			if (mysql_query($sql, $link)) {
-				echo '<br><h3 align="center">Database '.$database. ' created successfully!</h3>';
+				$success1 = '<br><h4 align="center">Database '.$database. ' created successfully!</h3>';
 			} 
 			else {
 				echo '<br>Error creating database: ' . mysql_error();
@@ -47,15 +46,26 @@ class RingiController extends AppController {
 
 		$sql = "CREATE TABLE IF NOT EXISTS $table1 (
 			`id` int unsigned NOT NULL auto_increment PRIMARY KEY,
+			`usertype` boolean,
+			`name` varchar(255),
 			`username` varchar(255),
 			`password` varchar(255),
+			`mail` varchar(255),
+			`department` varchar(255),
+			`title` varchar(255),
 			`DN` varchar(255),
 			`manager` varchar(255),
-			`name` varchar(255),
-			`title` varchar(255),
-			`department` varchar(255),
-			`mail` varchar(255),
-			`active` int,
+			`companyEmail` varchar(255),
+			`mobileEmail` varchar(255),
+			`creatorid` varchar(255),
+			`agentCD` varchar(255),
+			`agentStrDay` date,
+			`agentEndDay` date,
+			`companyTel` int,
+			`extention` int,
+			`cellphone` int,
+			`activeflag` boolean,
+			`deleteReason` text,
 			
 			`created_at` timestamp,
 			`updated_at` timestamp
@@ -65,12 +75,13 @@ class RingiController extends AppController {
 			echo '<br>Error creating table: ' . mysql_error();
 		}
 		else {
-			$success1= '<h3 align="center">Datatable '.$table1.' created successfully!<h/3>';
-			$success2= '<h2 align="center">Setup has been completed. Thank you!</h2><br>';
+			$success2 = '<h4 align="center">Datatable '.$table1.' created successfully!<h/3>';
+			$success3 = '<h2 align="center">Setup has been completed. Thank you!</h2><br>';
 		}
-		if (isset($success1)) {
+		if (isset($success1) && isset($success2) && isset($success3)) {
 			$this->set('success1',$success1);
 			$this->set('success2',$success2);
+			$this->set('success3',$success3);
 		}
 		
 		$bar = exec('cd ../Vendor/ ; sh importADToMySql.sh');
@@ -103,8 +114,6 @@ class RingiController extends AppController {
 				if ($_POST["newpass"]==$_POST["confirmpass"]) {
 					$userDN = $this->Auth->user('DN');
 					$newpassword=$_POST["newpass"];
-					echo $newpassword;
-					print_r($userDN);
 					exec('cd ../Vendor/ ; sh resetPassword.sh "' .$userDN.'" '.$newpassword);
 				}
 				else {
