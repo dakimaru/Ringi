@@ -9,15 +9,12 @@ class RingiController extends AppController {
 		$host = 'localhost';
 		$username = 'root';
 		$password = '';
-		$database = 'ringidata';
-		$someTable = 'attributes';
 
 		// Connect to MySQL
 		return mysql_connect($host, $username, $password);
 	}
 	
 	public function setup() {
-		$this->autoLayout = false;
 		
 		$database = 'ringidata';		
 		$table1 = 'users';
@@ -68,10 +65,14 @@ class RingiController extends AppController {
 			echo '<br>Error creating table: ' . mysql_error();
 		}
 		else {
-			echo '<h3 align="center">Datatable '.$table1.' created successfully!<h/3>';
-			echo '<h2 align="center">Setup has been completed. Thank you!</h2><br>';
+			$success1= '<h3 align="center">Datatable '.$table1.' created successfully!<h/3>';
+			$success2= '<h2 align="center">Setup has been completed. Thank you!</h2><br>';
 		}
-
+		if (isset($success1)) {
+			$this->set('success1',$success1);
+			$this->set('success2',$success2);
+		}
+		
 		$bar = exec('cd ../Vendor/ ; sh importADToMySql.sh');
 
 		//exec('cd ' . $script_path . '; sh' . $scriptfile);
@@ -96,25 +97,73 @@ class RingiController extends AppController {
         parent::beforeFilter();
     }
 
-	public function password_reset() {
-
-	if (isset($_POST["newpass"])) {
-		if ($_POST["newpass"]!=="" and $_POST["confirmpass"]!=="") {
-			if ($_POST["newpass"]==$_POST["confirmpass"]) {
-				$userDN = $this->Auth->user('DN');
-				$newpassword=$_POST["newpass"];
-				echo $newpassword;
-				print_r($userDN);
-				exec('cd ../Vendor/ ; sh resetPassword.sh "' .$userDN.'" '.$newpassword);
+	public function password_change() {
+		if (isset($_POST["newpass"])) {
+			if ($_POST["newpass"]!=="" and $_POST["confirmpass"]!=="") {
+				if ($_POST["newpass"]==$_POST["confirmpass"]) {
+					$userDN = $this->Auth->user('DN');
+					$newpassword=$_POST["newpass"];
+					echo $newpassword;
+					print_r($userDN);
+					exec('cd ../Vendor/ ; sh resetPassword.sh "' .$userDN.'" '.$newpassword);
+				}
+				else {
+					$this->Session->setFlash(__("Your passwords don't match!"));
+				}
 			}
 			else {
-				$this->Session->setFlash(__("Your passwords don't match!"));
+				$this->Session->setFlash(__('Invalid entries'));
 			}
 		}
-		else {
-			$this->Session->setFlash(__('Invalid entries'));
-		}
 	}
+
+	public function password_reset() {
+	
+		$database = 'ringidata';	
+		$link = $this->openSQLconnection();
+		$db_selected = mysql_select_db($database, $link);
+		
+		if ($this->request->is('post')) {
+			//$username = $POST[];
+			//$newpass = $POST[];
+			
+			
+			if ($_POST["newpass"]!=="" && $_POST["selection"]!=="") {
+				$user = $_POST["selection"];
+				$sql="SELECT DN FROM users WHERE username='".$user."'";
+				$query = mysql_query($sql, $link);
+				$userDN = mysql_fetch_assoc($query);
+				
+				$newpassword=$_POST["newpass"];
+				exec('cd ../Vendor/ ; sh resetPassword.sh "' .$userDN['DN'].'" '.$newpassword);
+				
+				$this->Session->setFlash(__("The password of ".$_POST["selection"]." was updated successfully"));
+				$this->redirect(array('controller' => 'Ringi', 'action' => 'main_menu'));	
+				
+			}
+			else {
+				$this->Session->setFlash(__('Please select an appropriate user and password!'));
+			}
+			
+			
+			
+		}
+		
+
+		$sql = "SELECT username FROM users";
+		$query = mysql_query($sql, $link);
+		
+		$allusers = array();
+		$num = mysql_num_rows($query);
+		for($j=0; $j<$num; $j++){
+			$row = mysql_fetch_assoc($query);
+			$allusers[$j] = $row['username'];
+			//print_r($row);
+		}
+
+		//print_r($allusers);
+		
+		$this->set('allusers',$allusers);
 		
 	}
 
@@ -126,7 +175,7 @@ class RingiController extends AppController {
 	public function preview() {
 
 		//The following piece gets the most recently added file in directory /uploads/
-		$path = $_SERVER['DOCUMENT_ROOT']."/uploads/";
+		$path = $_SERVER['DOCUMENT_ROOT']."/Ringi/uploads/";
 		$d = dir($path); 
 
 		$latest_ctime = 0;
@@ -138,7 +187,7 @@ class RingiController extends AppController {
 			$ext = $info['extension']; // get the extension of the file
 			if (preg_match("/xls/",$ext)) {
 				//saving upload.xls
-				move_uploaded_file( $_FILES["file"]["tmp_name"], $_SERVER['DOCUMENT_ROOT']."/uploads/"."upload.".$ext);
+				move_uploaded_file( $_FILES["file"]["tmp_name"], $path."upload.".$ext);
 				
 				while ($entry = $d->read()) {
 					
@@ -154,12 +203,12 @@ class RingiController extends AppController {
 				
 				if (isset($activexls)) {
 					//Returns the column names of OLD sheet. Also saves upload.php. This file will later be overwritten.
-					$oldColumns = $this->tempXLStoPHP($_SERVER['DOCUMENT_ROOT']."/uploads/".$activexls);
+					$oldColumns = $this->tempXLStoPHP($path.$activexls);
 					//print_r ($oldColumns);
 				}
 				
 				//Returns the column names of NEW sheet. Here we overwrite upload.xls and make it up to date!
-				$latestColumns = $this->tempXLStoPHP($_SERVER['DOCUMENT_ROOT']."/uploads/".$uploadxls);
+				$latestColumns = $this->tempXLStoPHP($path.$uploadxls);
 				//print_r ($latestColumns);
 								
 				$diff1=array_diff($oldColumns, $latestColumns);
@@ -178,6 +227,8 @@ class RingiController extends AppController {
 
 	
 	public function tempXLStoPHP($excelfile) {
+		
+		$path = $_SERVER['DOCUMENT_ROOT']."/Ringi/uploads/";
 		
 		$link = $this->openSQLconnection();
 
@@ -209,7 +260,7 @@ class RingiController extends AppController {
 
 		$objWriter->setUseInlineCSS(true);
 
-		$objWriter->save($_SERVER['DOCUMENT_ROOT']."/uploads/"."upload.php");
+		$objWriter->save($path."upload.php");
 		
 		return $columnNames;
 	}
@@ -255,7 +306,7 @@ class RingiController extends AppController {
 		$link = $this->openSQLconnection();
 		
 		//The following piece gets the most recently added file in directory /uploads/
-		$path = $_SERVER['DOCUMENT_ROOT']."/uploads/";
+		$path = $_SERVER['DOCUMENT_ROOT']."/Ringi/uploads/";
 		$d = dir($path); 
 
 		$latest_ctime = 0;
@@ -272,8 +323,6 @@ class RingiController extends AppController {
 
 		$highestRow = $objPHPExcel->getActiveSheet()->getHighestRow();
 		$highestColumn = $objPHPExcel->setActiveSheetIndex(0)->getHighestColumn();
-		
-		//$objPHPExcel = PHPExcel_IOFactory::load($_SERVER['DOCUMENT_ROOT']."/uploads/".$latest_filename);
 		
 		$columnNames = array();
 		$columnTypes = array();
@@ -308,7 +357,7 @@ class RingiController extends AppController {
 
 		$objWriter->setUseInlineCSS(true);
 
-		$objWriter->save($_SERVER['DOCUMENT_ROOT']."/uploads/"."upload.php");
+		$objWriter->save($path."upload.php");
 	}
 
 	public function createRingiTable(){
@@ -368,30 +417,32 @@ class RingiController extends AppController {
 	
 	public function from_upload_layout(){
 		
+		$path = $_SERVER['DOCUMENT_ROOT']."/Ringi/uploads/";
 		
-		$name_before_xls = $_SERVER['DOCUMENT_ROOT']."/uploads/upload.xls";
-		$name_after_xls = $_SERVER['DOCUMENT_ROOT']."/uploads/active.xls";
+		$name_before_xls = $path."upload.xls";
+		$name_after_xls = $path."active.xls";
 		
-		$name_before_php = $_SERVER['DOCUMENT_ROOT']."/uploads/upload.php";
-		$name_after_php = $_SERVER['DOCUMENT_ROOT']."/uploads/active.php";
+		$name_before_php = $path."upload.php";
+		$name_after_php = $path."active.php";
 		
-		if ($_POST["submit"] == "confirm" && file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/upload.xls")) { //**** User Clicked the Confirm Button
+		if ($_POST["submit"] == "confirm" && file_exists($path."upload.xls")) { //**** User Clicked the Confirm Button
 			rename($name_before_xls, $name_after_xls);		
 		}
 		
-		if ($_POST["submit"] == "confirm" && file_exists($_SERVER['DOCUMENT_ROOT']."/uploads/upload.php")) { //**** User Clicked the Confirm Button
+		if ($_POST["submit"] == "confirm" && file_exists($path."upload.php")) { //**** User Clicked the Confirm Button
 			rename($name_before_php, $name_after_php);			
 		}
 	}
 	
 	public function apply () {
-	
 
+		$path = $_SERVER['DOCUMENT_ROOT']."/Ringi/uploads/";
+		
 		$this->set("header_for_layout","Application for RINGI");
-	       $this->set('username', $this->Auth->user('username'));
+	    $this->set('username', $this->Auth->user('username'));
 
 		//creating a doc string.
-		$doc = file_get_contents($_SERVER['DOCUMENT_ROOT']."/uploads/active.php");
+		$doc = file_get_contents($path."active.php");
 			
 		$formstart = '<form method="post" action="apply_check">';
 		$formend = '</form>';
@@ -638,7 +689,9 @@ class RingiController extends AppController {
 		$password = '';
 		$database = 'ringidata';
 		$someTable = 'attributes';
-
+		
+		$path = $_SERVER['DOCUMENT_ROOT']."/Ringi/uploads/";
+		
 		// Connect to MySQL
 		$link = mysql_connect($host, $username, $password);
 
@@ -650,7 +703,7 @@ class RingiController extends AppController {
 		$newentryid = $this->DuplicateMySQLRecord($database, $table, $id_field, $id);
 		
 		//creating a doc string.
-		$doc = file_get_contents($_SERVER['DOCUMENT_ROOT']."/uploads/active.php");
+		$doc = file_get_contents($path."active.php");
 		
 		$titlequery = mysql_db_query($database, "SELECT xxxxxtitle FROM attributes WHERE id=$newentryid");
 		$title = mysql_fetch_assoc($titlequery);

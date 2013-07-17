@@ -1,22 +1,22 @@
 <div class="container">
-
 	<div class="surface">
 		<div class="account-content">
 			<form method="post" action="password_reset">
-
-				<h2 class="form-signin-heading">Forgot your password?</h2>
-				<p>New Password</p>
-
+				<h2 class="form-signin-heading">Password Reset</h2>
+				<select name="selection">
+				  <option value=""></option>
+					<?php
+					$i=0;
+					while (isset($allusers[$i])) {
+						echo '<option value="'. $allusers[$i] . '">' . $allusers[$i] . '</option>';
+						$i++; 
+					}
+					?>
+				</select>
+				
 				<input type="text" placeholder="New pass" name="newpass"><br>
-
-				<p>Retype Password</p>
-
-				<input type="text" placeholder="Retype" name="confirmpass"><br>
-
-				<button class="btn btn-primary" type="submit">Submit</button>
-
+				<button class="btn btn-primary" type="submit">Reset password</button>
 			</form>
 		</div>
 	</div>
-
 </div>

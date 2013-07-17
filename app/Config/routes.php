@@ -27,6 +27,7 @@
 
 	Router::connect('/setup', array('controller' => 'Ringi', 'action' => 'setup', 'setup'));
 	Router::connect('/main_menu', array('controller' => 'Ringi', 'action' => 'main_menu', 'main_menu'));
+	Router::connect('/password_change', array('controller' => 'Ringi', 'action' => 'password_change', 'password_change'));
 	Router::connect('/password_reset', array('controller' => 'Ringi', 'action' => 'password_reset', 'password_reset'));
 	Router::connect('/overview', array('controller' => 'Ringi', 'action' => 'overview', 'overview'));
 	Router::connect('/processed', array('controller' => 'Ringi', 'action' => 'processed', 'processed'));

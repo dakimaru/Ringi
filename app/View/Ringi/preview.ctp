@@ -1,12 +1,7 @@
 <?php
 
-//foreach ($diff1 as $value) {
-//	echo ($value."<br>");
-//}
+$path = $_SERVER['DOCUMENT_ROOT']."/Ringi/uploads/";
 
-//foreach ($diff2 as $value) {
-//	echo ($value."<br>");
-//}
 if (isset($diff1)&&isset($diff2)) {
 	if ($diff1) {
 		foreach ($diff1 as $value) {
@@ -21,7 +16,7 @@ if (isset($diff1)&&isset($diff2)) {
 	}
 }
 
-$doc = file_get_contents($_SERVER['DOCUMENT_ROOT']."/uploads/upload.php");
+$doc = file_get_contents($path."upload.php");
 
 //if input:...is found
 while (preg_match('/input:.+:.+/', $doc, $matches) == 1) {

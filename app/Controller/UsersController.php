@@ -58,15 +58,13 @@ class UsersController extends AppController {
 				mysql_query($querynewpass, $link) or die(mysql_error());	//overwrite password
 
 				//print_r ($this->data['User']);
-				$username = $this->Auth->user('username');
-				if ($this->request->is('post')) {
-					if ($this->Auth->login()) {
-						// save username entered in the login form
-						$username = $this->Auth->user('username');
-						
-						return $this->redirect($this->Auth->redirectUrl());
-						//return $this->redirect(array('controller' => 'Ringi', 'action' => 'overview'));
-					}
+				//$username = $this->Auth->user('username');
+				if ($this->Auth->login()) {
+					// save username entered in the login form
+					$username = $this->Auth->user('username');
+					
+					return $this->redirect($this->Auth->redirectUrl());
+					//return $this->redirect(array('controller' => 'Ringi', 'action' => 'overview'));
 				}
 			}	
 			else {

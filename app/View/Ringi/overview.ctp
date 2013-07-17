@@ -1,28 +1,17 @@
-<form class="form-search">
-	<div class="btn-group">
-	  <a class="btn dropdown-toggle" data-toggle="dropdown" href="#">
-	    Filter
-	    <span class="caret"></span>
-	  </a>
-	  <ul class="dropdown-menu">
-	    <!-- dropdown menu links -->
-		  <li><a tabindex="-1" href="#">Action</a></li>
-		  <li><a tabindex="-1" href="#">Another action</a></li>
-		  <li><a tabindex="-1" href="#">Something else here</a></li>
-		  <li class="divider"></li>
-		  <li><a tabindex="-1" href="#">Separated link</a></li>
-	  </ul>
-	</div>
+<p><a href="./password_change" class="btn btn-primary">Password change</a></p>
 	
-  <input type="text" class="input-medium search-query">
-  <button type="submit" class="btn">Search</button>
+<form class="form-search">
+	
+  	<input type="text" class="input-medium search-query">
+  	<button type="submit" class="btn">Search</button>
+	
 </form>
 
 
 <div class="tabbable"> <!-- Only required for left/right tabs -->
 	<ul class="nav nav-tabs">
 		<li class="active"><a href="#tab1" data-toggle="tab">Summary</a></li>
-		<li><a href="#tab2" data-toggle="tab">In Progress</a></li>
+		<li><a href="#tab2" data-toggle="tab" style="color:red">In Progress</a></li>
 		<li><a href="#tab3" data-toggle="tab">Passed Back</a></li>
 		<li><a href="#tab4" data-toggle="tab">On Hold</a></li>
 		<li><a href="#tab5" data-toggle="tab">Accepted</a></li>
