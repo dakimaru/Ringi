@@ -333,13 +333,11 @@ class RingiController extends AppController {
 
 		$path = $_SERVER['DOCUMENT_ROOT']."/Ringi/uploads/";
 		
-		$this->set("header_for_layout","Application for RINGI");
-	    $this->set('username', $this->Auth->user('username'));
 
 		//creating a doc string.
 		$doc = file_get_contents($path."active.php");
 			
-		$formstart = '<form name="applyForm" method="post" action="apply_check" onsubmit="return validateForm()" enctype="multipart/form-data">';
+		$formstart = '<form name="applyForm" method="post" action="apply_check" onsubmit="return main()" enctype="multipart/form-data">';
 	
 		$doc = $formstart . $doc .
 		'
@@ -369,8 +367,6 @@ class RingiController extends AppController {
 	public function apply_check () {
 		require_once("../Config/uploads.ctp");
 		
-        $this->set("header_for_layout","Application for RINGI");
-		$this->set('username', $this->Auth->user('username'));
 
 		$host = 'localhost';
 		$username = 'root';
@@ -409,15 +405,21 @@ class RingiController extends AppController {
 			}
 		}
 		
-		$Attribute['Attribute']['xxxxxauth1'] = $this->Auth->user('username');// should be deleted
-		$Attribute['Attribute']['xxxxxdate1'] = date("Y-m-d H:i:s"); // should be deleted
 		
-		$Attribute['Attribute']['xxxxxapplicant'] = $this->Auth->user('username');
-		$Attribute['Attribute']['xxxxxapplication_date'] = date("Y-m-d H:i:s"); 
-		//$Attribute['Attribute']['xxxxxtitle'] = $this->data['xxxxxtitle'];
+		//storing non-excel items
+		$Attribute['Attribute']['applicantid'] = $this->Auth->user('username');
+		$Attribute['Attribute']['applydate'] = date("Y-m-d H:i:s");
+		//$Attribute['Attribute']['ringistatus'] = 002;  //to be changed///////
+		$Attribute['Attribute']['creator_id'] = $this->Auth->user('username');
+		$Attribute['Attribute']['created_at'] = date("Y-m-d H:i:s");
+		$Attribute['Attribute']['updator_id'] = NULL;
+		$Attribute['Attribute']['updated_at'] = NULL;
+		$Attribute['Attribute']['activeflag'] = 1;
+		$Attribute['Attribute']['deleteReason'] = NULL;
 		
 		$this->Attribute->save($Attribute);
 		
+		//Upload file
 		$ringino=$Attribute['Attribute']['ringino'];
 		$cmd = "cd $vendorpath ; sh createFolder.sh $folderpath $ringino";
 		exec($cmd);
@@ -433,9 +435,6 @@ class RingiController extends AppController {
 		
 		echo "<a href=file://".$folderpath.$ringino.">Link to Uploads</a>";		
 		
-
-		//print_r($this->Attribute->getLastInsertID());
-		
 		
 		//$latestid = mysql_query("SELECT MAX(id) FROM attributes");
 		//$querystring = mysql_fetch_assoc($latestid);
@@ -444,10 +443,6 @@ class RingiController extends AppController {
 		//$updated_at = mysql_fetch_assoc($updatedtime);
 		//$updated_final = $updated_at['updated_at'];
 		
-		//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-		//if (mysql_query("SELECT created_at FROM attributes WHERE id=$latestid") == NULL) {
-		//	mysql_query("UPDATE attributes SET created_at=$updated_final WHERE id=$latestid");
-		//}
     }
 
 	public function DuplicateMySQLRecord ($database, $table, $id_field, $id) {
@@ -478,7 +473,7 @@ class RingiController extends AppController {
 	public function change_privileges() {}
 		
 	public function overview() {
-		$this->index();
+		//$this->index();
 	}
 		
 	public function processed() {
@@ -517,9 +512,9 @@ class RingiController extends AppController {
 		
 		$this->modelClass = null;
         //$username = $this->Auth->user('username');
-        $userrole = $this->Auth->user('title');
+        //$userrole = $this->Auth->user('title');
         //Setting up so that variables auths and attachments can be used in view
-        $auths = $this->Attribute->find('all');
+        //$auths = $this->Attribute->find('all');
 				
 		//$this->set('attachments',$attachments);
         $list_apply = array();
@@ -527,63 +522,7 @@ class RingiController extends AppController {
 		$list_passback = array();
 		$list_reject = array();
 		$indiv_attachment = array();
-		$i=0;
-				
-        foreach($auths as $auth){
-			//$indiv_attachment = $this->Attribute->findById($auth['Attribute']['attachmentid']);
 
-						
-			$authlevel = 0;
-            $confirmlevel = 0;
-
-            if($auth['Attribute']['xxxxxauth1']==$username){
-                $authlevel = 1;
-            }
-            if($auth['Attribute']['xxxxxauth2']==$username){
-                $authlevel = 2;
-            }
-            if($auth['Attribute']['xxxxxauth3']==$username){
-                $authlevel = 3;
-            }
-            if($auth['Attribute']['xxxxxauth4']==$username){
-                $authlevel = 4;
-            }
-            if($auth['Attribute']['xxxxxauth5']==$username){
-                $authlevel = 5;
-            }
-            if($auth['Attribute']['xxxxxauth6']==$username){
-                $authlevel = 6;
-            }
-            if($auth['Attribute']['xxxxxauth7']==$username){
-                $authlevel = 7;
-            }
-            array_push($list_apply, $authlevel);
-			
-			
-            if($auth['Attribute']['xxxxxdate1'] == NULL && $auth['Attribute']['xxxxxauth1']==$username){
-                $confirmlevel = 1;
-            }
-            if($auth['Attribute']['xxxxxdate2'] == NULL && $userrole == 'mgr'){
-                $confirmlevel = 2;
-            }
-            if($auth['Attribute']['xxxxxdate3'] == NULL && $userrole =='agm'){
-                $confirmlevel = 3;
-            }
-            if($auth['Attribute']['xxxxxdate4'] == NULL && $userrole == 'gm'){
-                $confirmlevel = 4;
-            }
-            if($auth['Attribute']['xxxxxdate5'] == NULL && $userrole =='hr'){
-                $confirmlevel = 5;
-            }
-            if($auth['Attribute']['xxxxxdate6'] == NULL && $userrole=='pr'){
-                $confirmlevel = 6;
-            }
-            if($auth['Attribute']['xxxxxdate7'] == NULL && $userrole=='admin' ){
-                $confirmlevel = 7;
-            }
-            array_push($list_confirm, $confirmlevel);
-						$i++;
-        }
 		$this->set('auths',$auths);
         $this->set('list_apply',$list_apply);
         $this->set('list_confirm',$list_confirm);

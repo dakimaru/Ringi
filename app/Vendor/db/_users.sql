@@ -57,4 +57,23 @@ int(11)
 ,
 cellphone 
 int(11) 
+,
+activeflag 
+bool 
+not null  
+,
+deletereason 
+text 
+,
+creator_id 
+varchar(255) 
+,
+created_at 
+datetime 
+,
+updator_id 
+varchar(255) 
+,
+updated_at 
+datetime 
 ) ENGINE=InnoDB;

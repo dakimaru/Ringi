@@ -6,8 +6,8 @@ SCRIPTPATH=../scripts
 SCHEMAPATH=../db/schema
 SQLPATH=../db
 
-python $SCRIPTPATH/genCreateTableQuery.py $SCHEMAPATH users 1 19          > $SQLPATH/_users.sql
-python $SCRIPTPATH/genCreateTableQuery.py $SCHEMAPATH routes 1 19         > $SQLPATH/_routes.sql
+python $SCRIPTPATH/genCreateTableQuery.py $SCHEMAPATH users 1 25          > $SQLPATH/_users.sql
+python $SCRIPTPATH/genCreateTableQuery.py $SCHEMAPATH routes 1 20         > $SQLPATH/_routes.sql
 python $SCRIPTPATH/genCreateTableQuery.py $SCHEMAPATH names 1 17          > $SQLPATH/_names.sql
 python $SCRIPTPATH/genCreateTableQuery.py $SCHEMAPATH ringiroutes 1 12    > $SQLPATH/_ringiroutes.sql
 python $SCRIPTPATH/genCreateTableQuery.py $SCHEMAPATH ringihistories 1 13 > $SQLPATH/_ringihistories.sql

@@ -8,6 +8,9 @@ approveroutetype
 bool 
 not null  
 ,
+person 
+varchar(255) 
+,
 department 
 varchar(255) 
 not null  
@@ -22,14 +25,14 @@ conditionflg
 bool 
 ,
 approverlayer 
-bool 
+int(5) 
 not null  
 ,
 approverdept 
 varchar(255) 
 not null  
 ,
-title 
+approvertitle 
 varchar(255) 
 not null  
 ,
