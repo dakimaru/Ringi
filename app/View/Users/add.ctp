@@ -4,11 +4,15 @@
 <?php echo $this->Form->create('User'); ?>
     <fieldset>
         <legend><?php echo __('Add User'); ?></legend>
-        <?php echo $this->Form->input('username');
+        <?php 
+		//echo $this->Form->input('name');
+		echo $this->Form->input('username');
         echo $this->Form->input('password');
+		//echo $this->Form->input('department');
+		
         echo $this->Form->input('title', array(
             'options' => array('admin' => 'Admin', 
-                               'author' => 'Author'
+                               'user' => 'User'
                                )
         ));
     ?>

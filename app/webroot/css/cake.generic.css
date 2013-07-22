@@ -36,7 +36,7 @@ pre {
 }
 
 .wrapper {
-	background-color:#F5F5F5;
+	/*background-image:url('/Ringi/app/webroot/img/clouds.jpg');*/
 	min-height: 100%;
 	height: auto !important;
 	height: 100%;

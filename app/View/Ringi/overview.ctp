@@ -31,31 +31,31 @@
 		</div>
 
 		<div class="tab-pane" id="tab2">
-			<?php echo $this->element('table-progress'); ?>
+			<?//php echo $this->element('table-progress'); ?>
 		</div>
 
 		<div class="tab-pane" id="tab3">
-			<?php echo $this->element('table-passed'); ?>
+			<?//php echo $this->element('table-passed'); ?>
 		</div>
 
 		<div class="tab-pane" id="tab4">
-			<?php echo $this->element('table-hold'); ?>	
+			<?//php echo $this->element('table-hold'); ?>	
 		</div>
 
 		<div class="tab-pane" id="tab5">
-			<?php echo $this->element('table-accepted'); ?>
+			<?//php echo $this->element('table-accepted'); ?>
 		</div>
 
 		<div class="tab-pane" id="tab6">
-			<?php echo $this->element('table-rejected'); ?>
+			<?//php echo $this->element('table-rejected'); ?>
 		</div>
 		
 		<div class="tab-pane" id="tab7">
-			<?php echo $this->element('table-confirm'); ?>
+			<?//php echo $this->element('table-confirm'); ?>
 		</div>
 		
 		<div class="tab-pane" id="tab8">
-			<?php echo $this->element('menu-tableau'); ?>
+			<?//php echo $this->element('menu-tableau'); ?>
 		</div>
 		
 	</div>

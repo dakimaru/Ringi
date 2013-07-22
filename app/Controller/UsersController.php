@@ -5,6 +5,14 @@ App::uses('Sanitize', 'Utility');
 
 class UsersController extends AppController {
 
+	public function openSQLconnection() {
+		$host = 'localhost';
+		$username = 'root';
+		$password = '';
+
+		// Connect to MySQL
+		return mysql_connect($host, $username, $password);
+	}
 
 	public function beforeFilter() {
 		parent::beforeFilter();
@@ -33,7 +41,6 @@ class UsersController extends AppController {
 			$pass = $this->data['User']['password'];
 
 			// run information through authenticator
-
 			if(authenticate($usr,$pass))
 			{
 				// authentication passed
@@ -96,16 +103,35 @@ class UsersController extends AppController {
 	}
 
 	public function add() {
-
+		$database='ringidata';
 		if ($this->request->is('post')) {
 			$this->User->create();
-			if ($this->User->save($this->request->data)) {
+			
+			$link = $this->openSQLconnection();
+			$db_selected = mysql_select_db($database, $link);
+			$newusername = $this->data['User']['username'];
+			$sql = "SELECT username FROM users WHERE username='".$newusername."'";
+			$query=mysql_query($sql);
+			$existing = mysql_fetch_assoc($query);
+			if ($existing==NULL) {
+				
+				$user=$this->request->data;
+				$user['User']['usertype'] = 0;
+				$user['User']['activeflag'] = 1;
+				if ($this->Auth->user('username')!==NULL) {
+					$user['User']['creator_id'] = $this->Auth->user('username');
+				}
+				$user['User']['created_at'] = DboSource::expression('NOW()');	
+
+				$this->User->save($user);
+
 				if ($this->Auth->login()) {
 					$this->Session->setFlash(__('The user has been saved'));
 					return $this->redirect(array('controller' => 'Ringi', 'action' => 'main_menu'));
 				}
-			} else {
-				$this->Session->setFlash(__('The user could not be saved. Please, try again.'));
+			} 
+			else {
+				$this->Session->setFlash(__('A user with this username already exists'));
 			}
 		}
 	}

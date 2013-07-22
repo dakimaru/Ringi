@@ -21,11 +21,14 @@
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 App::uses('Controller', 'Controller');
+App::uses('Folder', 'Utility');
+App::uses('File', 'Utility');
 //PHPExcel
 App::import('Vendor','PHPExcel',array('file' => 'excel/phpexcel.php'));
 App::import('Vendor','IOFactory',array('file' => 'excel/PHPExcel/IOFactory.php'));
 App::import('Vendor','PHPExcelWriter',array('file' => 'excel/PHPExcel/Reader/Excel5.php'));
 App::import('Vendor','PHPExcelWriter',array('file' => 'excel/PHPExcel/Writer/Excel5.php'));
+
 
 //Testing class and function loading
 if (!class_exists('PHPExcel')) {

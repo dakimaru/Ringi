@@ -1,8 +1,0 @@
-DN,username,title,mail,department,name,manager,password
-"CN=Josh Ono,ou=Development,dc=enspirea,dc=com",Josh Ono,Developer,yono@enspirea.com,Enspirea_IL,Josh Ono,"CN=Aki Taira,ou=Development,dc=enspirea,dc=com",yono@enspirea.com
-"CN=Xu Han,ou=Development,dc=enspirea,dc=com",Xu Han,Developer,xhan@enspirea.com,Enspirea_IL,Xu Han,"CN=Aki Taira,ou=Development,dc=enspirea,dc=com",xhan@enspirea.com
-"CN=Eric Zheng,ou=Development,dc=enspirea,dc=com",Eric Zheng,Developer,czheng@enspirea.com,Enspirea_IL,Eric Zheng,"CN=Aki Taira,ou=Development,dc=enspirea,dc=com",czheng@enspirea.com
-"CN=Yuji Watanabe,ou=Development,dc=enspirea,dc=com",Yuji Watanabe,Manager,watanabe@enspirea.com,Enspirea_IL,Yuji Watanabe,"CN=Aki Taira,ou=Development,dc=enspirea,dc=com",watanabe@enspirea.com
-"CN=Ryo Yamakoshi,ou=Development,dc=enspirea,dc=com",Ryo Yamakoshi,Consultant,ryamakoshi@enspirea.com,Enspirea_NC,Ryo Yamakoshi,"CN=Aki Taira,ou=Development,dc=enspirea,dc=com",ryamakoshi@enspirea.com
-"CN=Aki Taira,ou=Development,dc=enspirea,dc=com",Aki Taira,Developer,taira@enspirea.com,Enspirea,Aki Taira,,taira@enspirea.com
-"CN=Dimitri Akimaru,ou=Development,dc=enspirea,dc=com",Dimitri Akimaru,Intern,dakimaru@enspirea.com,Enspirea_IL,Dimitri Akimaru,"CN=Aki Taira,ou=Development,dc=enspirea,dc=com",dakimaru@enspirea.com

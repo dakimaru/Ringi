@@ -15,76 +15,17 @@ class RingiController extends AppController {
 	}
 	
 	public function setup() {
+
+		$setup_script_path=$_SERVER['DOCUMENT_ROOT']."/Ringi/app/Vendor/";
 		
-		$database = 'ringidata';
-		$table2 = 'attributes';
-		$script_path="../Vendor/";
-		$scriptfile="importADToMySql.sh";
-		$table1 = "users";
-		$link = $this->openSQLconnection();
-
-		if (!$link) {
-		    die('Could not connect: ' . mysql_error());
-		}
-
-		// Make RingiData the current database
-		$db_selected = mysql_select_db($database, $link);
-
-		if (!$db_selected) {
-			// If we couldn't, then it either doesn't exist, or we can't see it. 
-			$sql = "CREATE DATABASE $database";
-
-			if (mysql_query($sql, $link)) {
-				$success1 = '<br><h4 align="center">Database '.$database. ' created successfully!</h3>';
-			} 
-			else {
-				echo '<br>Error creating database: ' . mysql_error();
-			}
-		}
-
-		mysql_select_db($database, $link);	//pointing at the right database
-
-		$sql = "CREATE TABLE IF NOT EXISTS $table1 (
-			`id` int unsigned NOT NULL auto_increment PRIMARY KEY,
-			`usertype` boolean,
-			`name` varchar(255),
-			`username` varchar(255),
-			`password` varchar(255),
-			`mail` varchar(255),
-			`department` varchar(255),
-			`title` varchar(255),
-			`DN` varchar(255),
-			`manager` varchar(255),
-			`companyEmail` varchar(255),
-			`mobileEmail` varchar(255),
-			`creatorid` varchar(255),
-			`agentCD` varchar(255),
-			`agentStrDay` date,
-			`agentEndDay` date,
-			`companyTel` int,
-			`extention` int,
-			`cellphone` int,
-			`activeflag` boolean,
-			`deleteReason` text,
-			
-			`created_at` timestamp,
-			`updated_at` timestamp
-		   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8";
-		
-		if (!mysql_query($sql, $link)) {
-			echo '<br>Error creating table: ' . mysql_error();
-		}
-		else {
-			$success2 = '<h4 align="center">Datatable '.$table1.' created successfully!<h/3>';
-			$success3 = '<h2 align="center">Setup has been completed. Thank you!</h2><br>';
-		}
-		if (isset($success1) && isset($success2) && isset($success3)) {
+		$success1 = '<h2 align="center">Setup has been completed. Thank you!</h2><br>';
+	
+		if (isset($success1)) {
 			$this->set('success1',$success1);
-			$this->set('success2',$success2);
-			$this->set('success3',$success3);
 		}
 		
-		$bar = exec('cd ../Vendor/ ; sh importADToMySql.sh');
+		$bar = exec("cd $setup_script_path ; sh createRingiTables.sh");
+		$bar = exec("cd $setup_script_path ; sh script/importADToMySql.sh");
 
 		//exec('cd ' . $script_path . '; sh' . $scriptfile);
 		
@@ -154,11 +95,8 @@ class RingiController extends AppController {
 				$this->Session->setFlash(__('Please select an appropriate user and password!'));
 			}
 			
-			
-			
 		}
-		
-
+	
 		$sql = "SELECT username FROM users";
 		$query = mysql_query($sql, $link);
 		
@@ -191,20 +129,18 @@ class RingiController extends AppController {
 		$latest_filename = '';    
 
 		//this part gets the uploaded file, and creates file upload."ext" in /uploads/
-		if ($_POST["submit"] == "Upload") { //**** User Clicked the Upload Button
+		if ($_POST["submit"] == "Upload" && $_FILES['file']['name']) { //**** User Clicked the Upload Button
 			$info = pathinfo($_FILES['file']['name']);
-			$ext = $info['extension']; // get the extension of the file
+			$ext = $info['extension'];
 			if (preg_match("/xls/",$ext)) {
 				//saving upload.xls
-				move_uploaded_file( $_FILES["file"]["tmp_name"], $path."upload.".$ext);
+				move_uploaded_file( $_FILES["file"]["tmp_name"], $path."upload.xls");
 				
 				while ($entry = $d->read()) {
-					
-					if (preg_match("/upload.xls/",$entry)) {	// find the file that is called upload.xls
 						$uploadxls=$entry;
 						$uploadfilepath = "{$path}{$entry}";	//not in use but may be handy to have
-					}
-					if (preg_match("/active.xls/",$entry)) {	// find the file that is called active.xls
+					
+					if (preg_match("/active.xls\b/",$entry)) {	// find the file that is called active.xls
 						$activexls=$entry;
 						$activefilepath = "{$path}{$entry}";	//not in use but may be handy to have
 					}
@@ -219,18 +155,25 @@ class RingiController extends AppController {
 				//Returns the column names of NEW sheet. Here we overwrite upload.xls and make it up to date!
 				$latestColumns = $this->tempXLStoPHP($path.$uploadxls);
 				//print_r ($latestColumns);
-								
-				$diff1=array_diff($oldColumns, $latestColumns);
-				$diff2=array_diff($latestColumns, $oldColumns);
 				
-				$this->set('diff1',$diff1);
-				$this->set('diff2',$diff2);
+				if (isset($oldColumns)) {
+					$diff1=array_diff($oldColumns, $latestColumns);
+					$diff2=array_diff($latestColumns, $oldColumns);
+
+					$this->set('diff1',$diff1);
+					$this->set('diff2',$diff2);
+				}
+				
 				
 			}
 			else {
 				$this->Session->setFlash(__('Invalid file type! Please upload a file with the correct extension.'));
 				$this->redirect(array('controller' => 'Ringi', 'action' => 'upload_layout'));				
 			}
+		}
+		else {
+			$this->Session->setFlash(__('Please choose a file to upload'));
+			$this->redirect(array('controller' => 'Ringi', 'action' => 'upload_layout'));		
 		}
 	}
 
@@ -300,7 +243,6 @@ class RingiController extends AppController {
 	}
 	
 	public function upload_confirmation() {
-		$this->createRingiTable();
 		
 		$this->addNewColumns();
 		
@@ -310,7 +252,6 @@ class RingiController extends AppController {
 	public function addNewColumns(){
 		
 		$database = 'ringidata';
-		$someTable = 'attributes';
 		
 		$link = $this->openSQLconnection();
 		
@@ -322,7 +263,7 @@ class RingiController extends AppController {
 		$latest_filename = '';    
 
 		while ($entry = $d->read()) {
-			if (preg_match("/upload.xls/",$entry)) {	// find the file that is called upload.xls
+			if (preg_match("/upload.xls\b/",$entry)) {	// find the file that is called upload.xls
 				$uploadxls=$entry;
 				$uploadfilepath = "{$path}{$entry}";	//not in use but may be handy to have
 			}
@@ -358,7 +299,7 @@ class RingiController extends AppController {
 			if ($columnTypes[$i]=="string") {
 				$columnTypes[$i]= "varchar(255)";
 			}
-			$query = "ALTER TABLE $someTable ADD $columnNames[$i] $columnTypes[$i]";
+			$query = "ALTER TABLE ATTRIBUTES ADD $columnNames[$i] $columnTypes[$i]";
 			mysql_db_query($database,$query);
 		}
 
@@ -367,61 +308,6 @@ class RingiController extends AppController {
 		$objWriter->setUseInlineCSS(true);
 
 		$objWriter->save($path."upload.php");
-	}
-
-	public function createRingiTable(){
-		
-		$database = 'ringidata';
-		$someTable = 'attributes';
-		
-		$link = $this->openSQLconnection();
-
-		// Make RingiData the current database
-		$db_selected = mysql_select_db($database, $link);
-
-		if (!$db_selected) {
-		  // If we couldn't, then it either doesn't exist, or we can't see it. 
-		$sql = "CREATE DATABASE $database";
-		
-			if (mysql_query($sql, $link)) {
-				echo "<br>Database $database created successfully";
-			} 
-			else {
-				echo '<br>Error creating database: ' . mysql_error();
-			}
-		}
-		
-		mysql_select_db($database, $link);	//pointing at the right database
-
-		$sql = "CREATE TABLE IF NOT EXISTS $someTable (
-			`id` int unsigned NOT NULL auto_increment PRIMARY KEY,
-			`updated_at` timestamp,
-			`created_at` timestamp NULL,
-			`xxxxxapplicant` varchar(255),
-			`xxxxxapplication_date` date,
-			`xxxxxauth1` varchar(255),
-			`xxxxxauth2` varchar(255),
-			`xxxxxauth3` varchar(255),
-			`xxxxxauth4` varchar(255),
-			`xxxxxauth5` varchar(255),
-			`xxxxxauth6` varchar(255),
-			`xxxxxauth7` varchar(255),
-			`xxxxxdate1` date,
-			`xxxxxdate2` date,
-			`xxxxxdate3` date,
-			`xxxxxdate4` date,
-			`xxxxxdate5` date,
-			`xxxxxdate6` date,
-			`xxxxxdate7` date,
-			`xxxxxpassbackflag` int,
-			`xxxxxrejectflag` int,
-			`xxxxxtitle` varchar(255),
-			`xxxxxcomment` text
-			
-		   ) ENGINE=MyISAM  DEFAULT CHARSET=utf8";
-		
-		mysql_query($sql, $link);	//creates table called: "attributes" and all entities
-
 	}
 	
 	public function from_upload_layout(){
@@ -453,19 +339,18 @@ class RingiController extends AppController {
 		//creating a doc string.
 		$doc = file_get_contents($path."active.php");
 			
-		$formstart = '<form method="post" action="apply_check">';
-		$formend = '</form>';
+		$formstart = '<form name="applyForm" method="post" action="apply_check" onsubmit="return validateForm()" enctype="multipart/form-data">';
 	
-		$doc = $formstart .
-				'<div class="text-center">
-					<textarea class="span6" style="resize: none; font-size:30px;" 
-					placeholder = "Enter title of this application" wrap="off" rows="1"
-					name="xxxxxtitle"></textarea>
-				</div>'
-				. $doc .
-				'<div class="text-center"><button class="btn btn-success">Apply</button>'
-				. $formend .
-				'</div>';
+		$doc = $formstart . $doc .
+		'
+			<div class="well">
+				<div class="text-center">
+					<label for="file">Choose your attachments</label><br>
+					<input type="file" name="file[]" style="line-height: 0; padding: 0px" multiple="multiple"><br><br>
+					<button class="btn btn-success">Apply</button>
+				</div>
+			</div>
+		</form>';
 	
 		//if input:...is found
 		while (preg_match('/input:.+:.+/', $doc, $matches) == 1) {	//strpos($doc, 'input:'.':') ==false
@@ -482,6 +367,8 @@ class RingiController extends AppController {
     }
 
 	public function apply_check () {
+		require_once("../Config/uploads.ctp");
+		
         $this->set("header_for_layout","Application for RINGI");
 		$this->set('username', $this->Auth->user('username'));
 
@@ -527,9 +414,26 @@ class RingiController extends AppController {
 		
 		$Attribute['Attribute']['xxxxxapplicant'] = $this->Auth->user('username');
 		$Attribute['Attribute']['xxxxxapplication_date'] = date("Y-m-d H:i:s"); 
-		$Attribute['Attribute']['xxxxxtitle'] = $this->data['xxxxxtitle'];;
+		//$Attribute['Attribute']['xxxxxtitle'] = $this->data['xxxxxtitle'];
 		
 		$this->Attribute->save($Attribute);
+		
+		$ringino=$Attribute['Attribute']['ringino'];
+		$cmd = "cd $vendorpath ; sh createFolder.sh $folderpath $ringino";
+		exec($cmd);
+		
+		if ($_FILES['file']['name']) {
+			$count=0;
+			foreach ($_FILES['file']['name'] as $filename) 
+	        {
+				move_uploaded_file( $_FILES['file']['tmp_name'][$count], $folderpath.$ringino."/".$_FILES['file']['name'][$count]);
+				$count++;
+	        }
+		}
+		
+		echo "<a href=file://".$folderpath.$ringino.">Link to Uploads</a>";		
+		
+
 		//print_r($this->Attribute->getLastInsertID());
 		
 		
@@ -612,7 +516,7 @@ class RingiController extends AppController {
     public function index() {
 		
 		$this->modelClass = null;
-        $username = $this->Auth->user('username');
+        //$username = $this->Auth->user('username');
         $userrole = $this->Auth->user('title');
         //Setting up so that variables auths and attachments can be used in view
         $auths = $this->Attribute->find('all');
@@ -714,10 +618,10 @@ class RingiController extends AppController {
 		//creating a doc string.
 		$doc = file_get_contents($path."active.php");
 		
-		$titlequery = mysql_db_query($database, "SELECT xxxxxtitle FROM attributes WHERE id=$newentryid");
+		//$titlequery = mysql_db_query($database, "SELECT xxxxxtitle FROM attributes WHERE id=$newentryid");
 		$title = mysql_fetch_assoc($titlequery);
 		$attachmentid = $this->data['idlist2'];
-		$project_name = $title['xxxxxtitle'];
+		//$project_name = $title['xxxxxtitle'];
 		
 		$formstart = '<form method="post" action="./confirm_check" name="confirm_check1">';
 		$formend = '</form>';

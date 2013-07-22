@@ -41,7 +41,7 @@
 							<a><?php
 							if(!empty($user)) {
 							echo 'Logged in as: ', $user['username'], ' (', $user['title'], ')';
-						}
+							}
 						?></a>
 					</li>
 					<li>

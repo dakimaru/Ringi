@@ -1,0 +1,89 @@
+dn: ou=Enspirea,dc=enspirea,dc=com
+objectClass: organizationalUnit
+ou: Enspirea
+
+dn: ou=Enspirea_NC,dc=enspirea,dc=com
+objectClass: organizationalUnit
+ou: Enspirea_NC
+
+dn: ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: organizationalUnit
+ou: Enspirea_IL
+
+dn: uid=yono,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: yono
+cn: Josh Ono
+sn: Josh Ono
+givenName: Josh Ono
+mail: yono@enspirea.com
+
+dn: uid=xhan,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: xhan
+cn: Xu Han
+sn: Xu Han
+givenName: Xu Han
+mail: xhan@enspirea.com
+
+dn: uid=czheng,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: czheng
+cn: Eric Zheng
+sn: Eric Zheng
+givenName: Eric Zheng
+mail: czheng@enspirea.com
+
+dn: uid=watanabe,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: watanabe
+cn: Yuji Watanabe
+sn: Yuji Watanabe
+givenName: Yuji Watanabe
+mail: watanabe@enspirea.com
+
+dn: uid=rymakoshi,ou=Enspirea_NC,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: rymakoshi
+cn: Ryo Yamakoshi
+sn: Ryo Yamakoshi
+givenName: Ryo Yamakoshi
+mail: ryamakoshi@enspirea.com
+
+dn: uid=taira,ou=Enspirea,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: taira
+cn: Aki Taira
+sn: Aki Taira
+givenName: Aki Taira
+mail: taira@enspirea.com
+
+dn: uid=akimaru,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: akimaru
+cn: Dimitri Akimaru
+sn: Dimitri Akimaru
+givenName: Dimitri Akimaru
+mail: dakimaru@enspirea.com
+
