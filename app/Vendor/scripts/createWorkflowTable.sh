@@ -1,0 +1,7 @@
+#! /bin/sh
+
+WORKFLOW_OPTION=dept   # or user
+USERINFODIR=../user
+USERTABLE_CSV_FILENAME=$USERINFODIR/usertable.csv
+
+python loadWorkflow.py $USERTABLE_CSV_FILENAME $WORKFLOW_OPTION

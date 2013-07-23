@@ -1,6 +1,6 @@
 import sys
 
-import readCSV
+import CSVHelper
 import DBHelper
 
 USER_CSV_DN             = "DN"
@@ -133,7 +133,7 @@ def analyzeUserTree(option,users):
     return ROUTES_HEADER_COLUMNS, appFlows
 
 def doit(filename, option):
-    header,rows = readCSV.readCsv(filename)
+    header,rows = CSVHelper.readCsv(filename)
 
     newheader,newrows = analyzeUserTree(option,rows)
 

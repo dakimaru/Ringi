@@ -1,4 +1,4 @@
-import readCSV
+import CSVHelper
 import DBHelper
 from datetime import date
 import copy
@@ -120,7 +120,7 @@ def addAdditionalColumn(rows, additionalColumns):
 def updateMaster(filename):
     print "loading Master tables..."
 
-    header, rows = readCSV.readCsv(filename)
+    header, rows = CSVHelper.readCsv(filename)
     for r in rows:
         genCodeMap(r)
 
@@ -160,7 +160,7 @@ def convertKeyToDB(rows,fy):
 def updateBudget(filename,fy):
     print "loading budget table..." 
 
-    headerdummy, rows = readCSV.readCsv(filename)
+    headerdummy, rows = CSVHelper.readCsv(filename)
 
     newheader, newrows = convertKeyToDB(rows,fy)
     #setYear(fy)

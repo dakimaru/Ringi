@@ -1,21 +1,129 @@
 .btn-example {
-	-moz-box-shadow:inset 0px 0px 0px 0px #bbdaf7;
-	-webkit-box-shadow:inset 0px 0px 0px 0px #bbdaf7;
-	box-shadow:inset 0px 0px 0px 0px #bbdaf7;
-	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #79bbff), color-stop(1, #378de5) );
-	background:-moz-linear-gradient( center top, #79bbff 5%, #378de5 100% );
-	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#79bbff', endColorstr='#378de5');
-	background-color:#79bbff;
+	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	box-shadow:inset 0px 1px 0px 0px #ffffff;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+	background:-moz-linear-gradient( center top, #ededed 5%, #dfdfdf 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ededed', endColorstr='#dfdfdf');
+	background-color:#ededed;
 	-moz-border-radius:6px;
 	-webkit-border-radius:6px;
 	border-radius:6px;
-	border:1px solid #84bbf3;
+	border:1px solid #dcdcdc;
+
 	display:inline-block;
-	color:#ffff00;
+	color:#777777;
 	font-family:arial;
 	font-size:15px;
 	font-weight:bold;
 	padding:6px 24px;
 	text-decoration:none;
-	text-shadow:1px 1px 0px #528ecc;
+	text-shadow:1px 1px 0px #ffffff;
+}.btn-example:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+	background:-moz-linear-gradient( center top, #dfdfdf 5%, #ededed 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#dfdfdf', endColorstr='#ededed');
+	background-color:#dfdfdf;
+}.btn-example:active {
+	position:relative;
+	top:1px;
+}
+
+
+.icon-search {
+  background-color:transparent;
+  
+}
+
+li.inline{
+	display:inline;
+	text-color:#000000;
+}
+
+a.sitefoot{
+font-size:normal;
+font-weight:normal;
+color:#000000;
+}
+
+a.sitefoot:hover,
+a.sitefoot:focus
+{
+text-decoration:underline;
+}
+
+.well2
+{
+  border: 1px solid #e3e3e3;
+}
+
+div.row-fluid
+{
+   
+}
+
+img.pos_relative
+{
+   position:relative;
+   height:100%;
+   width:80%;
+   top:5px;
+}
+
+a.smaller
+{
+font-size:small;
+}
+
+.nav-pills
+{
+   text-aligned: center;
+}
+
+.nav-pills > li > a {
+  padding-right: 0px;
+  padding-left: 0px;
+  margin-right: 0px;
+  line-height: 0px;
+  padding-top:0px;
+  padding-bottom:0px;
+}
+
+legend
+{
+	font-size: 30px;
+}
+legend > p
+{
+  font-size:15px;
+}
+
+div.inline
+{
+   display:inline-block;
+}
+
+p.absolute
+{
+   position:absolute;
+   left:1250px;
+}
+
+p.right-align
+{
+text-align:right;
+position:relative;
+left:0px;
+}
+
+span.help-block > a
+{
+  font-weight: normal;
+}
+.btn-long
+{
+   padding: 0px 30px;
+}
+.icon-chevron-right {
+  background-position: -456px -72px;
 }

@@ -3,7 +3,7 @@ import ldap
 import sys
 
 parser = ConfigParser.SafeConfigParser()
-parser.read('exportLdap.ini')
+parser.read('ldapinfo.ini')
 
 # Active Directory attributes
 src_attrs = [ 
@@ -143,4 +143,15 @@ def doit(ldapServer):
     ldapSearchRes = getSourceUserData(ldapServer, ldapConn)
     saveCsv( ldapSearchRes )
 
-doit('source_ldap')
+
+def usage():
+    print "usage: ", sys.argv[0], "<ldapsrc_in_ldapinfo.ini>"
+    exit()
+
+if len(sys.argv) != 2:
+    usage()
+    exit()
+
+ldapsrc = sys.argv[1]
+
+doit(ldapsrc)
