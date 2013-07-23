@@ -5,7 +5,13 @@ import copy
 import sys
 
 ## Master Table Definition
-dept_code=line_code=project=account_code=description=purpose={}
+dept_code   ={}
+line_code   ={}
+project     ={}
+account_code={}
+description ={}
+purpose     ={}
+
 MASTER_EX_DEPT_CODE     = 'Dept_Code'
 MASTER_EX_LINE_CODE     = 'Line_Code'
 MASTER_EX_PROJECT       = 'Project'
@@ -119,10 +125,15 @@ def updateMaster(filename):
         genCodeMap(r)
 
     rows = []
+    print "====> Code map generated: "
     for enum,map in CODE_MAP.items():
-        #print enum, map
+        #print enum
+        #print map
         rows = rows + genEnumNamesArray(enum, map.keys())
 
+    print "====> Rows to be inserted: "
+    for r in rows:
+        print r
     DBHelper.updateDBIncremental(   MASTER_TABLENAME,
                                     MASTER_TABLEHEADER,
                                     rows,

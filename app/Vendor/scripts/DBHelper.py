@@ -112,8 +112,9 @@ def rowAlreadyExist(cursor, dbTable, header, row, keyColNames):
 
     #print result, query
 
-    if not entryFound: 
-        print keyColNames, " not found"
+    if not entryFound:
+        # suppressing this message as it's happening too often
+        #print keyColNames, " not found"
         return None
 
     retval = []

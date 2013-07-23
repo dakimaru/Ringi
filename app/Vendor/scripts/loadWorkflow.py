@@ -1,5 +1,6 @@
-import readCSV
 import sys
+
+import readCSV
 import DBHelper
 
 USER_CSV_DN             = "DN"
@@ -14,10 +15,6 @@ ROUTES_TABLENAME        = "ROUTES"
 ROUTES_PERSON           = "person"
 ROUTES_TITLE            = "approvertitle"
 ROUTES_DEPARTMENT       = "department"
-# ROUTES_APPROVEROUTETYPE = "approveRouteType"
-# ROUTES_MONEYCONDITION   = "moneyCondition"
-# ROUTES_RATECONDITION    = "rateCondition"
-# ROUTES_CONDITIIONFLG    = "conditionFlg"
 ROUTES_APPROVERLAYER    = "approverLayer"
 ROUTES_APPROVERDEPT     = "approverDept"
 ROUTES_APPROVERID       = "approverID"
@@ -50,20 +47,20 @@ OPTION_USER = 1
 OPTION_DEPT = 2
 
 def hasManager(user):
-    print "### hasManager : ", user[USER_CSV_MANAGER]
+    #print "### hasManager : ", user[USER_CSV_MANAGER]
     if user[USER_CSV_MANAGER] == "":
         return False
     return True
 
 def getManager(user, users):
-    print "### getManager ###"
+    #print "### getManager ###"
     if not hasManager(user):
         return None
 
     managerDN = user[USER_CSV_MANAGER]
-    print "### managerDN : ", managerDN
+    #print "### managerDN : ", managerDN
     for u in users:
-        print ">> DN comparison:",managerDN, u[USER_CSV_DN]
+        #print ">> DN comparison:",managerDN, u[USER_CSV_DN]
         if managerDN == u[USER_CSV_DN]:
             return u
 
@@ -89,7 +86,7 @@ def createLayer(option,user,manager,layerDepth):
     if option == OPTION_DEPT:
         aLayerMap[ROUTES_PERSON] = ""
 
-    print "createLayer, create to be added: ", aLayerMap
+    #print "createLayer, create to be added: ", aLayerMap
     return aLayerMap
     
 def getApprovalFlow(option,user,users,layerDepth):
@@ -100,7 +97,7 @@ def getApprovalFlow(option,user,users,layerDepth):
 
     manager = getManager(user,users)
     if manager:
-        print ">>manager find:", manager
+        #print ">>manager find:", manager
         aLayer  = createLayer(option,user,manager,layerDepth)
         aFlow   = getApprovalFlow(option,manager,users,layerDepth+1)
         aFlow.append(aLayer)
@@ -109,7 +106,7 @@ def getApprovalFlow(option,user,users,layerDepth):
     return []
 
 def analyzeUserTree(option,users):
-    print "loading user table..."
+    print "analyzing user tree..."
 
     appFlows = []
 
@@ -129,7 +126,8 @@ def analyzeUserTree(option,users):
         # if User, [(User,Title,Dept),(User,Title,Dept)...]
         # if Dept, [(Title,Dept),[Title,Dept)...]
         appFlow = getApprovalFlow(option, user, users, 1)
-        if( not appFlow in appFlows ):
+        if( not appFlow[0] in appFlows ):
+            #print ">>> adding new", appFlow, " as not found in ", appFlows
             appFlows.append(appFlow[0])
 
     return ROUTES_HEADER_COLUMNS, appFlows
@@ -137,7 +135,6 @@ def analyzeUserTree(option,users):
 def doit(filename, option):
     header,rows = readCSV.readCsv(filename)
 
-    print "analyzing usertree from usertable.csv...."
     newheader,newrows = analyzeUserTree(option,rows)
 
     print "loading workflow to DB...."

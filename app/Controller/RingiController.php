@@ -16,7 +16,7 @@ class RingiController extends AppController {
 	
 	public function setup() {
 
-		$setup_script_path=$_SERVER['DOCUMENT_ROOT']."/Ringi/app/Vendor/";
+		$setup_script_path=$_SERVER['DOCUMENT_ROOT']."/Ringi/app/Vendor/scripts";
 		
 		$success1 = '<h2 align="center">Setup has been completed. Thank you!</h2><br>';
 	
@@ -25,7 +25,7 @@ class RingiController extends AppController {
 		}
 		
 		$bar = exec("cd $setup_script_path ; sh createRingiTables.sh");
-		$bar = exec("cd $setup_script_path ; sh script/importADToMySql.sh");
+		$bar = exec("cd $setup_script_path ; sh importADToMySql.sh");
 
 		//exec('cd ' . $script_path . '; sh' . $scriptfile);
 		
@@ -407,6 +407,8 @@ class RingiController extends AppController {
 		
 		
 		//storing non-excel items
+		
+		//attributes
 		$Attribute['Attribute']['applicantid'] = $this->Auth->user('username');
 		$Attribute['Attribute']['applydate'] = date("Y-m-d H:i:s");
 		//$Attribute['Attribute']['ringistatus'] = 002;  //to be changed///////
@@ -417,7 +419,12 @@ class RingiController extends AppController {
 		$Attribute['Attribute']['activeflag'] = 1;
 		$Attribute['Attribute']['deleteReason'] = NULL;
 		
-		$this->Attribute->save($Attribute);
+		//ringihistories
+		$Attribute['Ringihistory']['processerid'] = $this->Auth->user('username');
+		
+		print_r($Attribute);
+		
+		$this->Attribute->save($Attribute,true);
 		
 		//Upload file
 		$ringino=$Attribute['Attribute']['ringino'];

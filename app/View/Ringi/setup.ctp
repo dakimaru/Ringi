@@ -4,6 +4,6 @@ if (isset($success1)){
 }
 ?>
 
-<form action="/Ringi/users/add" method="get" style="text-align: center;">
+<form action="overview" method="get" style="text-align: center;">
 	<button class="btn-example" type="submit" style="font-size: 20px">Next</button>
 </form>
