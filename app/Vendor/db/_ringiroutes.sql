@@ -7,12 +7,10 @@ not null
 ringino 
 varchar(255) 
 not null  
-unique  
 ,
 approverlayer 
-bool 
+int(3) 
 not null  
-unique  
 ,
 approverid 
 varchar(255) 
@@ -20,8 +18,8 @@ varchar(255)
 approvedate 
 date 
 ,
-ringstatus 
-bool 
+ringistatus 
+varchar(255) 
 ,
 lastlayerflg 
 bool 
@@ -37,4 +35,9 @@ varchar(255)
 ,
 updated_at 
 datetime 
+,UNIQUE KEY compUniqDummy (
+ringino
+,
+approverlayer
+)
 ) ENGINE=InnoDB;

@@ -45,13 +45,10 @@ class UsersController extends AppController {
 			{
 				// authentication passed
 				
-				$host = 'localhost';
-				$username = 'root';
-				$password = '';
 				$database = 'ringidata';
 
 				// Connect to MySQL
-				$link = mysql_connect($host, $username, $password);
+				$link = $this->openSQLconnection();
 
 				if (!$link) {
 					die('Could not connect: ' . mysql_error());

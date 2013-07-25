@@ -3,7 +3,7 @@
 /** General Style Info **/
 
 html,body {
-	min-width:1000px;
+	/*min-width:1000px;*/
 	height:100%; /*needed because otherwise the footer will not work properly. If you just leave out, will not work for safari.*/
 	
 	/*
@@ -36,7 +36,7 @@ pre {
 }
 
 .wrapper {
-	/*background-image:url('/Ringi/app/webroot/img/clouds.jpg');*/
+	background-image:url('/Ringi/app/webroot/img/clouds.png');
 	min-height: 100%;
 	height: auto !important;
 	height: 100%;

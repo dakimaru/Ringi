@@ -9,7 +9,7 @@ SQLPATH=../db
 RINGIDBNAME=ringidata
 MYSQLPATH=/Applications/XAMPP/xamppfiles/bin/
 
-python $SCRIPTPATH/convXlsSchemaToSql.py $SCHEMAPATH budgets 1 18 > $SQLPATH/_budgets.sql
+python $SCRIPTPATH/convXlsSchemaToSql.py $SCHEMAPATH budgets > $SQLPATH/_budgets.sql
 $MYSQLPATH/mysql -u root              < $SQLPATH/createdb.sql
 $MYSQLPATH/mysql -u root $RINGIDBNAME < $SQLPATH/_budgets.sql
 

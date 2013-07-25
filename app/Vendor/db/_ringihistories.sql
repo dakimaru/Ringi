@@ -7,12 +7,10 @@ not null
 ringino 
 varchar(255) 
 not null  
-unique  
 ,
 ringiseq 
-bool 
+int(3) 
 not null  
-unique  
 ,
 processerid 
 varchar(255) 
@@ -23,7 +21,7 @@ date
 not null  
 ,
 approverlayer 
-bool 
+int(3) 
 not null  
 ,
 ringiaction 
@@ -44,4 +42,9 @@ varchar(255)
 ,
 updated_at 
 datetime 
+,UNIQUE KEY compUniqDummy (
+ringino
+,
+ringiseq
+)
 ) ENGINE=InnoDB;

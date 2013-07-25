@@ -51,7 +51,19 @@
 	Router::connect('/pass_back_check', array('controller' => 'Ringi', 'action' => 'pass_back_check', 'pass_back_check'));
 	Router::connect('/reject', array('controller' => 'Ringi', 'action' => 'reject', 'reject'));
 	Router::connect('/application_details', array('controller' => 'Ringi', 'action' => 'application_details', 'application_details'));
+	
+	Router::connect('/edit', array('controller' => 'Ringi', 'action' => 'edit', 'edit'));
+	
+	Router::connect('/pattern3', array('controller' => 'Ringi', 'action' => 'pattern3', 'pattern3'));
 
+	Router::connect('/approve', array('controller' => 'Ringi', 'action' => 'approve', 'approve'));
+	Router::connect('/accept', array('controller' => 'Ringi', 'action' => 'accept', 'accept'));
+	Router::connect('/reject', array('controller' => 'Ringi', 'action' => 'reject', 'reject'));
+	Router::connect('/hold', array('controller' => 'Ringi', 'action' => 'hold', 'hold'));
+	Router::connect('/passback', array('controller' => 'Ringi', 'action' => 'passback', 'passback'));
+	Router::connect('/reopen', array('controller' => 'Ringi', 'action' => 'reopen', 'reopen'));
+	Router::connect('/cancel1', array('controller' => 'Ringi', 'action' => 'cancel1', 'cancel1'));
+	Router::connect('/cancel2', array('controller' => 'Ringi', 'action' => 'cancel2', 'cancel2'));
 
 /**
  * Load all plugin routes. See the CakePlugin documentation on

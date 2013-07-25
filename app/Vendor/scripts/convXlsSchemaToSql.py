@@ -3,6 +3,7 @@ import string
 import sys
 
 QUERY_HEAD      = "CREATE TABLE IF NOT EXISTS "
+QUERY_COMP_UNIQ = ",UNIQUE KEY compUniqDummy ("
 QUERY_OPTION    = ") ENGINE=InnoDB;"
 
 COL_NAME =0
@@ -12,7 +13,7 @@ COL_NULL =4
 COL_UNIQ =5
 COL_BIGGEST =5
 
-COL_TOREAD = [COL_NAME, COL_TYPE, COL_PRI, COL_NULL, COL_UNIQ]
+COL_TOREAD = [COL_NAME, COL_TYPE, COL_PRI, COL_NULL]
 
 DECLARATIVE_STR = {
     COL_PRI  : "PRIMARY KEY auto_increment",
@@ -51,7 +52,7 @@ def genQuerySnip(colIndex,value):
     return (retval + ' ').lower()
 
         
-def readXls(pathToExcel,tablename,rowFrom,rowTo):
+def readXls(pathToExcel,tablename,rowFrom=1):
     filename = tablename + ".xlsx"
     filename = pathToExcel + "/" + filename 
     wb = open_workbook(filename)
@@ -61,35 +62,51 @@ def readXls(pathToExcel,tablename,rowFrom,rowTo):
     for s in wb.sheets():
         #print 'Sheet:',s.name
         first = True
-        for row in range(rowFrom,rowTo):
+        uniqColumns = []
+        for row in range(rowFrom,s.nrows):
             if not first:
                 print ","
             first = False
             for col in range(0, COL_BIGGEST+1):
+                val = s.cell(row,col).value
                 if col in COL_TOREAD:
-                    val = s.cell(row,col).value
                     #print col, val.value
                     val = genQuerySnip(col,val)
                     if val.strip() != "":
                         print val
-            
+                if col == COL_UNIQ:
+                    #print "COL_UNIQ found"
+                    uniqVal = genDeclarativeStr(col,val)
+                    #print "  value =", uniqVal, "."
+                    if uniqVal != "":
+                        colName = s.cell(row,COL_NAME).value
+                        #print "  name of column =", colName
+                        uniqColumns.append(colName)
+        if len(uniqColumns)>0:
+            print QUERY_COMP_UNIQ
+            first = True
+            for col in uniqColumns:
+                if not first:
+                    print ","
+                first = False
+                print col
+            print ")"
     print QUERY_OPTION
 
-def doit(pathToExcel, tablename, rowFrom, rowTo):
-    dArray = readXls(pathToExcel, tablename, rowFrom, rowTo)
+def doit(pathToExcel, tablename):
+    #print 'reading table:', tablename
+    dArray = readXls(pathToExcel, tablename)
 
 def usage():
-    print "usage: ", sys.argv[0], "<tablename> <rowFrom> <rowTo>"
+    print "usage: ", sys.argv[0], "<schema_directory> <tablename>"
     exit()
 
-if len(sys.argv) != 5:
+if len(sys.argv) != 3:
     usage()
     exit()
 
 pathToExcel = sys.argv[1].upper()
 tablename   = sys.argv[2].upper()
-rowFrom     = int(sys.argv[3])
-rowTo       = int(sys.argv[4])
  
-doit( pathToExcel, tablename, rowFrom, rowTo )
+doit( pathToExcel, tablename )
 

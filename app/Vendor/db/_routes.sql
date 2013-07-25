@@ -5,7 +5,7 @@ primary key auto_increment
 not null  
 ,
 approveroutetype 
-bool 
+int(2) 
 not null  
 ,
 person 

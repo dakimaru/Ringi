@@ -23,7 +23,8 @@
 	echo $this->fetch('meta');
 	echo $this->fetch('script');
 	?>
-
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
 </head>
 <body>
 	<div class="wrapper">
@@ -43,26 +44,6 @@
 							<span class="caret"></span>
 						</a>
 
-
-
-						<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
-							<li><a tabindex="-1" href="#">Help</a></li>
-							<li class="divider"></li>
-							<li><a tabindex="-1" href="#">Settings</a></li>
-							<li>
-								<?php
-							if(!empty($user)) {
-								echo('<form method="post" action="/Ringi/users/logout">
-								<a tabindex="-1">Logout</a></form>');
-							}
-							else {
-								echo('<form method="get" action="/Ringi/users/login">
-								<a tabindex="-1">Login</a></form>');						
-							}
-							?>
-							</li>						
-						</ul>
-
 						<li>
 							<a>
 								<?php
@@ -73,13 +54,30 @@
 							?></a>
 						</li>
 
-						
+						<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
+							<li><a tabindex="-1" href="#">Help</a></li>
+							<li class="divider"></li>
+							<li><a tabindex="-1" href="#">Settings</a></li>
+							<li>
+								<?php
+							if(!empty($user)) {
+								echo('<a tabindex="-1" href="/Ringi/users/logout">
+								<form name="my_form" method="post" action="/Ringi/users/logout">
+																     Logout
+																     </form></a>');
+							}
+							else {
+								echo('<a tabindex="-1" href="/Ringi/users/login">Login</a>');						
+							}
+							?>
+						</li>						
+					</ul>					
 				</ul>
 			</div>
 		</div>
 	</div>
 	<div style="height:3em;"></div>
-	<div class="containers" style="min-width:940px; padding:20px; ">
+	<div class="containers">
 
 		<?php echo $this->Session->flash(); ?>
 		<?php echo $content_for_layout; ?>

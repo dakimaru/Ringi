@@ -20,7 +20,33 @@ def connect():
 
     return cnx
 
+def getSelectQuery(DBconn, header,dbTable):
+    query = "Select "
+    first = True
+    for c in header:
+        if not first:
+            query = query + ","
+        first = False
+        query = query + c
+    query = query + " FROM " + dbTable
+
+    #print "query in getSelectQuery=", query
+    cursor = DBconn.cursor()
+    cursor.execute(query)
+
+    rows = []
+    columns = tuple( [d[0].decode('utf8').encode('ascii','ignore') for d in cursor.description] )
+    entryFound = False
+    for r in cursor:
+        result = dict(zip(columns, r))
+        entryFound = True
+        rows.append(result)
+    cursor.close()
+   
+    return rows
+
 def getUpdateQuery(header, row, dbTable, keyColNames):
+    #print "## getUpdateQuery, row = ", row
     #print header
     query = "UPDATE " + dbTable + " "
     query = query + "SET "
@@ -117,12 +143,11 @@ def rowAlreadyExist(cursor, dbTable, header, row, keyColNames):
         #print keyColNames, " not found"
         return None
 
-    retval = []
-    for col in keyColNames:
-        retval.append(row[col])
-    
-    #print keyColNames , "=", retval, " found"
+    # overwrite fetched with newer
+    for rkey,rval in row.items():
+        result[rkey.lower()] = rval
 
+    #print "   result for query = ", result
     return result
 
 def updateRow(DBconn, dbTable, header, row, keyColNames): 
@@ -136,12 +161,21 @@ def updateRow(DBconn, dbTable, header, row, keyColNames):
         #print "rows to insert = ", row
         query = getInsertQuery(dbTable, header, row)
 
-    #print query
+    print query
 
     cursor = DBconn.cursor(True)   
     cursor.execute(query)
     DBconn.commit()
     cursor.close()
+
+def queryTable(tablename, columns):
+    DBconn = connect()
+
+    rows = getSelectQuery(DBconn, columns, tablename)
+    
+    DBconn.close()
+
+    return rows
 
 def updateDB(dbTable,header,rows,keyColNames):
     DBconn = connect()
@@ -197,9 +231,12 @@ def getNextEnumValue(cursor, dbTable, enumColName, incColName, row):
     cursor.execute(query)
 
     retval = str(ENUM_FIRST_VALUE)
+    #print "## getNextEnumValue, query  = ", query
+    #print "## getNextEnumValue, retval = ", retval
     for dummy in cursor:
         #entry found
-        if dummy[0]:
+        #print dummy
+        if dummy[0] and dummy[0] != 'None':
             #print dummy[0]
             retval = str(int(dummy[0])+1)
 

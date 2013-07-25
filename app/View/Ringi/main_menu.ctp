@@ -18,8 +18,6 @@
 	</div>
 </div>-->
 
-
-
 <div class="container">
 <div class="row-fluid">
 	<div class="span12">
@@ -261,8 +259,20 @@
 						<p>
 							<button class="btn btn-small btn-long">Detail</button>
 						</p>
-					</div>
-				</div>
+					</div>					
+				</div>	
+				<a class="btn btn-small " href="/Ringi/apply">Create</a>				
+				<a class="btn btn-small " href="/Ringi/edit">Edit</a>
+				<br>
+				<form action="pattern3" method="post" accept-charset="utf-8">
+					<input type="text" name="ringi_number" value="1">
+					<input type="text" name="status" value="002">
+					<input type="text" name="resourceflag" value="home">
+					<input type="submit" value="My Application &rarr;">
+				</form>
+				
+				<div id="name"></div>
+				<div id="name"></div>
 			</div>
 		</div>
 	</div>

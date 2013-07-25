@@ -2,14 +2,17 @@
 
 function authenticate($user, $pass) {
 	
-	//$usr = "";
-	//$pass = "";
-	
-	
+	//ldap credentials
 	$ldap_host = "192.168.1.3";
 	$ldapuser      = 'cn=Manager,dc=enspirea,dc=com';  
 	$ldappass     = '820davis';
-
+	
+	//MySQL credentials
+	$host = 'localhost';
+	$username = 'root';
+	$password = '';
+	$database = 'ringidata';
+	
 	// Active Directory DN
 	$ldap_dn = "ou=Development,dc=enspirea,dc=com";
 
@@ -24,14 +27,6 @@ function authenticate($user, $pass) {
 
 	// connect to active directory
 	$ldap = ldap_connect($ldap_host) or die("Could not connect to LDAP server.");
-
-	// verify user and password
-
-	//connect to DB
-	$host = 'localhost';
-	$username = 'root';
-	$password = '';
-	$database = 'ringidata';
 
 	// Connect to MySQL
 	$link = mysql_connect($host, $username, $password);

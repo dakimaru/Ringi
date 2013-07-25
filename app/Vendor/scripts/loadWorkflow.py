@@ -18,6 +18,7 @@ ROUTES_DEPARTMENT       = "department"
 ROUTES_APPROVERLAYER    = "approverLayer"
 ROUTES_APPROVERDEPT     = "approverDept"
 ROUTES_APPROVERID       = "approverID"
+ROUTES_APPROVEROUTETYPE = "approveRouteType"
 ROUTES_KEY_COLUMNS  = [ 
                         ROUTES_PERSON,
                         ROUTES_DEPARTMENT,
@@ -39,7 +40,12 @@ MANAGER_ROUTES_MAP =    {
                         USER_CSV_DEPARTMENT : ROUTES_APPROVERDEPT,
                         USER_CSV_TITLE      : ROUTES_TITLE,
                         USER_CSV_USERNAME   : ROUTES_APPROVERID,
-                        } 
+                        }
+ROUTES_DEFAULT_VALUES = {
+                        ROUTES_APPROVEROUTETYPE  : 1,
+}
+                        
+ 
 MAXIMUM_LAYER           = 5
 MARKER_VISITED          = "_visited"
 
@@ -130,7 +136,13 @@ def analyzeUserTree(option,users):
             #print ">>> adding new", appFlow, " as not found in ", appFlows
             appFlows.append(appFlow[0])
 
-    return ROUTES_HEADER_COLUMNS, appFlows
+    # add default values
+    newheader = ROUTES_HEADER_COLUMNS + ROUTES_DEFAULT_VALUES.keys()
+    for aFlow in appFlows:
+        for col,defaultvalue in ROUTES_DEFAULT_VALUES.items():
+            aFlow[col] = defaultvalue
+
+    return newheader, appFlows
 
 def doit(filename, option):
     header,rows = CSVHelper.readCsv(filename)

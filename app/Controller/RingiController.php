@@ -5,13 +5,28 @@ App::uses('Sanitize', 'Utility');
 
 class RingiController extends AppController {	
 	
+	//Put All Model for this controller
+    var $uses = array(  'Attribute',
+                        'Name',
+						'Ringihistory',
+						'Ringiroute',
+						'Route',
+						'UserData');
+
+    public function beforeFilter() {
+        parent::beforeFilter();
+    }
+
 	public function openSQLconnection() {
 		$host = 'localhost';
 		$username = 'root';
 		$password = '';
-
-		// Connect to MySQL
-		return mysql_connect($host, $username, $password);
+		$database = 'ringidata';
+		
+		$link=mysql_connect($host, $username, $password);
+		$ret = mysql_select_db($database, $link);
+		
+		return $ret;
 	}
 	
 	public function setup() {
@@ -27,8 +42,6 @@ class RingiController extends AppController {
 		$bar = exec("cd $setup_script_path ; sh createRingiTables.sh");
 		$bar = exec("cd $setup_script_path ; sh importADToMySql.sh");
 
-		//exec('cd ' . $script_path . '; sh' . $scriptfile);
-		
 	}
 			
     public function isAuthorized($user) {
@@ -38,15 +51,6 @@ class RingiController extends AppController {
            //  $postId = $this->request->params['pass'][0];
         }
         return parent::isAuthorized($user);
-    }   
-
-    //Put All Model for this controller
-    var $uses = array(  'Attribute',
-                        'UserData',
-						'PassBackData');
-
-    public function beforeFilter() {
-        parent::beforeFilter();
     }
 
 	public function password_change() {
@@ -70,8 +74,7 @@ class RingiController extends AppController {
 	public function password_reset() {
 	
 		$database = 'ringidata';	
-		$link = $this->openSQLconnection();
-		$db_selected = mysql_select_db($database, $link);
+		$this->openSQLconnection();
 		
 		if ($this->request->is('post')) {
 			//$username = $POST[];
@@ -81,7 +84,7 @@ class RingiController extends AppController {
 			if ($_POST["newpass"]!=="" && $_POST["selection"]!=="") {
 				$user = $_POST["selection"];
 				$sql="SELECT DN FROM users WHERE username='".$user."'";
-				$query = mysql_query($sql, $link);
+				$query = mysql_query($sql);
 				$userDN = mysql_fetch_assoc($query);
 				
 				$newpassword=$_POST["newpass"];
@@ -98,7 +101,7 @@ class RingiController extends AppController {
 		}
 	
 		$sql = "SELECT username FROM users";
-		$query = mysql_query($sql, $link);
+		$query = mysql_query($sql);
 		
 		$allusers = array();
 		$num = mysql_num_rows($query);
@@ -182,7 +185,7 @@ class RingiController extends AppController {
 		
 		$path = $_SERVER['DOCUMENT_ROOT']."/Ringi/uploads/";
 		
-		$link = $this->openSQLconnection();
+		$this->openSQLconnection();
 
 		$objPHPExcel = $this->XLmodify($excelfile);
 
@@ -219,7 +222,7 @@ class RingiController extends AppController {
 	
 	public function XLmodify($XLfile) {
 
-		$link = $this->openSQLconnection();
+		$this->openSQLconnection();
 
 		$objPHPExcel = PHPExcel_IOFactory::load($XLfile);
 
@@ -253,7 +256,7 @@ class RingiController extends AppController {
 		
 		$database = 'ringidata';
 		
-		$link = $this->openSQLconnection();
+		$this->openSQLconnection();
 		
 		//The following piece gets the most recently added file in directory /uploads/
 		$path = $_SERVER['DOCUMENT_ROOT']."/Ringi/uploads/";
@@ -293,8 +296,6 @@ class RingiController extends AppController {
 			}		
 		}
 		
-		mysql_select_db($database, $link);
-		
 		for ($i=0; $i < count($columnNames); $i++) { 
 			if ($columnTypes[$i]=="string") {
 				$columnTypes[$i]= "varchar(255)";
@@ -329,129 +330,6 @@ class RingiController extends AppController {
 		}
 	}
 	
-	public function apply () {
-
-		$path = $_SERVER['DOCUMENT_ROOT']."/Ringi/uploads/";
-		
-
-		//creating a doc string.
-		$doc = file_get_contents($path."active.php");
-			
-		$formstart = '<form name="applyForm" method="post" action="apply_check" onsubmit="return main()" enctype="multipart/form-data">';
-	
-		$doc = $formstart . $doc .
-		'
-			<div class="well">
-				<div class="text-center">
-					<label for="file">Choose your attachments</label><br>
-					<input type="file" name="file[]" style="line-height: 0; padding: 0px" multiple="multiple"><br><br>
-					<button class="btn btn-success">Apply</button>
-				</div>
-			</div>
-		</form>';
-	
-		//if input:...is found
-		while (preg_match('/input:.+:.+/', $doc, $matches) == 1) {	//strpos($doc, 'input:'.':') ==false
-		
-			//$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none;" id='. findcolname($doc) .' name='. findcolname($doc) .'></textarea>' , $doc);
-		
-			$temp = preg_split('/[:]/',$matches[0]);
-		
-			 $doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none; background-color:white;" id='. $temp[1] .' name='. $temp[1] .'></textarea>' , $doc, 1);
-		
-		}
-		$this->set('doc',$doc);
-	
-    }
-
-	public function apply_check () {
-		require_once("../Config/uploads.ctp");
-		
-
-		$host = 'localhost';
-		$username = 'root';
-		$password = '';
-		$database = 'ringidata';
-		$someTable = 'attributes';
-
-		// Connect to MySQL
-		$link = mysql_connect($host, $username, $password);
-
-		// Make Attributes the current database
-		mysql_select_db($database, $link);
-		if (mysql_query("SELECT id FROM attributes WHERE id=1")) {
-			$selectcols = "SELECT * FROM attributes WHERE id=1";
-		}
-		else {
-			$selectcols = "SELECT * FROM attributes";
-		}
-				
-		$tempcols = mysql_query($selectcols) or die(mysql_error());
-
-		$attrnumbers = mysql_num_fields($tempcols);		//this has the number of columns!!!		
-
-		$columnNames = array();
-
-		for ($i=0; $i < $attrnumbers; $i++) { 
-			$test = mysql_field_name($tempcols,$i);	
-			array_push($columnNames, $test);
-		}
-
-
-		for ($i=1; $i < $attrnumbers; $i++) {
-			$column = $columnNames[$i];
-			if (isset($this->data[$column])) {
-				$Attribute['Attribute'][$column] = $this->data[$column];
-			}
-		}
-		
-		
-		//storing non-excel items
-		
-		//attributes
-		$Attribute['Attribute']['applicantid'] = $this->Auth->user('username');
-		$Attribute['Attribute']['applydate'] = date("Y-m-d H:i:s");
-		//$Attribute['Attribute']['ringistatus'] = 002;  //to be changed///////
-		$Attribute['Attribute']['creator_id'] = $this->Auth->user('username');
-		$Attribute['Attribute']['created_at'] = date("Y-m-d H:i:s");
-		$Attribute['Attribute']['updator_id'] = NULL;
-		$Attribute['Attribute']['updated_at'] = NULL;
-		$Attribute['Attribute']['activeflag'] = 1;
-		$Attribute['Attribute']['deleteReason'] = NULL;
-		
-		//ringihistories
-		$Attribute['Ringihistory']['processerid'] = $this->Auth->user('username');
-		
-		print_r($Attribute);
-		
-		$this->Attribute->save($Attribute,true);
-		
-		//Upload file
-		$ringino=$Attribute['Attribute']['ringino'];
-		$cmd = "cd $vendorpath ; sh createFolder.sh $folderpath $ringino";
-		exec($cmd);
-		
-		if ($_FILES['file']['name']) {
-			$count=0;
-			foreach ($_FILES['file']['name'] as $filename) 
-	        {
-				move_uploaded_file( $_FILES['file']['tmp_name'][$count], $folderpath.$ringino."/".$_FILES['file']['name'][$count]);
-				$count++;
-	        }
-		}
-		
-		echo "<a href=file://".$folderpath.$ringino.">Link to Uploads</a>";		
-		
-		
-		//$latestid = mysql_query("SELECT MAX(id) FROM attributes");
-		//$querystring = mysql_fetch_assoc($latestid);
-		//$number = $querystring['MAX(id)'];
-		//$updatedtime = mysql_query("SELECT updated_at FROM attributes WHERE id="."$number");
-		//$updated_at = mysql_fetch_assoc($updatedtime);
-		//$updated_final = $updated_at['updated_at'];
-		
-    }
-
 	public function DuplicateMySQLRecord ($database, $table, $id_field, $id) {
 		// load the original record into an array  	
 		$search = "SELECT * FROM $table WHERE $id_field=$id";
@@ -536,23 +414,43 @@ class RingiController extends AppController {
 		$this->set('username',$username);
 				
     }
+	
+	public function pattern3 () {
+		if (isset($this->data['ringi_number'])) {
+			$this->set('status',$this->data['status']);
+			$this->set('ringino',$this->data['ringi_number']);
+			$this->set('resourceflag',$this->data['resourceflag']);
+			$ringino=$this->data['ringi_number'];
+			$this->displayApplication($ringino);
+		}
+		else {
+			$this->redirect(array('action' => 'main_menu'));
+		}
+	}
 
-    public function analise () {
-        $this->autoLayout = true;
-    }
-
-    public function confirm () {
+	public function displayApplication($ringino) {
+		$this->openSQLconnection();
+		$layoutpath = $_SERVER['DOCUMENT_ROOT']."/Ringi/uploads/";
+		$doc = file_get_contents($layoutpath."active.php");
 		
-		$host = 'localhost';
-		$username = 'root';
-		$password = '';
+		while (preg_match('/input:.+:.+/', $doc, $matches) == 1) {
+			$temp = preg_split('/[:]/',$matches[0]);
+			$query = mysql_db_query('ringidata', "SELECT $temp[1] FROM attributes WHERE ringino=$ringino");
+			$fix = mysql_fetch_assoc($query);
+			$doc = preg_replace('/input:(.+):.+/', $fix[$temp[1]], $doc, 1);
+		}
+		$this->set('doc',$doc);
+	}
+	
+    public function confirm () {
+	
 		$database = 'ringidata';
 		$someTable = 'attributes';
 		
 		$path = $_SERVER['DOCUMENT_ROOT']."/Ringi/uploads/";
 		
 		// Connect to MySQL
-		$link = mysql_connect($host, $username, $password);
+		$this->openSQLconnection();
 
 		$id = $this->data['idlist2'];
 		$id_field = 'id';
@@ -601,10 +499,7 @@ class RingiController extends AppController {
 		$Attribute['Attribute']['xxxxxcomment'] = $this->data['xxxxxcomment'];
 		
 		// Connect to MySQL
-		$link = mysql_connect($host, $username, $password);
-
-		// Make Attributes the current database
-		mysql_select_db($database, $link);
+		mysql_connect($host, $username, $password);
 		
 		$tempcols = mysql_query("SELECT * FROM attributes") or die(mysql_error());
 		
@@ -627,32 +522,6 @@ class RingiController extends AppController {
 				$PassBackData['PassBackData']['xxxxxauth_id'] = $authid;
      	$this->PassBackData->save($PassBackData);
 	}
-	
-	public function reject () {
-			$idlist2=$this->data["idlist2"];
-     	$Attribute = $this->Attribute->findById($idlist2);
-			$Attribute['Attribute']['xxxxxrejectflag'] = TRUE;
-			$this->Attribute->save($Attribute);
-			
-	}
-
-    public function edit($id = null) {
-        $this->User->id = $id;
-        if (!$this->User->exists()) {
-            throw new NotFoundException(__('Invalid user'));
-        }
-        if ($this->request->is('post') || $this->request->is('put')) {
-            if ($this->User->save($this->request->data)) {
-                $this->Session->setFlash(__('The user has been saved'));
-                $this->redirect(array('action' => 'index'));
-            } else {
-                $this->Session->setFlash(__('The user could not be saved. Please, try again.'));
-            }
-        } else {
-            $this->request->data = $this->User->read(null, $id);
-            unset($this->request->data['User']['password']);
-        }
-    }
 
     public function delete($id = null) {
         if (!$this->request->is('post')) {
@@ -670,7 +539,627 @@ class RingiController extends AppController {
         $this->redirect(array('action' => 'index'));
     }
 
-	public function application_details() {
+	public function application_details() {	
+	}
+	
+	
+	public function apply() {
+
+		$path = $_SERVER['DOCUMENT_ROOT']."/Ringi/uploads/";
+		
+		//creating a doc string.
+		$doc = file_get_contents($path."active.php");
+			
+		$formstart = '<form name="applyForm" method="post" action="apply_check" onsubmit="return main()" enctype="multipart/form-data">';
+	
+		$doc = $formstart . $doc .
+		'
+			<div class="well">
+				<div class="text-center">
+					<label for="file">Choose your attachments</label><br>
+					<input type="file" name="file[]" style="line-height: 0; padding: 0px" multiple="multiple"><br><br>
+					<button class="btn btn-success">Apply</button>
+				</div>
+			</div>
+		</form>';
+	
+		//if input:...is found
+		while (preg_match('/input:.+:.+/', $doc, $matches) == 1) {	//strpos($doc, 'input:'.':') ==false
+		
+			//$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none;" id='. findcolname($doc) .' name='. findcolname($doc) .'></textarea>' , $doc);
+		
+			$temp = preg_split('/[:]/',$matches[0]);
+		
+			 $doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none; background-color:white;" id='. $temp[1] .' name='. $temp[1] .'></textarea>' , $doc, 1);
+		
+		}
+		
+		//if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+			//if (isset($this->data['ringino'])) {
+			//	$this->openSQLconnection();
+			//	$ringino = $this->data['ringino'];
+			//	$sql="SELECT count(1) from attributes where ringino = $ringino";
+			//	$query = mysql_query($sql) or die(mysql_error());
+			//	$ringiunique = mysql_fetch_assoc($query);
+			//	$this->set('ringiunique',$ringiunique);
+		//	}
+	//	}
+
+		$this->set('doc',$doc);
+		
+		return $doc;
+	
+    }
+
+	public function apply_check () {
+		require_once("../Config/uploads.ctp");
+		
+		//$database = 'ringidata';
+		//$someTable = 'attributes';
+
+		// Connect to MySQL
+		$this->openSQLconnection();
+		
+		if (mysql_query("SELECT id FROM attributes WHERE id=1")) {
+			$selectcols = "SELECT * FROM attributes WHERE id=1";
+		}
+		else {
+			$selectcols = "SELECT * FROM attributes";
+		}
+				
+		$tempcols = mysql_query($selectcols) or die(mysql_error());
+
+		$attrnumbers = mysql_num_fields($tempcols);		//this has the number of columns!!!		
+
+		$columnNames = array();
+
+		for ($i=0; $i < $attrnumbers; $i++) { 
+			$test = mysql_field_name($tempcols,$i);	
+			array_push($columnNames, $test);
+		}
+
+
+		for ($i=1; $i < $attrnumbers; $i++) {
+			$column = $columnNames[$i];
+			if (isset($this->data[$column])) {
+				$Attribute['Attribute'][$column] = $this->data[$column];
+			}
+		}
+		
+		
+		//storing non-excel items
+		
+		//attributes
+		$Attribute['Attribute']['applicantid'] = $this->Auth->user('username');
+		$Attribute['Attribute']['applydate'] = date("Y-m-d H:i:s");
+		$Attribute['Attribute']['ringistatus'] = '002';
+		$Attribute['Attribute']['creator_id'] = $this->Auth->user('username');
+		$Attribute['Attribute']['created_at'] = date("Y-m-d H:i:s");
+		$Attribute['Attribute']['updator_id'] = NULL;
+		$Attribute['Attribute']['updated_at'] = NULL;
+		$Attribute['Attribute']['activeflag'] = 1;
+		$Attribute['Attribute']['deleteReason'] = NULL;
+		
+		//ringihistories
+		
+		$Ringihistory['Ringihistory']['ringino'] = $this->data['ringino'];
+		$Ringihistory['Ringihistory']['ringiseq'] = 1;
+		$Ringihistory['Ringihistory']['approverlayer'] = 0;
+		$Ringihistory['Ringihistory']['processerid'] = $this->Auth->user('username');
+		$Ringihistory['Ringihistory']['processdate'] = date("Y-m-d H:i:s");
+		$Ringihistory['Ringihistory']['ringiaction'] = '001';
+		$Ringihistory['Ringihistory']['comment'] = NULL;
+		$Ringihistory['Ringihistory']['creator_id'] = $this->Auth->user('username');
+		$Ringihistory['Ringihistory']['created_at'] = date("Y-m-d H:i:s");
+		$Ringihistory['Ringihistory']['updator_id'] = NULL;
+		$Ringihistory['Ringihistory']['updated_at'] = NULL;
+		
+		
+		$this->Attribute->save($Attribute);
+		$this->Ringihistory->save($Ringihistory);
+		
+		//Upload file
+		$ringino=$Attribute['Attribute']['ringino'];
+		$cmd = "cd $vendorpath ; sh createFolder.sh $folderpath $ringino";
+		exec($cmd);
+		
+		if ($_FILES['file']['name']) {
+			$count=0;
+			foreach ($_FILES['file']['name'] as $filename) 
+	        {
+				move_uploaded_file( $_FILES['file']['tmp_name'][$count], $folderpath.$ringino."/".$_FILES['file']['name'][$count]);
+				$count++;
+	        }
+		}
+		
+		echo "<a href=file://".$folderpath.$ringino.">Link to Uploads</a>";
+		
+    }
+
+	
+	public function edit() {
+		$doc = $this->apply();
+		echo gettype($doc);
 		
 	}
+	
+	
+	public function approve() {
+		$connection=$this->openSQLconnection();
+		$username = $this->Auth->user('username');
+		$date = date("Y-m-d H:i:s");
+		$ringino = $this->data['ringino'];
+		//Get current ringiseq from ringihistories 
+		$query = mysql_query("SELECT max(ringiseq) maxringino 
+		                        from ringihistories 
+		                       where ringino = $ringino 
+		                    group by ringino");
+		$array = mysql_fetch_assoc($query);
+		$ringiseq=$array['maxringino'];
+		
+		//Get approverLayer from ringiroutes
+		$query2 = mysql_query("SELECT approverLayer 
+		  						from ringiroutes
+							   where ringino = $ringino
+		  						 and approverID = '".$username."'");
+		$array2 = mysql_fetch_assoc($query2) or die("approverlayer get failure: ". mysql_error());
+		$approverlayer=$array2['approverLayer'];
+
+		$sql2="UPDATE ringiroutes
+		    Set  approvedate= now(),
+		         ringistatus = '002',
+		         updator_id = '".$username."',
+		         updated_at = now()
+		  where ringino = $ringino and  approverid = '".$username."'";
+
+    	$Ringihistory['Ringihistory']['ringino'] = $this->data['ringino'];
+    	$Ringihistory['Ringihistory']['ringiseq'] = $ringiseq+1;
+    	$Ringihistory['Ringihistory']['approverlayer'] = $approverlayer;
+    	$Ringihistory['Ringihistory']['processerid'] = $this->Auth->user('username');
+    	$Ringihistory['Ringihistory']['processdate'] = date("Y-m-d H:i:s");
+    	$Ringihistory['Ringihistory']['ringiaction'] = '002';
+    	$Ringihistory['Ringihistory']['comment'] = $this->data['comment'];
+    	$Ringihistory['Ringihistory']['creator_id'] = $this->Auth->user('username');
+    	$Ringihistory['Ringihistory']['created_at'] = date("Y-m-d H:i:s");
+    	$Ringihistory['Ringihistory']['updator_id'] = NULL;
+    	$Ringihistory['Ringihistory']['updated_at'] = NULL;
+   
+   
+    	$this->Ringihistory->save($Ringihistory);
+
+		if ($connection) {
+			$query = mysql_query($sql2) or die(mysql_error());
+		} else {
+			echo "Approve is failure when update the data into database";
+		}
+	}
+	
+	public function accept() {	
+		$connection=$this->openSQLconnection();
+		$username = $this->Auth->user('username');
+		$date = date("Y-m-d H:i:s");
+		$ringino = $this->data['ringino'];
+		//Get current ringiseq from ringihistories 
+		$query = mysql_query("SELECT max(ringiseq) maxringino 
+		                        from ringihistories 
+		                       where ringino = $ringino 
+		                    group by ringino");
+		$array = mysql_fetch_assoc($query);
+		$ringiseq=$array['maxringino'];
+		
+		//Get approverLayer from ringiroutes
+		$query2 = mysql_query("SELECT approverLayer 
+		  						from ringiroutes
+							   where ringino = $ringino
+		  						 and approverID = '".$username."'");
+		$array2 = mysql_fetch_assoc($query2) or die("approverlayer get failure: ". mysql_error());
+		$approverlayer=$array2['approverLayer'];
+		
+
+		$sql1="UPDATE attributes
+		    Set  ringistatus = '003',
+		           updator_id = '".$username."',
+		           updated_at = now()
+			where ringino = $ringino";
+
+		$sql2="UPDATE ringiroutes
+		    Set  approvedate= now(),
+		         ringistatus = '003',
+		         updator_id = '".$username."',
+		         updated_at = now()
+		  where ringino = $ringino and  approverid = '".$username."'";
+
+    	$Ringihistory['Ringihistory']['ringino'] = $this->data['ringino'];
+    	$Ringihistory['Ringihistory']['ringiseq'] = $ringiseq+1;
+    	$Ringihistory['Ringihistory']['approverlayer'] = $approverlayer;
+    	$Ringihistory['Ringihistory']['processerid'] = $this->Auth->user('username');
+    	$Ringihistory['Ringihistory']['processdate'] = date("Y-m-d H:i:s");
+    	$Ringihistory['Ringihistory']['ringiaction'] = '003';
+    	$Ringihistory['Ringihistory']['comment'] = $this->data['comment'];
+    	$Ringihistory['Ringihistory']['creator_id'] = $this->Auth->user('username');
+    	$Ringihistory['Ringihistory']['created_at'] = date("Y-m-d H:i:s");
+    	$Ringihistory['Ringihistory']['updator_id'] = NULL;
+    	$Ringihistory['Ringihistory']['updated_at'] = NULL;
+   
+   
+    	$this->Ringihistory->save($Ringihistory);
+
+		if ($connection) {
+			$query = mysql_query($sql1) or die(mysql_error());
+			$query = mysql_query($sql2) or die(mysql_error());
+		} else {
+			echo "Accept is failure when update the data into database";
+		}
+	}
+	
+	public function reject() {	
+		$connection=$this->openSQLconnection();
+		$username = $this->Auth->user('username');
+		$date = date("Y-m-d H:i:s");
+		$ringino = $this->data['ringino'];
+		//Get current ringiseq from ringihistories 
+		$query = mysql_query("SELECT max(ringiseq) maxringino 
+		                        from ringihistories 
+		                       where ringino = $ringino 
+		                    group by ringino");
+		$array = mysql_fetch_assoc($query);
+		$ringiseq=$array['maxringino'];
+		
+		//Get approverLayer from ringiroutes
+		$query2 = mysql_query("SELECT approverLayer 
+		  						from ringiroutes
+							   where ringino = $ringino
+		  						 and approverID = '".$username."'");
+		$array2 = mysql_fetch_assoc($query2) or die("approverlayer get failure: ". mysql_error());
+		$approverlayer=$array2['approverLayer'];
+		
+
+		$sql1="UPDATE attributes
+		    Set  ringistatus = '004',
+		           updator_id = '".$username."',
+		           updated_at = now()
+			where ringino = $ringino";
+
+		$sql2="UPDATE ringiroutes
+		    Set  approvedate= NOW(),
+		         ringistatus = '004',
+		         updator_id = '".$username."',
+		         updated_at = now()
+		  where ringino = $ringino and  approverid = '".$username."'";
+
+    	$Ringihistory['Ringihistory']['ringino'] = $this->data['ringino'];
+    	$Ringihistory['Ringihistory']['ringiseq'] = $ringiseq+1;
+    	$Ringihistory['Ringihistory']['approverlayer'] = $approverlayer;
+    	$Ringihistory['Ringihistory']['processerid'] = $this->Auth->user('username');
+    	$Ringihistory['Ringihistory']['processdate'] = date("Y-m-d H:i:s");
+    	$Ringihistory['Ringihistory']['ringiaction'] = '004';
+    	$Ringihistory['Ringihistory']['comment'] = $this->data['comment'];
+    	$Ringihistory['Ringihistory']['creator_id'] = $this->Auth->user('username');
+    	$Ringihistory['Ringihistory']['created_at'] = date("Y-m-d H:i:s");
+    	$Ringihistory['Ringihistory']['updator_id'] = NULL;
+    	$Ringihistory['Ringihistory']['updated_at'] = NULL;
+   
+   
+    	$this->Ringihistory->save($Ringihistory);
+
+		if ($connection) {
+			$query = mysql_query($sql1) or die(mysql_error());
+			$query = mysql_query($sql2) or die(mysql_error());
+		} else {
+			echo "Reject is failure when update the data into database";
+		}
+	}
+	
+	public function hold() {	
+		$connection=$this->openSQLconnection();
+		$username = $this->Auth->user('username');
+		$date = date("Y-m-d H:i:s");
+		$ringino = $this->data['ringino'];
+		//Get current ringiseq from ringihistories 
+		$query = mysql_query("SELECT max(ringiseq) maxringino 
+		                        from ringihistories 
+		                       where ringino = $ringino 
+		                    group by ringino");
+		$array = mysql_fetch_assoc($query);
+		$ringiseq=$array['maxringino'];
+		
+		//Get approverLayer from ringiroutes
+		$query2 = mysql_query("SELECT approverLayer 
+		  						from ringiroutes
+							   where ringino = $ringino
+		  						 and approverID = '".$username."'");
+		$array2 = mysql_fetch_assoc($query2) or die("approverlayer get failure: ". mysql_error());
+		$approverlayer=$array2['approverLayer'];
+		
+
+		$sql1="UPDATE attributes
+		    Set  ringistatus = '006',
+		           updator_id = '".$username."',
+		           updated_at = now()
+			where ringino = $ringino";
+
+		$sql2="UPDATE ringiroutes
+		    Set  approvedate= NOW(),
+		         ringistatus = '006',
+		         updator_id = '".$username."',
+		         updated_at = now()
+		  where ringino = $ringino and  approverid = '".$username."'";
+
+    	$Ringihistory['Ringihistory']['ringino'] = $this->data['ringino'];
+    	$Ringihistory['Ringihistory']['ringiseq'] = $ringiseq+1;
+    	$Ringihistory['Ringihistory']['approverlayer'] = $approverlayer;
+    	$Ringihistory['Ringihistory']['processerid'] = $this->Auth->user('username');
+    	$Ringihistory['Ringihistory']['processdate'] = date("Y-m-d H:i:s");
+    	$Ringihistory['Ringihistory']['ringiaction'] = '006';
+    	$Ringihistory['Ringihistory']['comment'] = $this->data['comment'];
+    	$Ringihistory['Ringihistory']['creator_id'] = $this->Auth->user('username');
+    	$Ringihistory['Ringihistory']['created_at'] = date("Y-m-d H:i:s");
+    	$Ringihistory['Ringihistory']['updator_id'] = NULL;
+    	$Ringihistory['Ringihistory']['updated_at'] = NULL;
+   
+   
+    	$this->Ringihistory->save($Ringihistory);
+
+		if ($connection) {
+			$query = mysql_query($sql1) or die(mysql_error());
+			$query = mysql_query($sql2) or die(mysql_error());
+		} else {
+			echo "Hold is failure when update the data into database";
+		}
+	}
+	
+	public function passback() {	
+		$connection=$this->openSQLconnection();
+		$username = $this->Auth->user('username');
+		$date = date("Y-m-d H:i:s");
+		$ringino = $this->data['ringino'];
+		//Get current ringiseq from ringihistories 
+		$query = mysql_query("SELECT max(ringiseq) maxringino 
+		                        from ringihistories 
+		                       where ringino = $ringino 
+		                    group by ringino");
+		$array = mysql_fetch_assoc($query);
+		$ringiseq=$array['maxringino'];
+		
+		//Get approverLayer from ringiroutes
+		$query2 = mysql_query("SELECT approverLayer 
+		  						from ringiroutes
+							   where ringino = $ringino
+		  						 and approverID = '".$username."'");
+		$array2 = mysql_fetch_assoc($query2) or die("approverlayer get failure: ". mysql_error());
+		$approverlayer=$array2['approverLayer'];
+		echo "username:".$username." and approverlater: ".$approverlayer;
+		
+		//if layer=1, which means it passed back by first approver -> set back to editing 
+		if ( $approverlayer == 1) {
+			$sql1="UPDATE attributes
+			    Set  ringistatus = '001',
+			           updator_id = '".$username."',
+			           updated_at = now()
+				where ringino = $ringino";
+
+			//clear the application history to let applicant reapply  
+			$sql2="UPDATE ringiroutes
+			    Set  approvedate= NULL,
+			         ringistatus = NULL,
+			         updator_id = '".$username."',
+			         updated_at = now()
+			  where ringino = $ringino and  approverLayer = 0 ";
+
+	    	$Ringihistory['Ringihistory']['ringino'] = $this->data['ringino'];
+	    	$Ringihistory['Ringihistory']['ringiseq'] = $ringiseq+1;
+	    	$Ringihistory['Ringihistory']['approverlayer'] = $approverlayer;
+	    	$Ringihistory['Ringihistory']['processerid'] = $this->Auth->user('username');
+	    	$Ringihistory['Ringihistory']['processdate'] = date("Y-m-d H:i:s");
+	    	$Ringihistory['Ringihistory']['ringiaction'] = '009';
+	    	$Ringihistory['Ringihistory']['comment'] = $this->data['comment'];
+	    	$Ringihistory['Ringihistory']['creator_id'] = $this->Auth->user('username');
+	    	$Ringihistory['Ringihistory']['created_at'] = date("Y-m-d H:i:s");
+	    	$Ringihistory['Ringihistory']['updator_id'] = NULL;
+	    	$Ringihistory['Ringihistory']['updated_at'] = NULL;
+
+
+	    	$this->Ringihistory->save($Ringihistory);
+
+			if ($connection) {
+				$query = mysql_query($sql1) or die(mysql_error());
+				$query = mysql_query($sql2) or die(mysql_error());
+			} else {
+				echo "Passback by first approver is failure when update the data into database";
+			}			
+		} else  
+		// if layer > 1, which means it passed by 2 and above approver -> set back to previous approver 
+		{
+
+			//clear the application history to let applicant reapply  
+			$sql2="UPDATE ringiroutes
+				     Set  approvedate= NULL,
+				          ringistatus = NULL,
+				          updator_id = '".$username."',
+				          updated_at = now()
+				    where ringino = $ringino and  approverLayer = $approverlayer - 1 ";
+
+		    $Ringihistory['Ringihistory']['ringino'] = $this->data['ringino'];
+		    $Ringihistory['Ringihistory']['ringiseq'] = $ringiseq+1;
+		    $Ringihistory['Ringihistory']['approverlayer'] = $approverlayer;
+		    $Ringihistory['Ringihistory']['processerid'] = $this->Auth->user('username');
+		    $Ringihistory['Ringihistory']['processdate'] = date("Y-m-d H:i:s");
+		    $Ringihistory['Ringihistory']['ringiaction'] = '010';
+		    $Ringihistory['Ringihistory']['comment'] = $this->data['comment'];
+		    $Ringihistory['Ringihistory']['creator_id'] = $this->Auth->user('username');
+		    $Ringihistory['Ringihistory']['created_at'] = date("Y-m-d H:i:s");
+		    $Ringihistory['Ringihistory']['updator_id'] = NULL;
+		    $Ringihistory['Ringihistory']['updated_at'] = NULL;
+
+
+		    $this->Ringihistory->save($Ringihistory);
+
+			if ($connection) {
+				$query = mysql_query($sql2) or die(mysql_error());
+			} else {
+				echo "Passback by higher approver is failure when update the data into database";
+			}
+		}
+
+	}
+	
+	public function reopen() {
+		$connection=$this->openSQLconnection();
+		$username = $this->Auth->user('username');
+		$date = date("Y-m-d H:i:s");
+		$ringino = $this->data['ringino'];
+		//Get current ringiseq from ringihistories 
+		$query = mysql_query("SELECT max(ringiseq) maxringino 
+		                        from ringihistories 
+		                       where ringino = $ringino 
+		                    group by ringino");
+		$array = mysql_fetch_assoc($query);
+		$ringiseq=$array['maxringino'];
+		
+		//Get approverLayer from ringiroutes
+		$query2 = mysql_query("SELECT approverLayer 
+		  						from ringiroutes
+							   where ringino = $ringino
+		  						 and approverID = '".$username."'");
+		$array2 = mysql_fetch_assoc($query2) or die("approverlayer get failure: ". mysql_error());
+		$approverlayer=$array2['approverLayer'];
+		
+
+		$sql1="UPDATE attributes
+		    Set  ringistatus = '002',
+		           updator_id = '".$username."',
+		           updated_at = now()
+			where ringino = $ringino";
+
+		$sql2="UPDATE ringiroutes
+		    Set  approvedate= NULL,
+		         ringistatus = NULL,
+		         updator_id = '".$username."',
+		         updated_at = now()
+		  where ringino = $ringino and  approverid = '".$username."'";
+
+    	$Ringihistory['Ringihistory']['ringino'] = $this->data['ringino'];
+    	$Ringihistory['Ringihistory']['ringiseq'] = $ringiseq+1;
+    	$Ringihistory['Ringihistory']['approverlayer'] = $approverlayer;
+    	$Ringihistory['Ringihistory']['processerid'] = $this->Auth->user('username');
+    	$Ringihistory['Ringihistory']['processdate'] = date("Y-m-d H:i:s");
+    	$Ringihistory['Ringihistory']['ringiaction'] = '011';
+    	$Ringihistory['Ringihistory']['comment'] = $this->data['comment'];
+    	$Ringihistory['Ringihistory']['creator_id'] = $this->Auth->user('username');
+    	$Ringihistory['Ringihistory']['created_at'] = date("Y-m-d H:i:s");
+    	$Ringihistory['Ringihistory']['updator_id'] = NULL;
+    	$Ringihistory['Ringihistory']['updated_at'] = NULL;
+   
+   
+    	$this->Ringihistory->save($Ringihistory);
+
+		if ($connection) {
+			$query = mysql_query($sql1) or die(mysql_error());
+			$query = mysql_query($sql2) or die(mysql_error());
+		} else {
+			echo "Reopen is failure when update the data into database";
+		}
+	}
+	
+	public function cancel1() {
+		$connection=$this->openSQLconnection();
+		$username = $this->Auth->user('username');
+		$date = date("Y-m-d H:i:s");
+		$ringino = $this->data['ringino'];
+		//Get current ringiseq from ringihistories 
+		$query = mysql_query("SELECT max(ringiseq) maxringino 
+		                        from ringihistories 
+		                       where ringino = $ringino 
+		                    group by ringino");
+		$array = mysql_fetch_assoc($query);
+		$ringiseq=$array['maxringino'];
+
+		$sql1="UPDATE attributes
+			Set  ringistatus = '001',
+			updator_id = '".$username."',
+			updated_at = now()
+		where ringino = $ringino";
+
+		$sql2="UPDATE ringiroutes
+			Set  approvedate= Null,
+			ringistatus = Null,
+			updator_id = '".$username."',
+			updated_at = now()
+		where ringino = $ringino and  approverlayer = 0";
+
+		$Ringihistory['Ringihistory']['ringino'] = $this->data['ringino'];
+		$Ringihistory['Ringihistory']['ringiseq'] = $ringiseq+1;
+		$Ringihistory['Ringihistory']['approverlayer'] = 0;
+		$Ringihistory['Ringihistory']['processerid'] = $this->Auth->user('username');
+		$Ringihistory['Ringihistory']['processdate'] = date("Y-m-d H:i:s");
+		$Ringihistory['Ringihistory']['ringiaction'] = '007';
+		$Ringihistory['Ringihistory']['comment'] = $this->data['comment'];
+		$Ringihistory['Ringihistory']['creator_id'] = $this->Auth->user('username');
+		$Ringihistory['Ringihistory']['created_at'] = date("Y-m-d H:i:s");
+		$Ringihistory['Ringihistory']['updator_id'] = NULL;
+		$Ringihistory['Ringihistory']['updated_at'] = NULL;
+		
+		$this->Ringihistory->save($Ringihistory);
+		
+
+		if ($connection) {
+			$query = mysql_query($sql1) or die(mysql_error());
+			$query = mysql_query($sql2) or die(mysql_error());
+		} else {
+			echo "Applicantion cancelation is failure when update the data into database";
+		}
+	}
+	
+	public function cancel2() {	
+			$connection=$this->openSQLconnection();
+			$username = $this->Auth->user('username');
+			$date = date("Y-m-d H:i:s");
+			$ringino = $this->data['ringino'];
+			//Get current ringiseq from ringihistories 
+			$query = mysql_query("SELECT max(ringiseq) maxringino 
+			                        from ringihistories 
+			                       where ringino = $ringino 
+			                    group by ringino");
+			$array = mysql_fetch_assoc($query);
+			$ringiseq=$array['maxringino'];
+
+			//Get approverLayer from ringiroutes
+			$query2 = mysql_query("SELECT approverLayer 
+			  						from ringiroutes
+								   where ringino = $ringino
+			  						 and approverID = '".$username."'");
+		    $array2 = mysql_fetch_assoc($query2) or die("approverlayer get failure: ". mysql_error());
+			$approverlayer=$array2['approverLayer'];
+
+
+			$sql2="UPDATE ringiroutes
+			          Set  approvedate= NULL,
+			         	   ringistatus = NULL,
+			               updator_id = '".$username."',
+			               updated_at = now()
+			         WHERE ringino = $ringino and  approverid = '".$username."'";
+
+			$Ringihistory['Ringihistory']['ringino'] = $this->data['ringino'];
+			$Ringihistory['Ringihistory']['ringiseq'] = $ringiseq+1;
+			$Ringihistory['Ringihistory']['approverlayer'] = $approverlayer;
+   	   		$Ringihistory['Ringihistory']['processerid'] = $this->Auth->user('username');
+ 	   		$Ringihistory['Ringihistory']['processdate'] = date("Y-m-d H:i:s");
+ 	   		$Ringihistory['Ringihistory']['ringiaction'] = '008';
+ 	   		$Ringihistory['Ringihistory']['comment'] = $this->data['comment'];
+ 	   		$Ringihistory['Ringihistory']['creator_id'] = $this->Auth->user('username');
+ 	   		$Ringihistory['Ringihistory']['created_at'] = date("Y-m-d H:i:s");
+ 	   		$Ringihistory['Ringihistory']['updator_id'] = NULL;
+ 	   		$Ringihistory['Ringihistory']['updated_at'] = NULL;
+
+			$this->Ringihistory->save($Ringihistory);
+
+			if ($connection) {
+				$query = mysql_query($sql2) or die(mysql_error());
+			} else {
+				echo "Approver Cancel is failure when update the data into database";
+			}
+	
+	}
+	
+	
 }
