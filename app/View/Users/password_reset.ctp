@@ -1,7 +1,7 @@
 <div class="container">
 	<div class="surface">
 		<div class="account-content">
-			<form method="post" action="password_reset">
+			<form method="post" action="../users/password_reset">
 				<h2 class="form-signin-heading">Password Reset</h2>
 				<select name="selection">
 				  <option value=""></option>

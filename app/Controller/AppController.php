@@ -76,11 +76,11 @@ class AppController extends Controller {
     );
 
     public function beforeFilter() {
-        $this->Auth->allow();
+        //$this->Auth->allow();
     }
 
     public function isAuthorized($user) {
-    if (isset($user['title']) && $user['title'] === 'admin') {
+    if (isset($user['usertype']) && $user['usertype'] === '1') {
         return true;
     }
 

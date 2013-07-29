@@ -14,46 +14,59 @@ print_r("$doc");
 <script type="text/javascript" charset="utf-8">
 
 function main(){
-	return (nullCheck() && 
-	typeCheck()&&
-	doubleCheck("assetdept","expensedept")&&
-	doubleCheck("asset","expense")&&
-	doubleCheck("assetaccountno","expenseaccountno"));
+	if( nullCheck("ringino") &&
+            nullCheck("linecd") &&
+            doubleCheck("assetdept","expensedept")&&
+            nullCheck("project") &&
+            nullCheck("purpose") &&
+            nullCheck("assetbudget") &&
+            typeCheck("assetbudget")&&
+            nullCheck("assetremain") &&
+            typeCheck("assetremain")&&
+            nullCheck("expensebudget") &&
+            typeCheck("expensebudget")&&
+            nullCheck("expenseremain") &&
+            typeCheck("expenseremain")&&
+            doubleCheck("asset","expense")&&
+            typeCheck("asset")&&
+            typeCheck("expense")&&
+            doubleCheck("assetaccountno","expenseaccountno"))
+        {
+            alert("Apply succeed!");
+            return true;
+        }
+        else{
+            return false;
+        }
 }	
 
-function nullCheck()
-{
-	var input = ["ringino","linecd","project","purpose"];
+function nullCheck(var1){
+	//var input = ["ringino","linecd","project","purpose"];
 
-	for (var i=0; i < input.length; i++) {
-		var x=document.forms["applyForm"][input[i]].value;
-		if (x==null || x=="") {
-			document.getElementById(input[i]).style.border = "2px solid #ff0000";
-			document.getElementById(input[i]).focus();
-			document.getElementById(input[i]).select();
-			alert("Fill out all necessary fields");
-			return false;
-		}
+	var x=document.forms["applyForm"][var1].value;
+	if (x==null || x=="") {
+		document.getElementById(var1).style.border = "2px solid #ff0000";
+		document.getElementById(var1).focus();
+		document.getElementById(var1).select();
+		alert("Fill out all necessary fields");
+		return false;
 	}
 	return true;
 }
 
-function typeCheck()
-{
-	var input = ["asset","expense","assetbudget","expensebudget","assetremain","expenseremain"];
+function typeCheck(var1){
+	//var input = ["asset","expense","assetbudget","expensebudget","assetremain","expenseremain"];
 
 	var pattern1 = /^\d+[\\.]\d+$/;
-	var pattern2 = /^\d+$/;
-	for (var i=0; i < input.length; i++) {
-		var x=document.forms["applyForm"][input[i]].value;
-		if ((x.match(pattern1) == null) && (x.match(pattern2) == null)) {
-			document.getElementById(input[i]).style.border = "2px solid blue";;
-			document.getElementById(input[i]).focus();
-			document.getElementById(input[i]).select();
-			alert("Type error");
-			return false;           
-		}            
-	}
+	var pattern2 = /^\d*$/;
+	var x=document.forms["applyForm"][var1].value;
+	if ((x.match(pattern1) == null) && (x.match(pattern2) == null)) {
+		document.getElementById(var1).style.border = "2px solid blue";;
+		document.getElementById(var1).focus();
+		document.getElementById(var1).select();
+		alert("Type error");
+		return false;           
+	}            
 	return true;
 }
 

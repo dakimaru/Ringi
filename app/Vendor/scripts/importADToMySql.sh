@@ -6,5 +6,5 @@ DEFAULT_PASSWORD=root
 #/usr/bin/python ./exportLdap.py >  ./directorydump.csv
 #/Applications/XAMPP/xamppfiles/bin/mysql -u root ringidata < ./mysql.sql > ./output.log
 
-/usr/bin/python ./loadLdap.py $USERTABLE_CSV_FILENAME $DEFAULT_PASSWORD
-/usr/bin/python ./loadUser.py $USERTABLE_CSV_FILENAME
+/usr/bin/python ./loadLdap.py $USERTABLE_CSV_FILENAME $DEFAULT_PASSWORD  > /dev/null
+/usr/bin/python ./loadUser.py $USERTABLE_CSV_FILENAME  > /dev/null

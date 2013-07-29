@@ -15,11 +15,10 @@ class User extends AppModel {
                 'message' => 'A password is required'
             )
         ),
-        'role' => array(
-            'valid' => array(
-                'rule' => array('inList', array('admin', 'author')),
-                'message' => 'Please enter a valid role',
-                'allowEmpty' => false
+        'usertype' => array(
+            'require' => array(
+                'rule' => array('usertype', array('0', '1')),
+                'message' => 'Please enter a valid usertype'
             )
         )
     );

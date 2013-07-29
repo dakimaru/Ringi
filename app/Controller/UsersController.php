@@ -9,9 +9,12 @@ class UsersController extends AppController {
 		$host = 'localhost';
 		$username = 'root';
 		$password = '';
-
-		// Connect to MySQL
-		return mysql_connect($host, $username, $password);
+		$database = 'ringidata';
+		
+		$link=mysql_connect($host, $username, $password);
+		$ret = mysql_select_db($database, $link);
+		
+		return $ret;
 	}
 
 	public function beforeFilter() {
@@ -44,31 +47,18 @@ class UsersController extends AppController {
 			if(authenticate($usr,$pass))
 			{
 				// authentication passed
-				
-				$database = 'ringidata';
-
 				// Connect to MySQL
 				$link = $this->openSQLconnection();
-
-				if (!$link) {
-					die('Could not connect: ' . mysql_error());
-				}
-
-				mysql_select_db($database, $link);	//pointing at the right database
 
 				$salted_pass = $this->Auth->password($pass);			//put salt on password
 
 				$querynewpass = "UPDATE users SET `password`='".$salted_pass."' WHERE username='".$usr."'"; 
-				mysql_query($querynewpass, $link) or die(mysql_error());	//overwrite password
+				mysql_query($querynewpass) or die(mysql_error());	//overwrite password
 
-				//print_r ($this->data['User']);
-				//$username = $this->Auth->user('username');
 				if ($this->Auth->login()) {
-					// save username entered in the login form
-					$username = $this->Auth->user('username');
 					
-					return $this->redirect($this->Auth->redirectUrl());
-					//return $this->redirect(array('controller' => 'Ringi', 'action' => 'overview'));
+					//return $this->redirect($this->Auth->redirectUrl());
+					return $this->redirect(array('controller' => 'Ringi', 'action' => 'main_menu'));
 				}
 			}	
 			else {
@@ -99,13 +89,11 @@ class UsersController extends AppController {
 		$this->set('user', $this->User->read(null, $id));
 	}
 
-	public function add() {
-		$database='ringidata';
+		public function add() {
 		if ($this->request->is('post')) {
 			$this->User->create();
 			
 			$link = $this->openSQLconnection();
-			$db_selected = mysql_select_db($database, $link);
 			$newusername = $this->data['User']['username'];
 			$sql = "SELECT username FROM users WHERE username='".$newusername."'";
 			$query=mysql_query($sql);
@@ -113,7 +101,7 @@ class UsersController extends AppController {
 			if ($existing==NULL) {
 				
 				$user=$this->request->data;
-				$user['User']['usertype'] = 0;
+				$user['User']['usertype'] = $this;
 				$user['User']['activeflag'] = 1;
 				if ($this->Auth->user('username')!==NULL) {
 					$user['User']['creator_id'] = $this->Auth->user('username');
@@ -134,6 +122,7 @@ class UsersController extends AppController {
 	}
 
 	public function edit($id = null) {
+		/*
 		$this->User->id = $id;
 		if (!$this->User->exists()) {
 			throw new NotFoundException(__('Invalid user'));
@@ -149,10 +138,11 @@ class UsersController extends AppController {
 			$this->request->data = $this->User->read(null, $id);
 			unset($this->request->data['User']['password']);
 		}
+		*/
 	}
 
 	public function delete($id = null) {
-		if (!$this->request->is('post')) {
+		/*if (!$this->request->is('post')) {
 			throw new MethodNotAllowedException();
 		}
 		$this->User->id = $id;
@@ -164,6 +154,75 @@ class UsersController extends AppController {
 			$this->redirect(array('action' => 'index'));
 		}
 		$this->Session->setFlash(__('User was not deleted'));
-		$this->redirect(array('action' => 'index'));
+		$this->redirect(array('action' => 'index'));*/
+		
 	}
+	
+	public function password_change() {
+		$this->openSQLconnection();
+		if ($this->request->is('post')) {	
+			if ($_POST["newpass"]!=="" && $_POST["confirmpass"]!=="") {
+				if ($_POST["newpass"]==$_POST["confirmpass"]) {
+					$user = $this->Auth->user('username');
+					$sql="SELECT DN FROM users WHERE username='".$user."'";
+					$query = mysql_query($sql);
+					$userDN = mysql_fetch_assoc($query);
+					
+					$newpassword=$_POST["newpass"];
+					exec('cd ../Vendor/scripts ; sh resetPassword.sh "' .$userDN['DN'].'" '.$newpassword);
+					$this->Session->setFlash(__("Your password was updated successfully"));
+					$this->redirect(array('controller' => 'Ringi', 'action' => 'main_menu'));	
+					
+				}
+				else {
+					$this->Session->setFlash(__("Your passwords don't match!"));
+				}
+			}
+			else {
+				$this->Session->setFlash(__('Invalid entries'));
+			}
+		}
+	}
+	
+	public function password_reset() {
+		$this->openSQLconnection();
+		
+		if ($this->request->is('post')) {	
+			if ($_POST["newpass"]!=="" && $_POST["selection"]!=="") {
+				$user = $_POST["selection"];
+				$sql="SELECT DN FROM users WHERE username='".$user."'";
+				$query = mysql_query($sql);
+				$userDN = mysql_fetch_assoc($query);
+				
+				$newpassword=$_POST["newpass"];
+				exec('cd ../Vendor/scripts ; sh resetPassword.sh "' .$userDN['DN'].'" '.$newpassword);
+				$this->Session->setFlash(__("The password of ".$_POST["selection"]." was updated successfully"));
+				$this->redirect(array('controller' => 'Ringi', 'action' => 'main_menu'));	
+				
+			}
+			else {
+				$this->Session->setFlash(__('Please select an appropriate user and password!'));
+			}
+			
+		}
+	
+		$sql = "SELECT username FROM users";
+		$query = mysql_query($sql);
+		
+		$allusers = array();
+		$num = mysql_num_rows($query);
+		for($j=0; $j<$num; $j++){
+			$row = mysql_fetch_assoc($query);
+			$allusers[$j] = $row['username'];
+			//print_r($row);
+		}
+
+		//print_r($allusers);
+		
+		$this->set('allusers',$allusers);
+		
+	}
+	
+	
 }
+

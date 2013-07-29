@@ -65,9 +65,8 @@ div.row-fluid
 img.pos_relative
 {
    position:relative;
-   height:100%;
-   width:80%;
    top:5px;
+   left:20px;
 }
 
 a.smaller
@@ -126,4 +125,70 @@ span.help-block > a
 }
 .icon-chevron-right {
   background-position: -456px -72px;
+}
+
+
+fixed_width {
+  height: 1000px;
+  width: 1000px;
+  max-height: 1000px;
+  max-width: 1000px;
+  min-height: 1000px;
+  min-width: 1000px;
+}
+
+.well, .well-large
+{
+  padding:0px;
+}
+.bottomBorder
+{
+  border-bottom-width:1px;
+  border-bottom-style:solid;
+  border-bottom-color:#eeeeee;
+}
+
+.rightBorder
+{
+  border-Right-width:1px;
+  border-Right-style:solid;
+  border-Right-color:#eeeeee;
+}
+
+
+.padding{
+  padding:20px
+}
+.paddingTop
+{
+  padding-top: 10px;
+}
+.paddingLeft
+{
+  padding-left: 20px;
+}
+.paddingRight
+{
+  padding-right: 20px;
+}
+.paddingBottom
+{
+  padding-bottom: 20px;
+}
+.nav-pills>li {
+float: none;
+}
+
+
+.table th, .table td{
+ text-align: center;
+ vertical-align: middle;
+}
+
+td.comment {
+ text-align: left;
+}
+
+textarea[readonly] {
+  cursor: default;
 }

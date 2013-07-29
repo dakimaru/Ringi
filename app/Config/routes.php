@@ -24,30 +24,22 @@
 	Router::connect('/login', array('controller' => 'Users', 'action' => 'login', 'login'));
 	Router::connect('/secure_login', array('controller' => 'Users', 'action' => 'secure_login', 'secure_login'));
 	Router::connect('/logout', array('controller' => 'Users', 'action' => 'logout', 'logout'));
+	
+	Router::connect('/delete', array('controller' => 'Users', 'action' => 'delete', 'delete'));
+	
 
 	Router::connect('/setup', array('controller' => 'Ringi', 'action' => 'setup', 'setup'));
 	Router::connect('/main_menu', array('controller' => 'Ringi', 'action' => 'main_menu', 'main_menu'));
-	Router::connect('/password_change', array('controller' => 'Ringi', 'action' => 'password_change', 'password_change'));
-	Router::connect('/password_reset', array('controller' => 'Ringi', 'action' => 'password_reset', 'password_reset'));
-	Router::connect('/overview', array('controller' => 'Ringi', 'action' => 'overview', 'overview'));
-	Router::connect('/processed', array('controller' => 'Ringi', 'action' => 'processed', 'processed'));
-	Router::connect('/confirm_applications', array('controller' => 'Ringi', 'action' => 'confirm_applications', 'confirm_applications'));
-	Router::connect('/pending', array('controller' => 'Ringi', 'action' => 'pending', 'pending'));
-	Router::connect('/passed_back', array('controller' => 'Ringi', 'action' => 'passed_back', 'passed_back'));
-	Router::connect('/accepted', array('controller' => 'Ringi', 'action' => 'accepted', 'accepted'));
-	Router::connect('/rejected', array('controller' => 'Ringi', 'action' => 'rejected', 'rejected'));
-	Router::connect('/database_log', array('controller' => 'Ringi', 'action' => 'database_log', 'database_log'));
+	Router::connect('/password_change', array('controller' => 'Users', 'action' => 'password_change', 'password_change'));
+	Router::connect('/password_reset', array('controller' => 'Users', 'action' => 'password_reset', 'password_reset'));
 	Router::connect('/support', array('controller' => 'Ringi', 'action' => 'support', 'support'));
 	Router::connect('/credit', array('controller' => 'Ringi', 'action' => 'credit', 'credit'));
 	
 	Router::connect('/upload_layout', array('controller' => 'Ringi', 'action' => 'upload_layout', 'upload_layout'));
 	Router::connect('/preview', array('controller' => 'Ringi', 'action' => 'preview', 'preview'));
 	Router::connect('/upload_confirmation', array('controller' => 'Ringi', 'action' => 'upload_confirmation', 'upload_confirmation'));
-	Router::connect('/index', array('controller' => 'Ringi', 'action' => 'index', 'index'));
 	Router::connect('/apply', array('controller' => 'Ringi', 'action' => 'apply', 'apply'));
-	Router::connect('/confirm', array('controller' => 'Ringi', 'action' => 'confirm', 'confirm'));
 	Router::connect('/apply_check', array('controller' => 'Ringi', 'action' => 'apply_check', 'apply_check'));
-	Router::connect('/confirm_check', array('controller' => 'Ringi', 'action' => 'confirm_check', 'confirm_check'));
 	Router::connect('/pass_back_check', array('controller' => 'Ringi', 'action' => 'pass_back_check', 'pass_back_check'));
 	Router::connect('/reject', array('controller' => 'Ringi', 'action' => 'reject', 'reject'));
 	Router::connect('/application_details', array('controller' => 'Ringi', 'action' => 'application_details', 'application_details'));
@@ -64,6 +56,9 @@
 	Router::connect('/reopen', array('controller' => 'Ringi', 'action' => 'reopen', 'reopen'));
 	Router::connect('/cancel1', array('controller' => 'Ringi', 'action' => 'cancel1', 'cancel1'));
 	Router::connect('/cancel2', array('controller' => 'Ringi', 'action' => 'cancel2', 'cancel2'));
+	
+	Router::connect('/task', array('controller' => 'Ringi', 'action' => 'task', 'task'));
+	Router::connect('/other', array('controller' => 'Ringi', 'action' => 'other', 'other'));
 
 /**
  * Load all plugin routes. See the CakePlugin documentation on

@@ -29,7 +29,16 @@ while (preg_match('/input:.+:.+/', $doc, $matches) == 1) {
 print_r("$doc");
 
 ?>
-
-<form action="upload_confirmation" method="post" align="center">
-	<button class="btn btn-primary" name="submit" value="confirm">Confirm</button>
-</form>
+<div class="row-fluid">
+	<div class="span6">
+		<form align="right" action="upload_confirmation" method="post" align="center">
+			<button class="btn btn-success" name="submit" value="confirm">Confirm</button>
+		</form>
+	</div>
+	<div class="span6">
+		<form align="left" action="upload_layout" method="post" align="center">
+			<button class="btn btn-danger" name="submit" value="cancel">Cancel</button>
+		</form>
+	</div>
+	
+</div>

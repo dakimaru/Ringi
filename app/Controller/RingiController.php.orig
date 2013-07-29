@@ -14,8 +14,7 @@ class RingiController extends AppController {
 						'UserData');
 
     public function beforeFilter() {
-parent::beforeFilter();
-	    
+        parent::beforeFilter();
     }
 
 	public function openSQLconnection() {
@@ -68,14 +67,6 @@ parent::beforeFilter();
 		$connection=$this->openSQLconnection();
 		$username = $this->Auth->user('username');
 
-		//Name, title, departement
-				$sql="SELECT department, title, name FROM users WHERE username = '$username'";
-				$query = mysql_query("$sql");
-				$array = mysql_fetch_assoc($query);
-				$this->set('name', $array['name']);
-				$this->set('department', $array['department']);
-				$this->set('title', $array['title']);
-				
 		//editing number
 		$editquery = mysql_query("SELECT count(1) count
 			From attributes 
@@ -90,7 +81,7 @@ parent::beforeFilter();
 			where applicantid = '$username' ".
 			"and ringistatus not in ('001','005')");
 		$clean = mysql_fetch_assoc($applicationquery);
-		$applicationCount=$clean['count'];
+		$applicationcount=$clean['count'];
 
 		//accepted number
 		$acceptednumber = mysql_query("SELECT count(1) count
@@ -109,7 +100,7 @@ parent::beforeFilter();
 		$progressnumber=$clean['count'];
 
 		$this->set('editcount',$editcount);
-		$this->set('applicationCount',$applicationCount);
+		$this->set('applicationcount',$applicationcount);
 		$this->set('acceptednumber',$acceptednumber);
 		$this->set('progressnumber',$progressnumber);
 		
@@ -119,8 +110,7 @@ parent::beforeFilter();
 			WHERE routes.department = users.department
 			and routes.approveRouteType = '0'
 			and routes.person is NULL
-			and users.username = '$username'
-			ORDER BY routes.approverlayer";
+			and users.username = '$username'";
 		$query = mysql_query("$sql");
 		$approverCount = mysql_num_rows($query);
 		for ($i = 0; $i < $approverCount; $i ++){
@@ -455,11 +445,7 @@ parent::beforeFilter();
 				from attributes A, ringiroutes B
 				where A.ringino= B.ringino and A.ringino = $ringino";
 			$query = mysql_query("$sql");
-			$count = -1;
-			if ($query != NULL) {
-				$count = mysql_num_rows($query);
-			}
-			
+			$count = mysql_num_rows($query);
 			$this->set('count', $count);
 			if ($count > 0 ){
 				for ($i = 0; $i < $count; $i ++){
@@ -478,14 +464,11 @@ parent::beforeFilter();
 				$this->set('approveDate', $approveDate);
 			}
 
+
 			$sql2 = "SELECT A.ringiseq,B.department,B.title,A.processerid,A.processdate,A.ringiaction,A.comment
 				from ringihistories A,users B
-				where A.processerid = B.username and A.ringino = $ringino order by A.ringiseq";
+				where A.processerid = B.username and A.ringino = $ringino";
 			$query2 = mysql_query("$sql2");
-			$count2 = -1;
-			if ($query2 != NULL) {
-				$count2 = mysql_num_rows($query2);
-			}
 			$count2 = mysql_num_rows($query2);
 			$this->set('count2', $count2);
 			if ($count2 > 0){
@@ -512,154 +495,28 @@ parent::beforeFilter();
 
 		}
 
-    public function getApproverFlowList($username){
-        //echo "**getApproverFlowList, username = ". $username. "***";
-        // get dept for user
-        $query = "select * from users";
-        $queryRes = mysql_query($query); 
-        $users = array();
-        while($tmp = mysql_fetch_assoc($queryRes)){
-            $users[$tmp['username']] = $tmp;
-			}
-
-        //echo "getApproverFlowList,users=";
-        //print_r($users);
-        //echo "**";
-
-        // get dept for user
-        $department = null;
-        //echo "***username =". $username. "***";
-        if( array_key_exists($username, $users) ){
-            //echo "***setting department***";
-            $department = $users[$username]['department'];
-        }
-        if($department==null){
-            return null;
-        }
-        
-        $user = $users[$username];
-        // get approver flow
-        $query = "select * from routes where department='". $department. "' order by approverlayer ASC";
-        //echo "**query in getting_flow: ";
-        //echo $query;
-        //echo "-- end**";
-        $queryRes = mysql_query($query);
-        $approvers = array();
-        $appLayer = 0;
-
-        // set myself
-        $myself = array(    'MYDEPT'=>$user['department'], 
-                            'MYTITLE'=>$user['title'],
-                            'MYNAME'=>$user['name'],
-                            'MYID'=>$user['username'] );
-        $approvers[$appLayer] = $myself;
-
-        // set approvers
-        $appLayer ++;
-        while($tmp = mysql_fetch_assoc($queryRes)){
-            $approverId = $tmp['approverid'];
-            $approver = array(
-                            ('APPROVERDEPT'. '_'. $appLayer) =>$tmp['approverdept'],
-                            ('APPROVERTITLE'. '_'. $appLayer) =>$tmp['approvertitle'],
-                            ('APPROVERID'. '_'. $appLayer) =>$approverId,
-                            ('APPROVERNAME'. '_'. $appLayer) =>$users[$approverId]['name'] );
-            //echo "***fetching approver:";
-            //print_r($approver);
-            //echo "end***";
-            $approvers[$appLayer++] = $approver;
-        }
-        if(count($approvers)==0){
-            return null;
-		}
-        //echo "***approver returning:";
-        //print_r($approvers);
-        //echo "approver returning end***";
-
-        return $approvers;
-    }
-
-    private function _genApproverFlowHtmlWithId($username, $ringiId) {
-        return $this->_genApproverFlowHTML($username, $ringiId);
-    }
-
-    private function _genNonEditableApproverFlowHTML($existingRoute){
-
-        // FIXME
-        //array_push( $existingRoute, array(  'approverid'=>'yono', 'title'=>'Engineer' ) );
-
-        $source_html_begin = '
-            <table class="table table-bordered table-hover">
-                    <tr class="success">
-                        <td width="20%">No</td>
-                        <td>Applicant/Approver</td>
-                        <td>Department</td>
-                        <td>Title</td>
-                        <td>Approver ID</td>
-                    </tr>
-                <tbody>
-                    ';
-        // <tr> <td>1</td> <td>MYNAME</td>         <td>MYDEPT        </td> <td>MYTITLE        </td> <td>MYID</td> </tr>
-
-        $source_html_end = '
-                </tbody>
-            </table>
-        ';
-
-        $row = 1;
-        $approverLines = "";
-
-        //echo '**** _nonEditable begin: existingRoute =';
-        //print_r($existingRoute);
-        //echo '_nonEditable end****';
-        foreach( $existingRoute as $approver ){
-            $title = "dummyTitle";
-            $id = "dummyId";
-            $approverLines = "<tr> <td>". $row. "</td> <td>". $approver['approverid']. "</td> <td>". $title. "</td> <td>". $id. "</td> </tr>\n";
-        }
-
-        $msg =  $source_html_begin. $approverLines. $source_html_end;
-
-        //echo 'approverFlow query='. $msg. '\n';
-
-        return $msg;
-    }
-
-    private function _getRouteTables($ringino){
-        $this->openSQLconnection();
-        $sql="SELECT * from ringiroutes where ringino = ". $ringino. " order by approverlayer ASC";
-        $queryRes = mysql_query($sql) or die(mysql_error());
-        
-        $arrayToAdd=array();
-        while($tmp = mysql_fetch_assoc($queryRes)){
-            array_push($arrayToAdd, $tmp);
-        }
-
-        return $arrayToAdd;
-    }
-
-    // mode=apply or edit
-    private function _genApproverFlowHtml($username, $ringiId=null) {
-        // FIXME: specify these as global params
-        $MAX_LAYER = 5;
+	public function apply() {
+		$connection=$this->openSQLconnection();
+		$username = $this->Auth->user('username');
 
         // generate HTML for options
         $source_html = '
-            <table class="table table-bordered table-hover">
-                    <tr class="success">
-                        <td width="20%">No</td>
-                        <td>Applicant/Approver</td>
-                        <td>Department</td>
-                        <td>Title</td>
-                        <td>Approver ID</td>
-                    </tr>
-                <tbody>
-                    <tr> <td>1</td> <td>MYNAME</td>         <td>MYDEPT        </td> <td>MYTITLE        </td> <td>MYID</td> </tr>
-                    <tr> <td>2</td> <td>APPROVERNAME_1</td> <td>APPROVERDEPT_1</td> <td>APPROVERTITLE_1</td> <td>APPROVERID_1</td> </tr>
-                    <tr> <td>3</td> <td>APPROVERNAME_2</td> <td>APPROVERDEPT_2</td> <td>APPROVERTITLE_2</td> <td>APPROVERID_2</td> </tr>
-                    <tr> <td>4</td> <td>APPROVERNAME_3</td> <td>APPROVERDEPT_3</td> <td>APPROVERTITLE_3</td> <td>APPROVERID_3</td> </tr>
-                    <tr> <td>5</td> <td>APPROVERNAME_4</td> <td>APPROVERDEPT_4</td> <td>APPROVERTITLE_4</td> <td>APPROVERID_4</td> </tr>
-                </tbody>
-            </table>
+                <table class="table table-bordered table-hover">
+                        <tr class="success">
+                            <td width="20%">No</td>
+                            <td>Approver</td>
+                            <td>Department</td>
+                            <td>Title</td>
+                            <td>User</td>
+                        </tr>
+                    <tbody>
+                        <tr> <td>1</td> <td>Some</td>   <td>DEPARTMENT</td> <td>TITLE</td> <td>USERNAME</td> </tr>
+                        <tr> <td>2</td> <td>Joe</td>    <td>DEPARTMENT</td> <td>TITLE</td> <td>USERNAME</td> </tr>
+                        <tr> <td>3</td> <td>Joe</td>    <td>DEPARTMENT</td> <td>TITLE</td> <td>USERNAME</td> </tr>
+                        <tr> <td>4</td> <td>Joe</td>    <td>DEPARTMENT</td> <td>TITLE</td> <td>USERNAME</td> </tr>
+                        <tr> <td>5</td> <td>Joe</td>    <td>DEPARTMENT</td> <td>TITLE</td> <td>USERNAME</td> </tr>
+                    </tbody>
+                </table>
         ';
 
         $dom = new DOMDocument;
@@ -667,171 +524,54 @@ parent::beforeFilter();
 
         $selectAttr = array( 'class'=>'span2' );
 
-        $applicantElems = array('MYNAME', 'MYDEPT', 'MYTITLE', 'MYID');
-        $approverElems  = array('APPROVERNAME');
-
-        $existingRoute = null;
-        if( $ringiId ){
-            $existingRoute = $this->_getRouteTables($ringiId);
-        }
-
-        if( count($existingRoute) == 0 ){
-            //echo "HTML gen: array is used\n";
-            // all users appears on pulldown
-            $queries = Array( 'APPROVERDEPT'  =>"select distinct department as approverdept from users",
-                              'APPROVERTITLE' =>"select distinct title as approvertitle from users",
-                              'APPROVERID'    =>"select distinct username as approverid from users", 
-                         );
-        }else{
-            //echo "HTML gen: fixed format is used\n";
-            $message = $this->_genNonEditableApproverFlowHTML($existingRoute);
-            //echo "*** _genApproverFlowHtml() returning ". $message. "\n";
-            return $message;
-        }
-            
-        // returns 
-        //echo "calling getApproverFlowList";
-        $approverFlow = $this->getApproverFlowList($username);
-        //echo "***approverFlow=";
-        //print_r($approverFlow);
-        //echo "approverFlow end***";
+        // create arrays with options
+        $queries = Array( 'department'=> "select distinct department from users",
+                          'title'=>"select distinct title from users",
+                          'username'=>"select distinct username from users");
 
         $options = array();
         foreach ($queries as $colname=>$query){
-            //echo $query;
-            $queryRes = mysql_query($query);
+            echo $query;
+            $queryRes = mysql_query($query); 
             $arrayToAdd = array();
-            array_push($arrayToAdd, 'NULL');
             while($tmp = mysql_fetch_assoc($queryRes)){
-                array_push($arrayToAdd, $tmp[strtolower($colname)]);
+                array_push($arrayToAdd, $tmp[$colname]);
             }
             $options[strtoupper($colname)] = $arrayToAdd;
         }
 
         foreach ($dom->getElementsByTagName('td') as $elem){
-            $layer = 0;
-            foreach( $approverFlow as $layer=>$approver ){
-                // Create Applicant's UI
-                if( $layer== 0 ){
-                    foreach( $applicantElems as $elemKey ){
-                        $regEx = '/'. $elemKey. '/';
-                        // echo $regEx;
-                        if( preg_match($regEx, $elem->textContent, $matched ) ){
-                            // create TD as container
-                            $td = $dom->createElement('td');
-                            $td->nodeValue = $approver[$elemKey];
-                            // replace DOM's TD with the container
-                            $elem->parentNode->replaceChild($td, $elem);
-                        }
+            foreach( $options as $pdKey=>$pdOptions ){
+                $regEx = '/'. $pdKey. '/';
+                // echo $regEx;
+                if( preg_match($regEx, $elem->textContent, $matched ) ){
+                    // echo $matched, "\n";
+                    // set select
+                    $pulldown = $dom->createElement('select');
+                    foreach( $selectAttr as $attr=>$val ){
+                        $pulldown->setAttribute($attr, $val);
                     }
-                } else {
-                    foreach( $approverElems as $elemKeyBase ){
-                        $elemKey = $elemKeyBase. '_'. $layer; 
-                        //echo "***approverRepl";
-                        //print_r($approver[$elemKey]);
-                        //echo "approverRepl***";
-                        $regEx = '/'. $elemKey. '/';
-                        // echo $regEx;
-                        if( preg_match($regEx, $elem->textContent, $matched ) ){
-                            // create TD as container
-                            $td = $dom->createElement('td');
-                            $td->nodeValue = $approver[$elemKey];
-                            // replace DOM's TD with the container
-                            $elem->parentNode->replaceChild($td, $elem);
-                        }
+                    $pulldown->setAttribute('name', $pdKey);
+                    $pulldown->setAttribute('id', $pdKey);
+
+                    // set option
+                    for($j=0; $j<count($pdOptions); $j++){
+                        $option = $dom->createElement('option');
+                        $option->setAttribute('value',$pdOptions[$j]);
+                        $option->nodeValue = $pdOptions[$j];
+                        $pulldown->appendChild($option);
                     }
-                } 
-                // Create Approver's UI
-                foreach( $options as $pdKeyBase=>$pdOptions ){
-                    $pdKey = $pdKeyBase. '_'. $layer;
-                    $regEx = '/'. $pdKey. '/';
-                    // echo $regEx;
-                    if( preg_match($regEx, $elem->textContent, $matched ) ){
-                        // echo $matched, "\n";
-                        // set select
-                        $pulldown = $dom->createElement('select');
-                        foreach( $selectAttr as $attr=>$val ){
-                            $pulldown->setAttribute($attr, $val);
-                        }
-                        $pulldown->setAttribute('name', $pdKey);
-                        $pulldown->setAttribute('id', $pdKey);
 
-                        // set option & default value
-                        $selected = 1;
-                        $selectedValue = "";
-                        for($j=0; $j<count($pdOptions); $j++){
-                            $option = $dom->createElement('option');
-                            $option->setAttribute('value',$pdOptions[$j]);
-                            if ($pdOptions[$j] == $approver[$pdKey] ){
-                                $selected = $j;
-                                $selectedValue = $pdOptions[$j];
-                                $option->setAttribute('selected', 'selected');
-                            }
-                            $option->nodeValue = $pdOptions[$j];
-                            $pulldown->appendChild($option);
-                        }
-                        //echo "selected=". $selected. "\n";
-                        //$pulldown->setAttribute('selected', $selectedValue);
+                    // create TD as container
+                    $td = $dom->createElement('td');
+                    $td->appendChild($pulldown);
 
-                        // create TD as container
-                        $td = $dom->createElement('td');
-                        $td->appendChild($pulldown);
-
-                        // replace DOM's TD with the container
-                        $elem->parentNode->replaceChild($td, $elem);
-                    }
+                    // replace DOM's TD with the container
+                    $elem->parentNode->replaceChild($td, $elem);
                 }
             }
         }
         $optionsHTML = $dom->saveHTML();
-
-        // FIXME remove additional user lists
-        //$dom = new DOMDocument;
-        //$dom->loadHTML($optionsHTML);
-        //foreach ($dom->getElementsByTagName('td') as $elem){
-        //    // remove extra rows
-        //    $pdKey = 'APPROVER'. '[a-ZA-Z]+'. '_'. $i;
-        //    $regEx = '/'. $pdKey. '/';
-        //    echo $regEx;
-        //    if( preg_match($regEx, $elem->textContent, $matched ) ){
-        //        $row = $elem->parentNode;
-        //        $table = $row->parentNode;
-        //        $table->removeChild($row);
-        //    }
-        //}
-        //$optionsHTML = $dom->saveHTML();
-
-        return $optionsHTML;
-    }	
-
-    public function apply() {
-        //echo "calling apply()";
-		$connection=$this->openSQLconnection();
-        //echo "***Auth Begin:";
-        //print_r($this->Auth);
-        //echo "Auth END:***";
-
-        // FIXME
-		$username = $this->Auth->user('username');
-
-        $optionsHTML = $this->_genApproverFlowHtml($username);
-        // $optionsHTML = $dom->saveHTML();
-/*
-        $dom = new DOMDocument;
-        $dom->loadHTML($optionsHTML);
-        foreach ($dom->getElementsByTagName('td') as $elem){
-            // remove extra rows
-            $pdKey = 'APPROVER'. '[a-ZA-Z]+'. '_'. $i;
-            $regEx = '/'. $pdKey. '/';
-            echo $regEx;
-            if( preg_match($regEx, $elem->textContent, $matched ) ){
-                $row = $elem->parentNode;
-                $table = $row->parentNode;
-                $table->removeChild($row);
-            }
-        }
-        $optionsHTML = $dom->saveHTML();
-*/
 
 	
         // OUTPUT	
@@ -886,38 +626,9 @@ parent::beforeFilter();
 		return $doc;
 	
     }
-	
-    private function _saveRingiRoutes($ringino) {
-
-        // FIXME
-        $MAXLAYER = 5;
-        $TABLENAME = 'ringiroutes';
-		$username = $this->Auth->user('username');
-
-        //save self
-        $row[$TABLENAME]['ringino'] = $ringino;
-        $row[$TABLENAME]['approverlayer'] = 0;
-        $row[$TABLENAME]['approverid'] = $username;
-        $this->Ringiroute->save($row);
-
-        for( $i=1; $i<=$MAXLAYER; $i++ ){
-            $keyToVerify = 'APPROVERID_'. $i;
-
-            if( array_key_exists($keyToVerify, $this->data) ){
-                $row[$TABLENAME]['ringino']         = $ringino;
-                $row[$TABLENAME]['approverlayer']   = $i;
-                $row[$TABLENAME]['approverid']      = $username;
-                $this->Ringiroute->save($row);
-            }
-        } 
-    }
-	
 
 	public function apply_check () {
 		require_once("../Config/uploads.ctp");
-		
-		$ringino = $this->data['ringino'];
-		$username = $this->Auth->user('username');
 		
 		//$database = 'ringidata';
 		//$someTable = 'attributes';
@@ -955,10 +666,10 @@ parent::beforeFilter();
 		//storing non-excel items
 		
 		//attributes
-		$Attribute['Attribute']['applicantid'] = $username;
+		$Attribute['Attribute']['applicantid'] = $this->Auth->user('username');
 		$Attribute['Attribute']['applydate'] = date("Y-m-d H:i:s");
 		$Attribute['Attribute']['ringistatus'] = '002';
-		$Attribute['Attribute']['creator_id'] = $username;
+		$Attribute['Attribute']['creator_id'] = $this->Auth->user('username');
 		$Attribute['Attribute']['created_at'] = date("Y-m-d H:i:s");
 		$Attribute['Attribute']['updator_id'] = NULL;
 		$Attribute['Attribute']['updated_at'] = NULL;
@@ -967,21 +678,19 @@ parent::beforeFilter();
 		
 		//ringihistories
 		
-		$Ringihistory['Ringihistory']['ringino'] = $ringino;
+		$Ringihistory['Ringihistory']['ringino'] = $this->data['ringino'];
 		$Ringihistory['Ringihistory']['ringiseq'] = 1;
 		$Ringihistory['Ringihistory']['approverlayer'] = 0;
-		$Ringihistory['Ringihistory']['processerid'] = $username;
+		$Ringihistory['Ringihistory']['processerid'] = $this->Auth->user('username');
 		$Ringihistory['Ringihistory']['processdate'] = date("Y-m-d H:i:s");
 		$Ringihistory['Ringihistory']['ringiaction'] = '001';
 		$Ringihistory['Ringihistory']['comment'] = NULL;
-		$Ringihistory['Ringihistory']['creator_id'] = $username;
+		$Ringihistory['Ringihistory']['creator_id'] = $this->Auth->user('username');
 		$Ringihistory['Ringihistory']['created_at'] = date("Y-m-d H:i:s");
 		$Ringihistory['Ringihistory']['updator_id'] = NULL;
 		$Ringihistory['Ringihistory']['updated_at'] = NULL;
 		
-		// FIXME
-		// save ringi routes - multiple table updates has to be atomic
-		$this->_saveRingiRoutes($ringino);
+		
 		$this->Attribute->save($Attribute);
 		$this->Ringihistory->save($Ringihistory);
 		
@@ -993,29 +702,23 @@ parent::beforeFilter();
 		if ($_FILES['file']['name']) {
 			$count=0;
 			foreach ($_FILES['file']['name'] as $filename) 
-			{
+	        {
 				move_uploaded_file( $_FILES['file']['tmp_name'][$count], $folderpath.$ringino."/".$_FILES['file']['name'][$count]);
 				$count++;
-			}
+	        }
 		}
-		//echo "<a href=file://".$folderpath.$ringino.">Link to Uploads</a>";
-		$this->redirect(array('action' => 'main_menu'));
 		
-	}
+		echo "<a href=file://".$folderpath.$ringino.">Link to Uploads</a>";
+		
+    }
 
 	
 	public function edit() {
 
-		$ringino = $this->data['ringi_number'];
-		$username = $this->Auth->user('username');
-		$this->set('ringino',$ringino);
-		$this->set('status',$this->Auth->user('status'));
-		
         $this->openSQLconnection();
 
-
         // FIXME
-        $query = "SELECT * FROM ATTRIBUTES WHERE ringino = $ringino";
+        $query = "SELECT * FROM ATTRIBUTES WHERE ringino = 1";
         $sql = mysql_query($query);
         $array = mysql_fetch_assoc($sql);
 
@@ -1037,6 +740,7 @@ parent::beforeFilter();
 
                 $inputMatched = preg_split('/[:]/',$matches[0]);
                 $id = $colname = $inputMatched[1];
+                //echo $colname. "\n";
 
                 $valFromDB = $array[$colname];
                 $element = $dom->createElement('textarea', $valFromDB);
@@ -1045,9 +749,6 @@ parent::beforeFilter();
                 }
                 $element->setAttribute( 'id', $id );
                 $element->setAttribute( 'name', $colname );
-		if ($colname == 'ringino'){
-			$element->setAttribute( 'readonly', true);
-		}
 
                 $replace = $text->cloneNode();
                 $replace->appendChild($element);
@@ -1055,9 +756,8 @@ parent::beforeFilter();
                 $text->parentNode->replaceChild($replace, $text);
             }
         }
-		$approvalFlow = $this->_genApproverFlowHtmlWithId($username, $ringino);
-		
-        $formstart = '<form name="applyForm" method="post" action="" onsubmit="" enctype="multipart/form-data">';
+
+        $formstart = '<form name="applyForm" method="post" action="apply_check" onsubmit="return main()" enctype="multipart/form-data">';
 
         $doc =  $formstart .
                 $dom->saveHTML().
@@ -1066,180 +766,17 @@ parent::beforeFilter();
                 <div class="text-center">
                     <label for="file">Choose your attachments</label><br>
                     <input type="file" name="file[]" style="line-height: 0; padding: 0px" multiple="multiple"><br><br>
-					<button class="btn btn-success" onclick="reapply()">Reapply</button>
-					<button class="btn btn-success" onclick="delet()">Delete</button>
-
+                    <button class="btn btn-success">Apply</button>
                 </div>
             </div>
-			
-			<div id="routing">
-        '.
-        $approvalFlow.
-		'    </div>
         </form>';
 
         $this->set('doc',$doc);
 
+		echo gettype($doc);
 		
 	}
-
- // add by Tei 2012/07/28 start
-	public function reapply () {
-		require_once("../Config/uploads.ctp");
-		
-		$ringino = $this->data['ringino'];
-		$username = $this->Auth->user('username');
-		
-		//$database = 'ringidata';
-		//$someTable = 'attributes';
-
-		// Connect to MySQL
-		$connection = $this->openSQLconnection();
-		
-		if (mysql_query("SELECT id FROM attributes WHERE id=1")) {
-			$selectcols = "SELECT * FROM attributes WHERE id=1";
-		}
-		else {
-			$selectcols = "SELECT * FROM attributes";
-		}
-				
-		$tempcols = mysql_query($selectcols) or die(mysql_error());
-
-		$attrnumbers = mysql_num_fields($tempcols);		//this has the number of columns!!!		
-
-		$columnNames = array();
-
-		for ($i=0; $i < $attrnumbers; $i++) { 
-			$test = mysql_field_name($tempcols,$i);	
-			array_push($columnNames, $test);
-		}
-
-
-		// attributes excel items save 
-		for ($i=1; $i < $attrnumbers; $i++) {
-			$column = $columnNames[$i];
-			if (isset($this->data[$column])) {
-				$Attribute['Attribute'][$column] = $this->data[$column];
-			}
-		}
-		
-		
-		//storing non-excel items
-		//attributes
-		$Attribute['Attribute']['applicantid'] = $username;
-		$Attribute['Attribute']['applydate'] = date("Y-m-d H:i:s");
-		$Attribute['Attribute']['ringistatus'] = '002';
-		$Attribute['Attribute']['creator_id'] = $username;
-		$Attribute['Attribute']['created_at'] = date("Y-m-d H:i:s");
-		$Attribute['Attribute']['updator_id'] = NULL;
-		$Attribute['Attribute']['updated_at'] = NULL;
-		$Attribute['Attribute']['activeflag'] = 1;
-		$Attribute['Attribute']['deleteReason'] = NULL;
-		
-		//ringihistories
-		
-		$Ringihistory['Ringihistory']['ringino'] = $ringino;
-		$Ringihistory['Ringihistory']['ringiseq'] = 1;
-		$Ringihistory['Ringihistory']['approverlayer'] = 0;
-		$Ringihistory['Ringihistory']['processerid'] = $username;
-		$Ringihistory['Ringihistory']['processdate'] = date("Y-m-d H:i:s");
-		$Ringihistory['Ringihistory']['ringiaction'] = '012';
-		$Ringihistory['Ringihistory']['comment'] = NULL;
-		$Ringihistory['Ringihistory']['creator_id'] = $username;
-		$Ringihistory['Ringihistory']['created_at'] = date("Y-m-d H:i:s");
-		$Ringihistory['Ringihistory']['updator_id'] = NULL;
-		$Ringihistory['Ringihistory']['updated_at'] = NULL;
-		
-		// FIXME would be change to update and keep the old record with the same ringno and deleteflg/activeflg = '0'
-		// clear old attributes record
-		$sql1="DELETE from attributes where ringino = $ringino";
-		
-		// Run SQL query
-
-		if ($connection) {
-			$query = mysql_query($sql1) or die(mysql_error());
-			$this->Attribute->save($Attribute);
-			
-			$this->_saveRingiRoutes($ringino);
-			$this->Ringihistory->save($Ringihistory);
-			
-		} else {
-			echo "Application reapply is failure when update the data into database";
-		}
-
-		//Upload file
-		$ringino=$Attribute['Attribute']['ringino'];
-		$cmd = "cd $vendorpath ; sh createFolder.sh $folderpath $ringino";
-		exec($cmd);
-		
-		if ($_FILES['file']['name']) {
-			$count=0;
-			foreach ($_FILES['file']['name'] as $filename) 
-	        {
-				move_uploaded_file( $_FILES['file']['tmp_name'][$count], $folderpath.$ringino."/".$_FILES['file']['name'][$count]);
-				$count++;
-	        }
-		}
-		
-		echo "<a href=file://".$folderpath.$ringino.">Link to Uploads</a>";
-		
- }
-
-	public function delete () {
-		// the system will ignore the modificaiton in the application from users when they choose delete
-		$connection=$this->openSQLconnection();
-		$username = $this->Auth->user('username');
-		$ringino = $this->data['ringino'];
-		//Get current ringiseq from ringihistories 
-		$query = mysql_query("SELECT max(ringiseq) maxringino 
-		                        from ringihistories 
-		                       where ringino = $ringino 
-		                    group by ringino");
-		$array = mysql_fetch_assoc($query);
-		$ringiseq=$array['maxringino'];
-
-		$sql1="UPDATE attributes
-		    Set  ringistatus = '005',
-		           updator_id = '".$username."',
-		           updated_at = now()
-			where ringino = $ringino";
-
-    	$Ringihistory['Ringihistory']['ringino'] = $this->data['ringino'];
-    	$Ringihistory['Ringihistory']['ringiseq'] = $ringiseq+1;
-    	$Ringihistory['Ringihistory']['approverlayer'] = 0;
-    	$Ringihistory['Ringihistory']['processerid'] = $this->Auth->user('username');
-    	$Ringihistory['Ringihistory']['processdate'] = date("Y-m-d H:i:s");
-    	$Ringihistory['Ringihistory']['ringiaction'] = '005';
-    	$Ringihistory['Ringihistory']['creator_id'] = $this->Auth->user('username');
-    	$Ringihistory['Ringihistory']['created_at'] = date("Y-m-d H:i:s");
-
-		if ($connection) {
-			$query = mysql_query($sql1) or die(mysql_error());
-	    	$this->Ringihistory->save($Ringihistory);
 	
-		} else {
-			echo "Application delete is failure when update the data into database";
-		}
-
-		//Upload file
-		$ringino=$Attribute['Attribute']['ringino'];
-		$cmd = "cd $vendorpath ; sh createFolder.sh $folderpath $ringino";
-		exec($cmd);
-		
-		if ($_FILES['file']['name']) {
-			$count=0;
-			foreach ($_FILES['file']['name'] as $filename) 
-	        {
-				move_uploaded_file( $_FILES['file']['tmp_name'][$count], $folderpath.$ringino."/".$_FILES['file']['name'][$count]);
-				$count++;
-	        }
-		}
-		
-		echo "<a href=file://".$folderpath.$ringino.">Link to Uploads</a>";
-		
- }
-
-// add by Tei 2013/07/28 End	
 	
 	public function approve() {
 		$connection=$this->openSQLconnection();
@@ -1637,7 +1174,7 @@ parent::beforeFilter();
 			updated_at = now()
 		where ringino = $ringino";
 
-		$sql2="DELETE from ringiroutes where ringino = $ringino";
+		$sql2="DELETE from ringiroutes where ringino = $ringino";;
 
 		$Ringihistory['Ringihistory']['ringino'] = $this->data['ringino'];
 		$Ringihistory['Ringihistory']['ringiseq'] = $ringiseq+1;
@@ -1714,192 +1251,195 @@ parent::beforeFilter();
 	}
 	
 	public function task() {
-		$connection=$this->openSQLconnection();
-		$username = $this->Auth->user('username');
-		//$ringino = $this->data['ringino'];
-		//Get current ringiseq from ringihistories
-		//$sql="SELECT * from attributes where ringino='$ringino'";
-		$sql="SELECT department, title, name FROM users WHERE username = '$username'";
-		$query = mysql_query("$sql");
-		$array = mysql_fetch_assoc($query);
-		$this->set('name', $array['name']);
-		$this->set('department', $array['department']);
-		$this->set('title', $array['title']);
-		$sql="SELECT count(1) count
-			FROM attributes a, ringiroutes b
-			WHERE a.ringino =  b.ringino
-				and b.approverid = '$username'
-				and a.ringistatus = '002'
-				and (a.ringino,b.approverlayer)
-			IN  (select ringino,min(approverlayer) approverlayer 
-			        FROM ringiroutes 
-			        WHERE approvedate is NULL  and approverlayer >0
-				GROUP BY ringino)";
-		$query = mysql_query("$sql");
-		$array = mysql_fetch_assoc($query);
-		$this->set('taskLeft', $array['count']);
-
-		$sql = "SELECT approverdept, approvertitle,approverid 
-			From routes, users
-			WHERE routes.department = users.department
-				and routes.approveRouteType = '0'
-				and routes.person is NULL
-				and users.username = '$username'
-			ORDER BY routes.approverlayer";
-		$query = mysql_query("$sql");
-		$approverCount = mysql_num_rows($query);
-		$this->set('approverCount', $approverCount);
-		if ($approverCount > 0){
-			for ($i = 0; $i < $approverCount; $i ++){
-				$array = mysql_fetch_assoc($query);
-				$approverId[$i] = $array['approverid'];
-				$approverDept[$i] = $array['approverdept'];
-				$approverTitle[$i] = $array['approvertitle'];
-			}
-			$this->set('approverId', $approverId);
-			$this->set('approverDept', $approverDept);
-			$this->set('approverTitle', $approverTitle);
-		}
-		$sql="Select a.ringino, a.ringiname, a.project, a.purpose, a.applydate, a.applicantid, a.asset+a.expense application, a.assetremain+expenseremain remain
-			FROM attributes a, ringiroutes b
-			WHERE a.ringino =  b.ringino 
-				and b.approverid = '$username'
-				and a.ringistatus = '002'
-				and (a.ringino,b.approverlayer)
-			IN  (select ringino,min(approverlayer) approverlayer 
-                                FROM ringiroutes 
-                                WHERE approvedate is NULL
-					and approverlayer >0
-				GROUP BY ringino)";
-		$query = mysql_query("$sql");
-		$applicationCount = mysql_num_rows($query);
-		$this->set('applicationCount', $applicationCount);
-		if ($applicationCount > 0){
-			for ($i = 0; $i < $applicationCount; $i ++){
+			$connection=$this->openSQLconnection();
+			$username = $this->Auth->user('username');
+			//$ringino = $this->data['ringino'];
+			//Get current ringiseq from ringihistories
+			//$sql="SELECT * from attributes where ringino='$ringino'";
+			$sql="SELECT department, title, name FROM users WHERE username = '$username'";
+			$query = mysql_query("$sql");
 			$array = mysql_fetch_assoc($query);
-			$ringiNo[$i] = $array['ringino'];
-			$ringiName[$i] = $array['ringiname'];
-			$project[$i] = $array['project'];
-			$purpose[$i] = $array['purpose'];
-			$applyDate[$i] = $array['applydate'];
-			$applicantId[$i] = $array['applicantid'];
-			$application[$i] = $array['application'];
-			$remain[$i] = $array['remain'];
-			}
-			$this->set('ringiNo', $ringiNo);
-			$this->set('ringiName', $ringiName);
-			$this->set('project', $project);
-			$this->set('purpose', $purpose);
-			$this->set('applyDate', $applyDate);
-			$this->set('applicantId', $applicantId);
-			$this->set('application', $application);
-			$this->set('remain', $remain);
-		}
-	}
+			$this->set('name', $array['name']);
+			$this->set('department', $array['department']);
+			$this->set('title', $array['title']);
 
-	public function other() {
-		$connection=$this->openSQLconnection();
-		$username = $this->Auth->user('username');
-		//$ringino = $this->data['ringino'];
-		//Get current ringiseq from ringihistories
-		//$sql="SELECT * from attributes where ringino='$ringino'";
-		$sql="SELECT department, title, name FROM users WHERE username = '$username'";
-		$query = mysql_query("$sql");
-		$array = mysql_fetch_assoc($query);
-		$this->set('name', $array['name']);
-		$this->set('department', $array['department']);
-		$this->set('title', $array['title']);
-
-		$sql = "SELECT count(1) count
-			FROM attributes,ringiroutes 
-			WHERE ringiroutes.ringino = attributes.ringino 
-				and ringiroutes.approverid = '$username'
-				and attributes.ringistatus not in ('001', '005')
-				and ringiroutes.approverlayer >0";
-		$query = mysql_query("$sql");
-		$array = mysql_fetch_assoc($query);
-		$this->set('appCount', $array['count']);
-
-		$sql = "SELECT count(1) count
-			FROM attributes,ringiroutes 
-			WHERE ringiroutes.ringino = attributes.ringino 
-				and ringiroutes.approverid = '$username'
-				and attributes.ringistatus = '003'";
-		$query = mysql_query("$sql");
-		$array = mysql_fetch_assoc($query);
-		$this->set('accCount', $array['count']);			
-
-		$sql = "SELECT count(1) count
-			FROM attributes, ringiroutes 
-			WHERE ringiroutes.ringino = attributes.ringino 
-				and ringiroutes.approverid = '$username'
-				and attributes.ringistatus = '002'";
-		$query = mysql_query("$sql");
-		$array = mysql_fetch_assoc($query);
-		$this->set('inProCount', $array['count']);
-
-		$sql = "SELECT approverdept, approvertitle,approverid 
-			From routes, users
-			WHERE routes.department = users.department
-				and routes.approveRouteType = '0'
-				and routes.person is NULL
-				and users.username = '$username'
-			ORDER BY routes.approverlayer";
-		$query = mysql_query("$sql");
-		$approverCount = mysql_num_rows($query);
-		$this->set('approverCount', $approverCount);
-		if ($approverCount > 0){
-			for ($i = 0; $i < $approverCount; $i ++){
-				$array = mysql_fetch_assoc($query);
-				$approverId[$i] = $array['approverid'];
-				$approverDept[$i] = $array['approverdept'];
-				$approverTitle[$i] = $array['approvertitle'];
-			}
-			$this->set('approverId', $approverId);
-			$this->set('approverDept', $approverDept);
-			$this->set('approverTitle', $approverTitle);
-		}
-
-		$sql="SELECT a.ringino, a.ringiname, a.project, a.purpose, a.applydate, a.applicantid, a.asset+a.expense application, a.assetremain+expenseremain remain, a.ringistatus
-			FROM attributes a, ringiroutes b
-			WHERE a.ringino =  b.ringino 
-				  and b.approverid = '$username'
-				  and b.approverlayer >0
-				  and (a.ringino,b.approverlayer)
-			NOT IN  (SELECT ringino,min(approverlayer) approverlayer 
-                                FROM ringiroutes 
-                                WHERE approvedate is NULL
-					AND approverlayer >0
-	    		        Group by ringino)";
-		$query = mysql_query("$sql");
-		$applicationCount = mysql_num_rows($query);
-		$this->set('applicationCount', $applicationCount);
-		if ($applicationCount > 0){
-			for ($i = 0; $i < $applicationCount; $i ++){
+			$sql="SELECT count(1) count
+					FROM attributes a, ringiroutes b
+					WHERE a.ringino =  b.ringino
+						and b.approverid = '$username'
+						and a.ringistatus = '002'
+						and (a.ringino,b.approverlayer)
+					IN  (select ringino,min(approverlayer) approverlayer 
+					        FROM ringiroutes 
+					        WHERE approvedate is NULL  and approverlayer >0
+						GROUP BY ringino)";
+			$query = mysql_query("$sql");
 			$array = mysql_fetch_assoc($query);
-			$ringiNo[$i] = $array['ringino'];
-			$ringiName[$i] = $array['ringiname'];
-			$project[$i] = $array['project'];
-			$purpose[$i] = $array['purpose'];
-			$applyDate[$i] = $array['applydate'];
-			$applicantId[$i] = $array['applicantid'];
-			$application[$i] = $array['application'];
-			$remain[$i] = $array['remain'];
-			$ringiStatus[$i] = $array['ringistatus'];
-			$ringiStatusName[$i] =$this->Convertor($array['ringistatus'],'RingiStatus');
+			$this->set('taskLeft', $array['count']);
+
+
+			$sql = "SELECT approverdept, approvertitle,approverid 
+					From routes, users
+					WHERE routes.department = users.department
+						and routes.approveRouteType = '0'
+						and routes.person is NULL
+						and users.username = '$username'";
+			$query = mysql_query("$sql");
+			$approverCount = mysql_num_rows($query);
+			$this->set('approverCount', $approverCount);
+			if ($approverCount > 0){
+				for ($i = 0; $i < $approverCount; $i ++){
+					$array = mysql_fetch_assoc($query);
+					$approverId[$i] = $array['approverid'];
+					$approverDept[$i] = $array['approverdept'];
+					$approverTitle[$i] = $array['approvertitle'];
+				}
+				$this->set('approverId', $approverId);
+				$this->set('approverDept', $approverDept);
+				$this->set('approverTitle', $approverTitle);
 			}
-			$this->set('ringiNo', $ringiNo);
-			$this->set('ringiName', $ringiName);
-			$this->set('project', $project);
-			$this->set('purpose', $purpose);
-			$this->set('applyDate', $applyDate);
-			$this->set('applicantId', $applicantId);
-			$this->set('application', $application);
-			$this->set('remain', $remain);
-			$this->set('ringiStatus', $ringiStatus);
-			$this->set('ringiStatusName', $ringiStatusName);
+			$sql="Select a.ringino, a.ringiname, a.project, a.purpose, a.applydate, a.applicantid, a.asset+a.expense application, a.assetremain+expenseremain remain
+					FROM attributes a, ringiroutes b
+					WHERE a.ringino =  b.ringino 
+						and b.approverid = '$username'
+						and a.ringistatus = '002'
+						and (a.ringino,b.approverlayer)
+					IN  (select ringino,min(approverlayer) approverlayer 
+	                                        FROM ringiroutes 
+	                                        WHERE approvedate is NULL
+							and approverlayer >0
+						GROUP BY ringino)";
+
+
+
+			$query = mysql_query("$sql");
+			$applicationCount = mysql_num_rows($query);
+			$this->set('applicationCount', $applicationCount);
+			if ($applicationCount > 0){
+				for ($i = 0; $i < $applicationCount; $i ++){
+				$array = mysql_fetch_assoc($query);
+				$ringiNo[$i] = $array['ringino'];
+				$ringiName[$i] = $array['ringiname'];
+				$project[$i] = $array['project'];
+				$purpose[$i] = $array['purpose'];
+				$applyDate[$i] = $array['applydate'];
+				$applicantId[$i] = $array['applicantid'];
+				$application[$i] = $array['application'];
+				$remain[$i] = $array['remain'];
+				}
+				$this->set('ringiNo', $ringiNo);
+				$this->set('ringiName', $ringiName);
+				$this->set('project', $project);
+				$this->set('purpose', $purpose);
+				$this->set('applyDate', $applyDate);
+				$this->set('applicantId', $applicantId);
+				$this->set('application', $application);
+				$this->set('remain', $remain);
+			}
 		}
-	}
+
+		public function other() {
+			$connection=$this->openSQLconnection();
+			$username = $this->Auth->user('username');
+			//$ringino = $this->data['ringino'];
+			//Get current ringiseq from ringihistories
+			//$sql="SELECT * from attributes where ringino='$ringino'";
+			$sql="SELECT department, title, name FROM users WHERE username = '$username'";
+			$query = mysql_query("$sql");
+			$array = mysql_fetch_assoc($query);
+			$this->set('name', $array['name']);
+			$this->set('department', $array['department']);
+			$this->set('title', $array['title']);
+
+			$sql = "SELECT count(1) count
+					FROM attributes,ringiroutes 
+					WHERE ringiroutes.ringino = attributes.ringino 
+						and ringiroutes.approverid = '$username'
+						and attributes.ringistatus not in ('001', '005')
+						and ringiroutes.approverlayer >0";
+			$query = mysql_query("$sql");
+			$array = mysql_fetch_assoc($query);
+			$this->set('appCount', $array['count']);
+
+
+			$sql = "SELECT count(1) count
+					FROM attributes,ringiroutes 
+					WHERE ringiroutes.ringino = attributes.ringino 
+						and ringiroutes.approverid = '$username'
+						and attributes.ringistatus = '003'";
+			$query = mysql_query("$sql");
+			$array = mysql_fetch_assoc($query);
+			$this->set('accCount', $array['count']);			
+
+			$sql = "SELECT count(1) count
+					FROM attributes, ringiroutes 
+					WHERE ringiroutes.ringino = attributes.ringino 
+						and ringiroutes.approverid = '$username'
+						and attributes.ringistatus = '002'";
+			$query = mysql_query("$sql");
+			$array = mysql_fetch_assoc($query);
+			$this->set('inProCount', $array['count']);
+
+			$sql = "SELECT approverdept, approvertitle,approverid 
+					From routes, users
+					WHERE routes.department = users.department
+						and routes.approveRouteType = '0'
+						and routes.person is NULL
+						and users.username = '$username'";
+			$query = mysql_query("$sql");
+			$approverCount = mysql_num_rows($query);
+			$this->set('approverCount', $approverCount);
+			if ($approverCount > 0){
+				for ($i = 0; $i < $approverCount; $i ++){
+					$array = mysql_fetch_assoc($query);
+					$approverId[$i] = $array['approverid'];
+					$approverDept[$i] = $array['approverdept'];
+					$approverTitle[$i] = $array['approvertitle'];
+				}
+				$this->set('approverId', $approverId);
+				$this->set('approverDept', $approverDept);
+				$this->set('approverTitle', $approverTitle);
+			}
+			$sql="SELECT a.ringino, a.ringiname, a.project, a.purpose, a.applydate, a.applicantid, a.asset+a.expense application, a.assetremain+expenseremain remain, a.ringistatus
+					FROM attributes a, ringiroutes b
+					WHERE a.ringino =  b.ringino 
+						  and b.approverid = '$username'
+						  and b.approverlayer >0
+						  and (a.ringino,b.approverlayer)
+					NOT IN  (select ringino,min(approverlayer) approverlayer 
+	                                        FROM ringiroutes 
+	                                        WHERE approvedate is NULL
+							and approverlayer >0)";
+			$query = mysql_query("$sql");
+			$applicationCount = mysql_num_rows($query);
+			$this->set('applicationCount', $applicationCount);
+			if ($applicationCount > 0){
+				for ($i = 0; $i < $applicationCount; $i ++){
+				$array = mysql_fetch_assoc($query);
+				$ringiNo[$i] = $array['ringino'];
+				$ringiName[$i] = $array['ringiname'];
+				$project[$i] = $array['project'];
+				$purpose[$i] = $array['purpose'];
+				$applyDate[$i] = $array['applydate'];
+				$applicantId[$i] = $array['applicantid'];
+				$application[$i] = $array['application'];
+				$remain[$i] = $array['remain'];
+				$ringiStatus[$i] = $array['ringistatus'];
+				$ringiStatusName[$i] =$this->Convertor($array['ringistatus'],'RingiStatus');
+				}
+				$this->set('ringiNo', $ringiNo);
+				$this->set('ringiName', $ringiName);
+				$this->set('project', $project);
+				$this->set('purpose', $purpose);
+				$this->set('applyDate', $applyDate);
+				$this->set('applicantId', $applicantId);
+				$this->set('application', $application);
+				$this->set('remain', $remain);
+				$this->set('ringiStatus', $ringiStatus);
+				$this->set('ringiStatusName', $ringiStatusName);
+			}
+
+		}
 	
 	
 }

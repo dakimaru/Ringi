@@ -25,17 +25,26 @@
 	?>
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link href="assets/css/bootstrap-responsive.css" rel="stylesheet">
+	<link href="assets/css/bootstrap.css" rel="stylesheet">
 </head>
 <body>
 	<div class="wrapper">
 		<div class="navbar navbar-static-top navbar-inverse">	<!-- replace with static/fixed -->
 			<div class="navbar-inner">
 				<div class="container">
+					<button type="button" class="btn btn-navbar collapsed" data-toggle="collapse" data-target=".nav-collapse">
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
 					<a class="brand" href="/Ringi/main_menu"><strong><i>Home</i></strong></a>
-					<ul class="nav">
-						<li><a href="#"><strong>@Task</strong></a></li>
-						<li><a href="#"><strong>#Report</strong></a></li>
-					</ul>
+					<div class="nav-collapse collapse" >
+						<ul class="nav" >					
+							<li ><a href="/Ringi/task"><strong>@Task</strong></a></li>
+							<li ><a href="/Ringi/other"><strong>&Other</strong></a></li>
+							<li ><a href="#"><strong>#Report</strong></a></li>
+						</ul>
+					</div>
 					<ul class="nav pull-right">
 						<form class="navbar-search pull-left">
 							<input type="text" class="search-query" placeholder="Search">
@@ -57,7 +66,7 @@
 						<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
 							<li><a tabindex="-1" href="#">Help</a></li>
 							<li class="divider"></li>
-							<li><a tabindex="-1" href="#">Settings</a></li>
+							<li><a tabindex="-1" href="/Ringi/Users/password_change">Password Change</a></li>
 							<li>
 								<?php
 							if(!empty($user)) {
@@ -71,7 +80,8 @@
 							}
 							?>
 						</li>						
-					</ul>					
+					</ul>
+						<a href="/Ringi/apply" class="btn">Create</a>
 				</ul>
 			</div>
 		</div>

@@ -2,7 +2,7 @@
 
 	<div class="surface">
 		<div class="account-content">
-			<form method="post" action="password_change">
+			<form method="post" action="../users/password_change">
 
 				<h2 class="form-signin-heading">Change password</h2>
 				<p>New Password</p>

@@ -3,7 +3,7 @@
 /** General Style Info **/
 
 html,body {
-	/*min-width:1000px;*/
+	/*min-width:256px;*/
 	height:100%; /*needed because otherwise the footer will not work properly. If you just leave out, will not work for safari.*/
 	
 	/*
