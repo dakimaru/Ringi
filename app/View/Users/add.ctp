@@ -10,9 +10,9 @@
         echo $this->Form->input('password');
 		//echo $this->Form->input('department');
 		
-        echo $this->Form->input('title', array(
-            'options' => array('admin' => 'Admin', 
-                               'user' => 'User'
+        echo $this->Form->input('usertype', array(
+            'options' => array('0' => 'User', 
+                               '1' => 'Admin'
                                )
         ));
     ?>

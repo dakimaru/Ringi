@@ -14,8 +14,8 @@ class RingiController extends AppController {
 						'UserData');
 
     public function beforeFilter() {
-parent::beforeFilter();
-	    
+        parent::beforeFilter();
+        $this->Auth->allow('setup'); 
     }
 
 	public function openSQLconnection() {
@@ -90,7 +90,7 @@ parent::beforeFilter();
 			where applicantid = '$username' ".
 			"and ringistatus not in ('001','005')");
 		$clean = mysql_fetch_assoc($applicationquery);
-		$applicationCount=$clean['count'];
+		$applicationcount=$clean['count'];
 
 		//accepted number
 		$acceptednumber = mysql_query("SELECT count(1) count
@@ -109,7 +109,7 @@ parent::beforeFilter();
 		$progressnumber=$clean['count'];
 
 		$this->set('editcount',$editcount);
-		$this->set('applicationCount',$applicationCount);
+		$this->set('applicationcount',$applicationcount);
 		$this->set('acceptednumber',$acceptednumber);
 		$this->set('progressnumber',$progressnumber);
 		
@@ -1015,6 +1015,7 @@ parent::beforeFilter();
 
 
         // FIXME
+        echo $ringino;
         $query = "SELECT * FROM ATTRIBUTES WHERE ringino = $ringino";
         $sql = mysql_query($query);
         $array = mysql_fetch_assoc($sql);
@@ -1045,9 +1046,9 @@ parent::beforeFilter();
                 }
                 $element->setAttribute( 'id', $id );
                 $element->setAttribute( 'name', $colname );
-		if ($colname == 'ringino'){
-			$element->setAttribute( 'readonly', true);
-		}
+                if ($colname == 'ringino'){
+                    $element->setAttribute( 'readonly', true);
+                }
 
                 $replace = $text->cloneNode();
                 $replace->appendChild($element);

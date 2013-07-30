@@ -1,5 +1,6 @@
 <?php echo $doc ?>
 
+<?php echo ("<input type='hidden' name='ringino' value="."$ringino"." id='ringino'>") ?>
 <br>
 
 <script type="text/javascript" charset="utf-8">

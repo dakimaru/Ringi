@@ -45,7 +45,7 @@
 							<p>Edit</p>
 						</div>
 						<div class="span3 rightBorder">
-							<h4><?php echo $applicationCount ?></h4>
+							<h4><?php echo $applicationcount ?></h4>
 							<p>Application</p>
 						</div>
 						<div class="span3 rightBorder">
