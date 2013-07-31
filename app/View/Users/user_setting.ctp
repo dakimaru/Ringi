@@ -8,6 +8,7 @@
 if ($userCount>0){
 	for ($i = 0 ; $i < $userCount ; $i++)
 	{
+		echo '<input type="hidden" name="allUsertype'.$i.'" id="allUsertype'.$i.'" value="'.$allUsertype[$i].'">';
 		echo '<input type="hidden" name="allName'.$i.'"	id="allName'.$i.'" value="'.$allName[$i].'">';
 		echo '<input type="hidden" name="allEmail'.$i.'" id="allEmail'.$i.'" value="'.$allEmail[$i].'">';
 		echo '<input type="hidden" name="allDepartment'.$i.'" id="allDepartment'.$i.'" value="'.$allDepartment[$i].'">';
@@ -32,7 +33,7 @@ if ($userCount>0){
 						</p>
 					</div>
 					<div class="span5 paddingTop">
-						<h4 href="#"><?php echo $name; ?></h4>
+						<h4 href="#"><?php echo $name; if($usertype==1) echo ' (Admin)';  ?></h4>
 						<h5 href=#><?php echo $title; echo " ";echo $department; ?></h5>
 					</div>
 					
@@ -186,11 +187,9 @@ if ($userCount>0){
 								}
 								?>
 							</select>
+							<p style="margin:0;"><input type="checkbox" name="adminBox" value="<?php echo $usertype; ?>" id="adminBox" <?php if($usertype==1) echo 'checked';?>>Check the box to set an Admin user.</p>
+							<p style="margin:0;"><input type="checkbox" name="activeFlag" value="<?php echo $activeflag; ?>" id="activeFlag" <?php if($activeflag==1) echo 'checked';?>> Check the box to active the user.</p>
 							
-							<label class="checkbox">
-								<p style="margin:0;"><input type="checkbox">Check the box to set an Admin user.</p>
-								<p style="margin:0;"><input type="checkbox" name="activeFlag" value="<?php echo $activeflag; ?>" id="activeFlag"> Check the box to active the user.</p>
-							</label>
 						</div>
 					</fieldset>
 					<fieldset class="control-group">
@@ -251,18 +250,20 @@ if ($userCount>0){
 <script type="text/javascript" charset="utf-8">
 function UpdateInput(){
  var index= document.getElementById("users").value;
+ var usertype = document.getElementById("allUsertype"+index).value;
  var name = document.getElementById("allName"+index).value;
  var email = document.getElementById("allEmail"+index).value;
  var department = document.getElementById("allDepartment"+index).value;
  var title = document.getElementById("allTitle"+index).value;
  var manager = document.getElementById("allManager"+index).value;
  var activeFlag = document.getElementById("allActiveFlag"+index).value;
+  document.getElementById("adminBox").checked = (usertype == 1)? true:false;
  document.getElementById("name").value = name;
  document.getElementById("email").value = email;
  document.getElementById("department").value = department;
  document.getElementById("title").value = title;
  document.getElementById("manager").value = manager;
- document.getElementById("activeFlag").checked = activeFlag == 0? false:true;
+ document.getElementById("activeFlag").checked = (activeFlag == 1)? true:false;
  
 }
 </script>

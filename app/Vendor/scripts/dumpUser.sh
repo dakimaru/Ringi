@@ -1,6 +1,3 @@
 #! /bin/sh
 
-USERINFODIR=../user
-USERTABLE_CSV_FILENAME=$USERINFODIR/usertable.csv
-
-python dumpUser.py > $USERTABLE_CSV_FILENAME
+python exportUser.py > $USERINFOPATH/$USERTABLE_CSV_FILENAME

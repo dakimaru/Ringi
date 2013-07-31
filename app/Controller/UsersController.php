@@ -177,7 +177,9 @@ class UsersController extends AppController {
 						$sql="SELECT DN FROM users WHERE username='$username'";
 						$query = mysql_query($sql);
 						$userDN = mysql_fetch_assoc($query);
-						exec('cd ../Vendor/scripts ; sh resetPassword.sh "' .$userDN['DN'].'" '.$newPassword);
+						
+						require_once("../Config/uploads.ctp");
+						exec('cd ../Vendor/scripts ; $scr_reset_password "' .$userDN['DN'].'" '.$newPassword);
 						$this->Session->setFlash(__("Your password was updated successfully"));
 						//$this->redirect(array('controller' => 'Users', 'action' => 'password_change'));	
 						
@@ -221,7 +223,8 @@ class UsersController extends AppController {
 				$userDN = mysql_fetch_assoc($query);
 				
 				$newpassword=$_POST["newpass"];
-				exec('cd ../Vendor/scripts ; sh resetPassword.sh "' .$userDN['DN'].'" '.$newpassword);
+				require_once("../Config/uploads.ctp");
+				exec('cd ../Vendor/scripts ; $scr_reset_password "' .$userDN['DN'].'" '.$newpassword);
 				$this->Session->setFlash(__("The password of ".$_POST["selection"]." was updated successfully"));
 				$this->redirect(array('controller' => 'Ringi', 'action' => 'main_menu'));	
 				
@@ -271,12 +274,13 @@ class UsersController extends AppController {
 			
 		}
 		//Name, title, departement
-		$sql="SELECT department, title,  manager, mail, name, activeflag FROM users WHERE username = '$username'";
+		$sql="SELECT usertype, name, department, title,  manager, mail, activeflag FROM users WHERE username = '$username'";
 		//$sql="SELECT usertype, username, name, department, title, manager, email, activeflag,
 		//	FROM users
 		//	where username= admin direct username from pulldown";
 		$query = mysql_query("$sql");
 		$array = mysql_fetch_assoc($query);
+		$this->set('usertype', $array['usertype']);
 		$this->set('username', $username);
 		$this->set('email', $array['mail']);
 		$this->set('name', $array['name']);
@@ -287,7 +291,7 @@ class UsersController extends AppController {
 		
 		
 		
-		$sql="SELECT username, name, department, title, manager, mail, activeflag From users ORDER BY username";
+		$sql="SELECT usertype, username, name, department, title, manager, mail, activeflag From users ORDER BY username";
 		$query = mysql_query("$sql");
 		if ($query != NULL){
 			$userCount = mysql_num_rows($query);
@@ -296,6 +300,7 @@ class UsersController extends AppController {
 		if ($userCount > 0){
 			for ($i = 0 ; $i < $userCount; $i++){
 				$array = mysql_fetch_assoc($query);
+				$allUsertype[$i] = $array['usertype'];
 				$allUserame[$i] = $array['username'];
 				$allName[$i] = $array['name'];
 				$allDepartment[$i] = $array['department'];
@@ -304,6 +309,7 @@ class UsersController extends AppController {
 				$allEmail[$i] = $array['mail'];
 				$allActiveFlag[$i] = $array['activeflag'];
 			}
+			$this->set('allUsertype', $allUsertype);
 			$this->set('allUsername', $allUserame);
 			$this->set('allName', $allName);
 			$this->set('allDepartment', $allDepartment);

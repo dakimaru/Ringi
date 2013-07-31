@@ -47,6 +47,8 @@
 	Router::connect('/edit', array('controller' => 'Ringi', 'action' => 'edit', 'edit'));
 	
 	Router::connect('/pattern3', array('controller' => 'Ringi', 'action' => 'pattern3', 'pattern3'));
+	
+	Router::connect('/reapply', array('controller' => 'Ringi', 'action' => 'reapply', 'reapply'));
 
 	Router::connect('/approve', array('controller' => 'Ringi', 'action' => 'approve', 'approve'));
 	Router::connect('/accept', array('controller' => 'Ringi', 'action' => 'accept', 'accept'));
@@ -59,7 +61,8 @@
 	
 	Router::connect('/task', array('controller' => 'Ringi', 'action' => 'task', 'task'));
 	Router::connect('/other', array('controller' => 'Ringi', 'action' => 'other', 'other'));
-        Router::connect('/user_setting', array('controller' => 'Users', 'action' => 'user_setting', 'user_setting'));
+
+	Router::connect('/user_setting', array('controller' => 'Users', 'action' => 'user_setting', 'user_setting'));
 
 /**
  * Load all plugin routes. See the CakePlugin documentation on

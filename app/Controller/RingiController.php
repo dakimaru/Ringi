@@ -43,9 +43,11 @@ class RingiController extends AppController {
 	
 	public function setup() {
 
+		require_once("../Config/uploads.ctp");
+
 		$setup_script_path=$_SERVER['DOCUMENT_ROOT']."/Ringi/app/Vendor/scripts";
-		$exec1 = exec("cd $setup_script_path ; sh createRingiTables.sh 2>&1");
-		$exec2 = exec("cd $setup_script_path ; sh importADToMySql.sh 2>&1");
+		$exec1 = exec("cd $setup_script_path ; $scr_create_ringi_tables  2>&1");
+		$exec2 = exec("cd $setup_script_path ; $scr_import_ad_to_mysql 	 2>&1");
 		echo "$exec1";
 		echo "$exec2";
 		if ( (!$exec1) && (!$exec2)) {
@@ -445,6 +447,7 @@ class RingiController extends AppController {
 	}
 
 	public function application_details() {
+			$this->set('resourceflag',$this->data['resourceflag']);
 			$connection=$this->openSQLconnection();
 			//$username = $this->Auth->user('username');
 			$ringino = $this->data['ringiNo'];
@@ -466,7 +469,7 @@ class RingiController extends AppController {
 					$array = mysql_fetch_assoc($query);
 					$approverId[$i] = $array['approverid'];
 					$ringiStatus[$i] = $array['ringistatus'];
-					$ringiStatusName[$i] = $this->Convertor($array['ringistatus'],'RingiStatus');
+					$ringiStatusName[$i] = $this->Convertor($array['ringistatus'],'RingiAction');
 					$approveDate[$i] = $array['approvedate'];
 				}
 				$this->set('ringiNo', $array['ringino']);
@@ -591,7 +594,7 @@ class RingiController extends AppController {
             <table class="table table-bordered table-hover">
                     <tr class="success">
                         <td width="20%">No</td>
-                        <td>Applicant/Approver</td>
+                        <td>Layer</td>
                         <td>Department</td>
                         <td>Title</td>
                         <td>Approver ID</td>
@@ -701,7 +704,6 @@ class RingiController extends AppController {
             //echo $query;
             $queryRes = mysql_query($query);
             $arrayToAdd = array();
-            array_push($arrayToAdd, 'NULL');
             while($tmp = mysql_fetch_assoc($queryRes)){
                 array_push($arrayToAdd, $tmp[strtolower($colname)]);
             }
@@ -916,7 +918,8 @@ class RingiController extends AppController {
 	public function apply_check () {
 		require_once("../Config/uploads.ctp");
 		
-		$ringino = $this->data['ringino'];
+		//Deleted by tei 0730
+		//$ringino = $this->data['ringino'];
 		$username = $this->Auth->user('username');
 		
 		//$database = 'ringidata';
@@ -952,9 +955,17 @@ class RingiController extends AppController {
 		}
 		
 		
+		//Add by tei 0730 start
+		//Get current ringino from attributes 
+		$query = mysql_query("SELECT IFNULL(max(ringino),0) maxringino from attributes");
+		$array = mysql_fetch_assoc($query);
+		$ringino=$array['maxringino']+1;
+		
 		//storing non-excel items
 		
 		//attributes
+		$Attribute['Attribute']['ringino'] = $ringino;
+		//Add by tei 0730 end
 		$Attribute['Attribute']['applicantid'] = $username;
 		$Attribute['Attribute']['applydate'] = date("Y-m-d H:i:s");
 		$Attribute['Attribute']['ringistatus'] = '002';
@@ -986,8 +997,9 @@ class RingiController extends AppController {
 		$this->Ringihistory->save($Ringihistory);
 		
 		//Upload file
+		require_once("../Config/uploads.ctp");
 		$ringino=$Attribute['Attribute']['ringino'];
-		$cmd = "cd $vendorpath ; sh createFolder.sh $folderpath $ringino";
+		$cmd = "cd $vendorpath ; $scr_create_folder $folderpath $ringino";
 		exec($cmd);
 		
 		if ($_FILES['file']['name']) {
@@ -1110,15 +1122,16 @@ class RingiController extends AppController {
 
 		$columnNames = array();
 
-		for ($i=0; $i < $attrnumbers; $i++) { 
+		// FIXME - 8 is hardcoded!!!! 
+		for ($i=8; $i < $attrnumbers; $i++) { 
 			$test = mysql_field_name($tempcols,$i);	
 			array_push($columnNames, $test);
 		}
 
-
+		// FIXME - 8 is hardcoded!!!! 
 		// attributes excel items save 
-		for ($i=1; $i < $attrnumbers; $i++) {
-			$column = $columnNames[$i];
+		for ($i=8; $i < $attrnumbers; $i++) {
+			$column = $columnNames[$i-8];
 			if (isset($this->data[$column])) {
 				$Attribute['Attribute'][$column] = $this->data[$column];
 			}
@@ -1169,8 +1182,9 @@ class RingiController extends AppController {
 		}
 
 		//Upload file
+		require_once("../Config/uploads.ctp");
 		$ringino=$Attribute['Attribute']['ringino'];
-		$cmd = "cd $vendorpath ; sh createFolder.sh $folderpath $ringino";
+		$cmd = "cd $vendorpath ; $scr_create_folder $folderpath $ringino";
 		exec($cmd);
 		
 		if ($_FILES['file']['name']) {
@@ -1223,8 +1237,9 @@ class RingiController extends AppController {
 		}
 
 		//Upload file
+		require_once("../Config/uploads.ctp");
 		$ringino=$Attribute['Attribute']['ringino'];
-		$cmd = "cd $vendorpath ; sh createFolder.sh $folderpath $ringino";
+		$cmd = "cd $vendorpath ; $scr_create_folder  $folderpath $ringino";
 		exec($cmd);
 		
 		if ($_FILES['file']['name']) {

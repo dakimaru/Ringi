@@ -1,8 +1,9 @@
-dn: dc=test,dc=com
+dn: dc=enspirea,dc=com
 objectClass: dcObject
 objectClass: organization
-dc: test
-o: Test Organization
-dn: cn=Manager,dc=test,dc=com
+dc: enspirea
+o: Enspirea test
+
+dn: cn=Manager,dc=enspirea,dc=com
 objectClass: organizationalRole
 cn: Manager

@@ -223,11 +223,11 @@ def updateDBIncremental(dbTable, header, rows, enumColName, keyColNames, incColN
 
 def getNextEnumValue(cursor, dbTable, enumColName, incColName, row):
 
-    query = "select max(" + incColName + ") as maxvalue FROM "  \
+    query = "select max(" + incColName + ") as 'maxvalue' FROM "  \
             + dbTable + " WHERE "  \
             + enumColName + "=\'" + row[enumColName] + "\'"
 
-    #print query
+    print query
     cursor.execute(query)
 
     retval = str(ENUM_FIRST_VALUE)
