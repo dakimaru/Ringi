@@ -159,34 +159,60 @@ class UsersController extends AppController {
 	}
 	
 	public function password_change() {
+		include("authenticate.ctp");
 		$this->openSQLconnection();
-		if ($this->request->is('post')) {	
-			if ($_POST["newpass"]!=="" && $_POST["confirmpass"]!=="") {
-				if ($_POST["newpass"]==$_POST["confirmpass"]) {
-					$user = $this->Auth->user('username');
-					$sql="SELECT DN FROM users WHERE username='".$user."'";
-					$query = mysql_query($sql);
-					$userDN = mysql_fetch_assoc($query);
-					
-					$newpassword=$_POST["newpass"];
-					exec('cd ../Vendor/scripts ; sh resetPassword.sh "' .$userDN['DN'].'" '.$newpassword);
-					$this->Session->setFlash(__("Your password was updated successfully"));
-					$this->redirect(array('controller' => 'Ringi', 'action' => 'main_menu'));	
-					
+		$username = $this->Auth->user('username');
+		if ($this->request->is('post')) {
+
+			// run information through authenticator
+			if(authenticate($username,$_POST["currentPassword"]))
+			{
+				if ($_POST["newPassword"]!=="" && $_POST["verifyPassword"]!=="") {
+					if ($_POST["newPassword"]==$_POST["verifyPassword"]) {
+						$newPassword = $_POST['newPassword'];
+						$salted_pass = $this->Auth->password($newPassword);			//put salt on password
+						$querynewpass = "UPDATE users SET password='$salted_pass' WHERE username='$username'"; 
+						mysql_query($querynewpass) or die(mysql_error());	//overwrite password
+						
+						$sql="SELECT DN FROM users WHERE username='$username'";
+						$query = mysql_query($sql);
+						$userDN = mysql_fetch_assoc($query);
+						exec('cd ../Vendor/scripts ; sh resetPassword.sh "' .$userDN['DN'].'" '.$newPassword);
+						$this->Session->setFlash(__("Your password was updated successfully"));
+						//$this->redirect(array('controller' => 'Users', 'action' => 'password_change'));	
+						
+					}
+					else {
+						$this->Session->setFlash(__("Your passwords don't match!"));
+					}
 				}
 				else {
-					$this->Session->setFlash(__("Your passwords don't match!"));
+					$this->Session->setFlash(__('Invalid entries'));
 				}
-			}
+				
+
+			}	
 			else {
-				$this->Session->setFlash(__('Invalid entries'));
+				
+				$this->Session->setFlash(__('Invalid password, try again'));
 			}
 		}
+		
+		//Name, title, departement
+		$sql="SELECT department, title, name FROM users WHERE username = '$username'";
+		//$sql="SELECT usertype, username, name, department, title, manager, email, activeflag,
+		//	FROM users
+		//	where username= admin direct username from pulldown";
+		$query = mysql_query("$sql");
+		$array = mysql_fetch_assoc($query);
+		$this->set('username', $username);
+		$this->set('name', $array['name']);
+		$this->set('department', $array['department']);
+		$this->set('title', $array['title']);
 	}
 	
 	public function password_reset() {
 		$this->openSQLconnection();
-		
 		if ($this->request->is('post')) {	
 			if ($_POST["newpass"]!=="" && $_POST["selection"]!=="") {
 				$user = $_POST["selection"];
@@ -201,7 +227,7 @@ class UsersController extends AppController {
 				
 			}
 			else {
-				$this->Session->setFlash(__('Please select an appropriate user and password!'));
+				$this->Session->setFlash(__('Please select an appropriate password!'));
 			}
 			
 		}
@@ -222,6 +248,76 @@ class UsersController extends AppController {
 		$this->set('allusers',$allusers);
 		
 	}
+	
+	public function user_setting(){
+		$connection=$this->openSQLconnection();
+		$username = $this->Auth->user('username');
+		if ($this->request->is('post')) {	
+			if ($_POST["name"]!=="" && $_POST["email"]!=="") {
+				$name = $this->data['name'];
+				$email = $this->data['email'];
+				$sql = "UPDATE users Set name = '$name', mail = '$email', updated_at = now(), updator_id  = '$username' WHERE username= '$username'";
+				$query = mysql_query($sql);
+				//$userDN = mysql_fetch_assoc($query);
+				
+				//exec('cd ../Vendor/scripts ; sh resetPassword.sh "' .$userDN['DN'].'" '.$newpassword);
+				$this->Session->setFlash(__("Your profile was updated successfully"));
+				$this->redirect(array('controller' => 'Users', 'action' => 'user_setting'));	
+				
+			}
+			else {
+				$this->Session->setFlash(__('Please input an appropriate name and email!'));
+			}
+			
+		}
+		//Name, title, departement
+		$sql="SELECT department, title,  manager, mail, name, activeflag FROM users WHERE username = '$username'";
+		//$sql="SELECT usertype, username, name, department, title, manager, email, activeflag,
+		//	FROM users
+		//	where username= admin direct username from pulldown";
+		$query = mysql_query("$sql");
+		$array = mysql_fetch_assoc($query);
+		$this->set('username', $username);
+		$this->set('email', $array['mail']);
+		$this->set('name', $array['name']);
+		$this->set('department', $array['department']);
+		$this->set('title', $array['title']);
+		$this->set('manager', $array['manager']);
+		$this->set('activeflag', $array['activeflag']);
+		
+		
+		
+		$sql="SELECT username, name, department, title, manager, mail, activeflag From users ORDER BY username";
+		$query = mysql_query("$sql");
+		if ($query != NULL){
+			$userCount = mysql_num_rows($query);
+		}
+		$this->set('userCount', $userCount);
+		if ($userCount > 0){
+			for ($i = 0 ; $i < $userCount; $i++){
+				$array = mysql_fetch_assoc($query);
+				$allUserame[$i] = $array['username'];
+				$allName[$i] = $array['name'];
+				$allDepartment[$i] = $array['department'];
+				$allTitle[$i] = $array['title'];
+				$allManager[$i] = $array['manager'];
+				$allEmail[$i] = $array['mail'];
+				$allActiveFlag[$i] = $array['activeflag'];
+			}
+			$this->set('allUsername', $allUserame);
+			$this->set('allName', $allName);
+			$this->set('allDepartment', $allDepartment);
+			$this->set('allTitle', $allTitle);
+			$this->set('allManager', $allManager);
+			$this->set('allEmail', $allEmail);
+			$this->set('allActiveFlag', $allActiveFlag);
+		}
+		
+
+
+		
+	}
+	
 	
 	
 }

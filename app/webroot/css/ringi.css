@@ -192,3 +192,20 @@ td.comment {
 textarea[readonly] {
   cursor: default;
 }
+
+input[disabled]
+{
+  cursor:default;
+}
+
+form div {
+ clear: none;
+}
+
+.form-actions{
+  border-top: 0px;
+}
+
+.checkbox {
+margin: 5px 0;
+}

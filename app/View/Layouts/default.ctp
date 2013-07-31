@@ -66,7 +66,7 @@
 						<ul class="dropdown-menu" role="menu" aria-labelledby="dropdownMenu">
 							<li><a tabindex="-1" href="#">Help</a></li>
 							<li class="divider"></li>
-							<li><a tabindex="-1" href="/Ringi/Users/password_change">Password Change</a></li>
+							<li><a tabindex="-1" href="/Ringi/Users/user_setting">Settings</a></li>
 							<li>
 								<?php
 							if(!empty($user)) {

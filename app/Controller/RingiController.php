@@ -69,12 +69,12 @@ class RingiController extends AppController {
 		$username = $this->Auth->user('username');
 
 		//Name, title, departement
-				$sql="SELECT department, title, name FROM users WHERE username = '$username'";
-				$query = mysql_query("$sql");
-				$array = mysql_fetch_assoc($query);
-				$this->set('name', $array['name']);
-				$this->set('department', $array['department']);
-				$this->set('title', $array['title']);
+		$sql="SELECT department, title, name FROM users WHERE username = '$username'";
+		$query = mysql_query("$sql");
+		$array = mysql_fetch_assoc($query);
+		$this->set('name', $array['name']);
+		$this->set('department', $array['department']);
+		$this->set('title', $array['title']);
 				
 		//editing number
 		$editquery = mysql_query("SELECT count(1) count
@@ -1901,6 +1901,8 @@ class RingiController extends AppController {
 			$this->set('ringiStatusName', $ringiStatusName);
 		}
 	}
+	
+	
 	
 	
 }

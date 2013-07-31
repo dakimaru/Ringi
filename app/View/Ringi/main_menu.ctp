@@ -133,6 +133,10 @@
 								</div>';
 				  ?>
 			</div>
+			<?php 
+			$user = $this->Session->read('Auth.User');
+			if ($user['usertype']==1){
+				echo ('
 			<div class="well">
 				<div class="row-fluid paddingTop paddingBottom">
 					<div class="span4 offset1">
@@ -157,7 +161,8 @@
 					</div>
 				</div>
 			</div>
-			
+			');}
+			?>
 			<div class="well">
 				<ul class="clearfix paddingTop">
 					<li class="inline">&copy 2013 Enspirea</li>

@@ -59,6 +59,7 @@
 	
 	Router::connect('/task', array('controller' => 'Ringi', 'action' => 'task', 'task'));
 	Router::connect('/other', array('controller' => 'Ringi', 'action' => 'other', 'other'));
+        Router::connect('/user_setting', array('controller' => 'Users', 'action' => 'user_setting', 'user_setting'));
 
 /**
  * Load all plugin routes. See the CakePlugin documentation on
