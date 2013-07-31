@@ -209,3 +209,34 @@ form div {
 .checkbox {
 margin: 5px 0;
 }
+
+table tr td {
+min-width: 0;
+}
+
+.table td {
+padding: 2px;
+}
+
+.pre-scrollable {
+max-height: 600px;
+overflow-y: scroll;
+}
+
+.table-hover tbody tr:hover > td,
+.table-hover tbody tr:hover > th {
+  background-color: #ffffff;
+}
+
+
+.table tbody tr.success > td {
+  background-color: #dff0d8;
+}
+
+.table-hover tbody tr.success:hover > td {
+  background-color: #d0e9c6;
+}
+
+
+
+

@@ -1,5 +1,5 @@
 #! /bin/sh
-
+. env.sh
 if [ $# -ne 2 ]; then
     echo "Usage: $0 <DN> <newPassword>"
     exit 1

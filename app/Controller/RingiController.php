@@ -83,12 +83,10 @@ class RingiController extends AppController {
                         From attributes
                         where applicantid = '$username' ".
                         "and ringistatus = '001'";
-		print_r($sql);
 		$editquery = mysql_query("SELECT count(1) count
 			From attributes 
 			where applicantid = '$username' ".
 			"and ringistatus = '001'");
-		print_r($editquery);
 		$clean = mysql_fetch_assoc($editquery);
 		$editcount=$clean['count'];
 
@@ -897,7 +895,6 @@ class RingiController extends AppController {
 
    private function _saveRingiRoutes($ringino) {
 
-        echo "**** _saveRingiRoutes() ";
 
         // FIXME
         $MAXLAYER = 5;
@@ -1935,7 +1932,46 @@ class RingiController extends AppController {
 		}
 	}
 	
-	
+	public function report(){
+		$connection=$this->openSQLconnection();
+		$sql = "SELECT A.year, A.department, A.linecd, A.project, A.accountno, A.purpose, A.month,sum(A.budget) budget, Sum(A.application) application 
+			FROM (SELECT year,department, linecd,project,accountno,purpose,month,budget,0 application,benefit
+				FROM budgets
+				UNION ALL SELECT Year(applydate) year,assetdept department, linecd,project,assetaccountno accountno,purpose,month(applydate) month,0,asset application,Null benefit
+					  FROM attributes where ringistatus = '003' and asset is not null 
+					  UNION SELECT Year(applydate) year,expensedept department, linecd,project,expenseaccountno accountno,purpose,month(applydate) month,0,expense application,Null benefit
+					  FROM attributes where ringistatus = '003' and expense is not null ) A
+			GROUP BY A.year, A.department, A.linecd, A.project, A.accountno, A.purpose, A.month";
+		$count = -1;
+		$query = mysql_query("$sql");
+		if ($query != NULL){
+			$count = mysql_num_rows($query)/12;
+		}
+		$this->set('count', $count);
+		if ($count > 0){
+			for ($entry = 0; $entry < $count; $entry++){
+				for ($month = 0 ; $month < 12; $month++){
+					$array = mysql_fetch_assoc($query);
+					$budget[$entry][$month] = $array['budget'];
+					$application[$entry][$month] = $array['application'];
+				}
+				$year[$entry] = $array['year'];
+				$department[$entry] = $array['department'];
+				$linecd[$entry] = $array['linecd'];
+				$project[$entry] = $array['project'];
+				$accountno[$entry] = $array['accountno'];
+				$purpose[$entry] = $array['purpose'];
+			}
+			$this->set('year', $year);
+			$this->set('department', $department);
+			$this->set('linecd', $linecd);
+			$this->set('project', $project);
+			$this->set('accountno', $accountno);
+			$this->set('purpose', $purpose);
+			$this->set('budget', $budget);
+			$this->set('application', $application);
+		}
+	}
 	
 	
 }

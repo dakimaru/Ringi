@@ -42,7 +42,7 @@
 						<ul class="nav" >					
 							<li ><a href="/Ringi/task"><strong>@Task</strong></a></li>
 							<li ><a href="/Ringi/other"><strong>&Other</strong></a></li>
-							<li ><a href="#"><strong>#Report</strong></a></li>
+							<li ><a href="/Ringi/report"><strong>#Report</strong></a></li>
 						</ul>
 					</div>
 					<ul class="nav pull-right">
@@ -87,7 +87,7 @@
 		</div>
 	</div>
 	<div style="height:3em;"></div>
-	<div class="containers">
+	<div class="container">
 
 		<?php echo $this->Session->flash(); ?>
 		<?php echo $content_for_layout; ?>

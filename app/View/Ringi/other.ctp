@@ -237,6 +237,7 @@
 												<div class="span2">
 													<form action="application_details" method="post" accept-charset="utf-8">
 														<input type="hidden" name="ringiNo" value="'.$ringiNo[$i].'">
+														<input type="hidden" name="resourceflag" value="other" id="resourceflag">
 														<button class="btn btn-small">Detail</button>
 													</form>
 												</div>
@@ -318,6 +319,7 @@
                                                                 <div class="span2">
                                                                         <form action="application_details" method="post" accept-charset="utf-8">
                                                                                 <input type="hidden" name="ringiNo" value="'.$ringiNo[$i].'">
+										<input type="hidden" name="resourceflag" value="other" id="resourceflag">
                                                                                 <button class="btn btn-small">Detail</button>
                                                                         </form>
 								</div>
@@ -399,6 +401,7 @@
                                                                 <div class="span2">
                                                                         <form action="application_details" method="post" accept-charset="utf-8">
                                                                                 <input type="hidden" name="ringiNo" value="'.$ringiNo[$i].'">
+										<input type="hidden" name="resourceflag" value="other" id="resourceflag">
                                                                                 <button class="btn btn-small">Detail</button>
                                                                         </form>
 								</div>
@@ -480,6 +483,7 @@
                                                                 <div class="span2">
                                                                         <form action="application_details" method="post" accept-charset="utf-8">
                                                                                 <input type="hidden" name="ringiNo" value="'.$ringiNo[$i].'">
+										<input type="hidden" name="resourceflag" value="other" id="resourceflag">
                                                                                 <button class="btn btn-small">Detail</button>
                                                                         </form>
 								</div>
@@ -561,6 +565,7 @@
                                                                 <div class="span2">
                                                                         <form action="application_details" method="post" accept-charset="utf-8">
                                                                                 <input type="hidden" name="ringiNo" value="'.$ringiNo[$i].'">
+										<input type="hidden" name="resourceflag" value="other" id="resourceflag">
                                                                                 <button class="btn btn-small">Detail</button>
                                                                         </form>
 								</div>

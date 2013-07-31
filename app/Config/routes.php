@@ -30,6 +30,7 @@
 
 	Router::connect('/setup', array('controller' => 'Ringi', 'action' => 'setup', 'setup'));
 	Router::connect('/main_menu', array('controller' => 'Ringi', 'action' => 'main_menu', 'main_menu'));
+        
 	Router::connect('/password_change', array('controller' => 'Users', 'action' => 'password_change', 'password_change'));
 	Router::connect('/password_reset', array('controller' => 'Users', 'action' => 'password_reset', 'password_reset'));
 	Router::connect('/support', array('controller' => 'Ringi', 'action' => 'support', 'support'));
@@ -63,6 +64,9 @@
 	Router::connect('/other', array('controller' => 'Ringi', 'action' => 'other', 'other'));
 
 	Router::connect('/user_setting', array('controller' => 'Users', 'action' => 'user_setting', 'user_setting'));
+      	Router::connect('/report', array('controller' => 'Ringi', 'action' => 'report', 'report'));
+        Router::connect('/downloads', array('controller' => 'Ringi', 'action' => 'downloads', 'downloads'));
+
 
 /**
  * Load all plugin routes. See the CakePlugin documentation on

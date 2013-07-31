@@ -5,11 +5,11 @@ primary key auto_increment
 not null  
 ,
 ringino 
-varchar(255) 
+int(10) 
 not null  
 ,
 approverlayer 
-bool 
+int(3) 
 not null  
 ,
 approverid 
@@ -18,8 +18,8 @@ varchar(255)
 approvedate 
 date 
 ,
-ringstatus 
-bool 
+ringistatus 
+varchar(255) 
 ,
 lastlayerflg 
 bool 
@@ -36,8 +36,8 @@ varchar(255)
 updated_at 
 datetime 
 ,UNIQUE KEY compUniqDummy (
-ringiNo
+ringino
 ,
-approverLayer
+approverlayer
 )
 ) ENGINE=InnoDB;

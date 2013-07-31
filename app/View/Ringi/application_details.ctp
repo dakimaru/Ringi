@@ -73,7 +73,17 @@
                 
 	</table>
     </form>
-    <p><a href="/Ringi/main_menu"class="btn btn-success">Back to Main Menu</a></p>
+    <?php if($resourceflag == 'other'){
+	echo'
+	<p><a href="/Ringi/other" class="btn btn-success">Go Back</a></p>
+	';
+    }
+    else{
+	echo'
+	<p><a href="/Ringi/main_menu" class="btn btn-success">Go Back</a></p>
+	';
+    }
+    ?>
     
     
     

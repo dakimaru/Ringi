@@ -237,7 +237,7 @@
 													<p>Status:'.$ringiStatusName[$i].'</p>
 												</div>
 												<div class="span2">';
-													if ($ringiStatus[$i]==001) {
+													if ($ringiStatus[$i]=="001") {
 														echo '
 														<form action="edit" method="post" accept-charset="utf-8">
 															<input type="hidden" name="ringi_number" value="'.$ringino[$i].'" id="ringi_number">
@@ -245,7 +245,8 @@
 														</form>
 												';
 													}
-													elseif ($ringiStatus[$i]==002 && ($ringiaction[$i]==001 || $ringiaction[$i]==012)){
+													elseif ($ringiStatus[$i]=="002" && ($ringiaction[$i]=="001" || $ringiaction[$i]=="012")){
+													
 													echo '
 													<form action="pattern3" method="post" accept-charset="utf-8">
 														<input type="hidden" name="ringi_number" value="'.$ringino[$i].'" id="ringi_number">
@@ -263,6 +264,7 @@
 												<div class="span2">
 													<form action="application_details" method="post" accept-charset="utf-8">
 														<input type="hidden" name="ringiNo" value="'.$ringino[$i].'" id="ringiNo">
+														<input type="hidden" name="resourceflag" value="home" id="resourceflag">
 														<button class="btn btn-small">Details</button>
 													</form>
 												</div>
@@ -314,7 +316,7 @@
 												<p>Status:'.$ringiStatusName[$i].'</p>
 											</div>
 											<div class="span2">';
-											if ($ringiStatus[$i]==001) {
+											if ($ringiStatus[$i]=="001") {
 												echo '
 												<form action="edit" method="post" accept-charset="utf-8">
 													<input type="hidden" name="ringi_number" value="$ringino[$i]" id="ringi_number">
@@ -322,7 +324,7 @@
 												</form>
 											';
 											}
-											elseif ($ringiStatus[$i]==002 && ($ringiaction[$i]==001 or $ringiaction[$i]==012)){
+											elseif ($ringiStatus[$i]=="002" && ($ringiaction[$i]=="001" or $ringiaction[$i]=="012")){
 												echo '
 												<form action="pattern3" method="post" accept-charset="utf-8">
 													<input type="hidden" name="ringi_number" value="'.$ringino[$i].'" id="ringi_number">
@@ -340,6 +342,7 @@
 											<div class="span2">
 												<form action="application_details" method="post" accept-charset="utf-8">
 													<input type="hidden" name="ringiNo" value="'.$ringino[$i].'" id="ringiNo">
+													<input type="hidden" name="resourceflag" value="home" id="resourceflag">
 													<button class="btn btn-small">Details</button>
 												</form>
 											</div>
@@ -391,7 +394,7 @@
 												<p>Status:'.$ringiStatusName[$i].'</p>
 											</div>
 											<div class="span2">';
-											if ($ringiStatus[$i]==001) {
+											if ($ringiStatus[$i]=="001") {
 												echo '
 												<form action="edit" method="post" accept-charset="utf-8">
 													<input type="hidden" name="ringi_number" value="$ringino[$i]" id="ringi_number">
@@ -399,7 +402,7 @@
 												</form>
 											';
 											}
-											elseif ($ringiStatus[$i]==002 && ($ringiaction[$i]==001 or $ringiaction[$i]==012)){
+											elseif ($ringiStatus[$i]=="002" && ($ringiaction[$i]=="001" or $ringiaction[$i]=="012")){
 												echo '
 												<form action="pattern3" method="post" accept-charset="utf-8">
 													<input type="hidden" name="ringi_number" value="'.$ringino[$i].'" id="ringi_number">
@@ -417,6 +420,7 @@
 											<div class="span2">
 												<form action="application_details" method="post" accept-charset="utf-8">
 													<input type="hidden" name="ringiNo" value="'.$ringino[$i].'" id="ringiNo">
+													<input type="hidden" name="resourceflag" value="home" id="resourceflag">
 													<button class="btn btn-small">Details</button>
 												</form>
 											</div>
@@ -467,7 +471,7 @@
 												<p>Status:'.$ringiStatusName[$i].'</p>
 											</div>
 											<div class="span2">';
-											if ($ringiStatus[$i]==001) {
+											if ($ringiStatus[$i]=="001") {
 												echo '
 												<form action="edit" method="post" accept-charset="utf-8">
 													<input type="hidden" name="ringi_number" value="$ringino[$i]" id="ringi_number">
@@ -475,7 +479,7 @@
 												</form>
 											';
 											}
-											elseif ($ringiStatus[$i]==002 && ($ringiaction[$i]==001 or $ringiaction[$i]==012)){
+											elseif ($ringiStatus[$i]=="002" && ($ringiaction[$i]=="001" or $ringiaction[$i]=="012")){
 												echo '
 												<form action="pattern3" method="post" accept-charset="utf-8">
 													<input type="hidden" name="ringi_number" value="'.$ringino[$i].'" id="ringi_number">
@@ -493,6 +497,7 @@
 											<div class="span2">
 												<form action="application_details" method="post" accept-charset="utf-8">
 													<input type="hidden" name="ringiNo" value="'.$ringino[$i].'" id="ringiNo">
+													<input type="hidden" name="resourceflag" value="home" id="resourceflag">
 													<button class="btn btn-small">Details</button>
 												</form>
 											</div>
@@ -543,7 +548,7 @@
 												<p>Status:'.$ringiStatusName[$i].'</p>
 											</div>
 											<div class="span2">';
-											if ($ringiStatus[$i]==001) {
+											if ($ringiStatus[$i]=="001") {
 												echo '
 												<form action="edit" method="post" accept-charset="utf-8">
 													<input type="hidden" name="ringi_number" value="$ringino[$i]" id="ringi_number">
@@ -551,7 +556,7 @@
 												</form>
 											';
 											}
-											elseif ($ringiStatus[$i]==002 && ($ringiaction[$i]==001 or $ringiaction[$i]==012)){
+											elseif ($ringiStatus[$i]=="002" && ($ringiaction[$i]=="001" or $ringiaction[$i]=="012")){
 												echo '
 												<form action="pattern3" method="post" accept-charset="utf-8">
 													<input type="hidden" name="ringi_number" value="'.$ringino[$i].'" id="ringi_number">
@@ -569,6 +574,7 @@
 											<div class="span2">
 												<form action="application_details" method="post" accept-charset="utf-8">
 													<input type="hidden" name="ringiNo" value="'.$ringino[$i].'" id="ringiNo">
+													<input type="hidden" name="resourceflag" value="home" id="resourceflag">
 													<button class="btn btn-small">Details</button>
 												</form>
 											</div>
@@ -619,7 +625,7 @@
 												<p>Status:'.$ringiStatusName[$i].'</p>
 											</div>
 											<div class="span2">';
-											if ($ringiStatus[$i]==001) {
+											if ($ringiStatus[$i]=="001") {
 												echo '
 												<form action="edit" method="post" accept-charset="utf-8">
 													<input type="hidden" name="ringi_number" value="$ringino[$i]" id="ringi_number">
@@ -627,7 +633,7 @@
 												</form>
 											';
 											}
-											elseif ($ringiStatus[$i]==002 && ($ringiaction[$i]==001 or $ringiaction[$i]==012)){
+											elseif ($ringiStatus[$i]=="002" && ($ringiaction[$i]=="001" or $ringiaction[$i]=="012")){
 												echo '
 												<form action="pattern3" method="post" accept-charset="utf-8">
 													<input type="hidden" name="ringi_number" value="'.$ringino[$i].'" id="ringi_number">
@@ -645,6 +651,7 @@
 											<div class="span2">
 												<form action="application_details" method="post" accept-charset="utf-8">
 													<input type="hidden" name="ringiNo" value="'.$ringino[$i].'" id="ringiNo">
+													<input type="hidden" name="resourceflag" value="home" id="resourceflag">
 													<button class="btn btn-small">Details</button>
 												</form>
 											</div>
@@ -695,7 +702,7 @@
 												<p>Status:'.$ringiStatusName[$i].'</p>
 											</div>
 											<div class="span2">';
-											if ($ringiStatus[$i]==001) {
+											if ($ringiStatus[$i]=="001") {
 												echo '
 												<form action="edit" method="post" accept-charset="utf-8">
 													<input type="hidden" name="ringi_number" value="$ringino[$i]" id="ringi_number">
@@ -703,7 +710,7 @@
 												</form>
 											';
 											}
-											elseif ($ringiStatus[$i]==002 && ($ringiaction[$i]==001 or $ringiaction[$i]==012)){
+											elseif ($ringiStatus[$i]=="002" && ($ringiaction[$i]=="001" or $ringiaction[$i]=="012")){
 												echo '
 												<form action="pattern3" method="post" accept-charset="utf-8">
 													<input type="hidden" name="ringi_number" value="'.$ringino[$i].'" id="ringi_number">
@@ -721,6 +728,7 @@
 											<div class="span2">
 												<form action="application_details" method="post" accept-charset="utf-8">
 													<input type="hidden" name="ringiNo" value="'.$ringino[$i].'" id="ringiNo">
+													<input type="hidden" name="resourceflag" value="home" id="resourceflag">
 													<button class="btn btn-small">Details</button>
 												</form>
 											</div>

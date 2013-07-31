@@ -163,54 +163,76 @@ class UsersController extends AppController {
 		$this->openSQLconnection();
 		$username = $this->Auth->user('username');
 		if ($this->request->is('post')) {
-
-			// run information through authenticator
-			if(authenticate($username,$_POST["currentPassword"]))
-			{
-				if ($_POST["newPassword"]!=="" && $_POST["verifyPassword"]!=="") {
-					if ($_POST["newPassword"]==$_POST["verifyPassword"]) {
-						$newPassword = $_POST['newPassword'];
-						$salted_pass = $this->Auth->password($newPassword);			//put salt on password
-						$querynewpass = "UPDATE users SET password='$salted_pass' WHERE username='$username'"; 
-						mysql_query($querynewpass) or die(mysql_error());	//overwrite password
+			$resourceflag = $this->data['resourceflag'];
+			if($resourceflag == 'user'){
+				// run information through authenticator
+				if(authenticate($username,$_POST["currentPassword"]))
+				{
+					$newPassword = $_POST['newPassword'];
+					$salted_pass = $this->Auth->password($newPassword);			//put salt on password
+					$querynewpass = "UPDATE users SET password='$salted_pass' WHERE username='$username'"; 
+					//mysql_query($querynewpass) or die(mysql_error());	//overwrite password
 						
-						$sql="SELECT DN FROM users WHERE username='$username'";
-						$query = mysql_query($sql);
-						$userDN = mysql_fetch_assoc($query);
-						
-						require_once("../Config/uploads.ctp");
-						exec('cd ../Vendor/scripts ; $scr_reset_password "' .$userDN['DN'].'" '.$newPassword);
-						$this->Session->setFlash(__("Your password was updated successfully"));
-						//$this->redirect(array('controller' => 'Users', 'action' => 'password_change'));	
-						
-					}
-					else {
-						$this->Session->setFlash(__("Your passwords don't match!"));
-					}
-				}
+					//$sql="SELECT DN FROM users WHERE username='$username'";
+					//$query = mysql_query($sql);
+					//$userDN = mysql_fetch_assoc($query);
+					
+					//require_once("../Config/uploads.ctp");
+					//exec('cd ../Vendor/scripts ; $scr_reset_password "' .$userDN['DN'].'" '.$newPassword);
+					$this->Session->setFlash(__("Your password was updated successfully"));
+					//$this->redirect(array('controller' => 'Users', 'action' => 'password_change'));	
+				}	
 				else {
-					$this->Session->setFlash(__('Invalid entries'));
+					
+					$this->Session->setFlash(__('Invalid password, try again'));
 				}
+			}
+			elseif ($resourceflag == 'admin'){
+				$user = $_POST['users'];
+				$newPassword = $_POST['newPassword'];
+				$salted_pass = $this->Auth->password($newPassword);			//put salt on password
+				$querynewpass = "UPDATE users SET password='$salted_pass' WHERE username='$user'";
+				//mysql_query($querynewpass) or die(mysql_error());	//overwrite password
 				
-
-			}	
-			else {
-				
-				$this->Session->setFlash(__('Invalid password, try again'));
+				//$sql="SELECT DN FROM users WHERE username='$user'";
+				//$query = mysql_query($sql);
+				//$userDN = mysql_fetch_assoc($query);
+							
+				//require_once("../Config/uploads.ctp");
+				//exec('cd ../Vendor/scripts ; $scr_reset_password "' .$userDN['DN'].'" '.$newPassword);
+				$this->Session->setFlash(__("Your password was updated successfully"));
 			}
 		}
 		
 		//Name, title, departement
-		$sql="SELECT department, title, name FROM users WHERE username = '$username'";
+		$sql="SELECT usertype, name, department, title, name FROM users WHERE username = '$username'";
 		//$sql="SELECT usertype, username, name, department, title, manager, email, activeflag,
 		//	FROM users
 		//	where username= admin direct username from pulldown";
 		$query = mysql_query("$sql");
 		$array = mysql_fetch_assoc($query);
+		$this->set('usertype', $array['usertype']);
 		$this->set('username', $username);
 		$this->set('name', $array['name']);
 		$this->set('department', $array['department']);
 		$this->set('title', $array['title']);
+		
+		$sql="SELECT username From users ORDER BY username";
+		$query = mysql_query("$sql");
+		if ($query != NULL){
+			$userCount = mysql_num_rows($query);
+		}
+		$this->set('userCount', $userCount);
+		if ($userCount > 0){
+			for ($i = 0 ; $i < $userCount; $i++){
+				$array = mysql_fetch_assoc($query);
+				$allUserame[$i] = $array['username'];
+			}
+			$this->set('allUsername', $allUserame);
+		}
+		
+		
+		
 	}
 	
 	public function password_reset() {
@@ -255,21 +277,42 @@ class UsersController extends AppController {
 	public function user_setting(){
 		$connection=$this->openSQLconnection();
 		$username = $this->Auth->user('username');
-		if ($this->request->is('post')) {	
-			if ($_POST["name"]!=="" && $_POST["email"]!=="") {
-				$name = $this->data['name'];
-				$email = $this->data['email'];
+		if ($this->request->is('post')) {
+			$resourceflag = $this->data['resourceflag'];
+			if ($resourceflag =="user"){
+				$name = $this->data['userFullName'];
+				$email = $this->data['userEmail'];
 				$sql = "UPDATE users Set name = '$name', mail = '$email', updated_at = now(), updator_id  = '$username' WHERE username= '$username'";
 				$query = mysql_query($sql);
 				//$userDN = mysql_fetch_assoc($query);
-				
 				//exec('cd ../Vendor/scripts ; sh resetPassword.sh "' .$userDN['DN'].'" '.$newpassword);
 				$this->Session->setFlash(__("Your profile was updated successfully"));
-				$this->redirect(array('controller' => 'Users', 'action' => 'user_setting'));	
+				//$this->redirect(array('controller' => 'Users', 'action' => 'user_setting'));	
 				
 			}
-			else {
-				$this->Session->setFlash(__('Please input an appropriate name and email!'));
+			elseif ($resourceflag == "admin"){
+				$user = $this->data['users'];
+				$usertype = isset($this->data['usertype'])?1:0;
+				$fullname = $this->data['name'];
+				$email = $this->data['email'];
+				$department = $this->data['department'];
+				$title = $this->data['title'];
+				$manager = $this->data['manager'];
+				$activeflag = isset($this->data['activeFlag'])?1:0;
+				
+				
+				$sql="UPDATE users SET  usertype = '$usertype',
+							name = '$fullname',
+							mail = '$email',
+							department = '$department',
+							title = '$title',
+							manager = '$manager',
+							activeflag = '$activeflag',
+							updated_at = now(),
+							updator_id  = '$username'
+					WHERE username= '$user'";
+				$query = mysql_query($sql);
+				$this->Session->setFlash(__("Your profile was updated successfully"));
 			}
 			
 		}

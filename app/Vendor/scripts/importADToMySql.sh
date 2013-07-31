@@ -1,4 +1,5 @@
 #! /bin/sh
+. env.sh
 
 #/usr/bin/python ./exportLdap.py >  ./directorydump.csv
 #/Applications/XAMPP/xamppfiles/bin/mysql -u root ringidata < ./mysql.sql > ./output.log

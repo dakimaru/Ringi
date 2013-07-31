@@ -1,5 +1,5 @@
 #! /bin/sh
-
+. env.sh
 cd $SCRIPTROOT
 
 python $SCRIPTROOT/convXlsSchemaToSql.py $SCHEMAPATH budgets > $SQLPATH/_budgets.sql

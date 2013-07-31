@@ -20,9 +20,12 @@ ROUTES_APPROVERDEPT     = "approverDept"
 ROUTES_APPROVERID       = "approverID"
 ROUTES_APPROVEROUTETYPE = "approveRouteType"
 ROUTES_KEY_COLUMNS  = [ 
-                        ROUTES_PERSON,
                         ROUTES_DEPARTMENT,
                         ROUTES_TITLE,        
+                      ]
+ROUTES_PERSON_KEY_COLUMNS = ROUTES_KEY_COLUMNS + \
+                      [
+                        ROUTES_PERSON,
                       ]
 ROUTES_HEADER_COLUMNS = ROUTES_KEY_COLUMNS + \
                       [ 
@@ -42,7 +45,7 @@ MANAGER_ROUTES_MAP =    {
                         USER_CSV_USERNAME   : ROUTES_APPROVERID,
                         }
 ROUTES_DEFAULT_VALUES = {
-                        ROUTES_APPROVEROUTETYPE  : 1,
+                        ROUTES_APPROVEROUTETYPE  : 0,
 }
                         
  
@@ -89,8 +92,8 @@ def createLayer(option,user,manager,layerDepth):
         aLayerMap[routeKey] = manager[userKey]
     aLayerMap[ROUTES_APPROVERLAYER] = layerDepth
     
-    if option == OPTION_DEPT:
-        aLayerMap[ROUTES_PERSON] = ""
+    #if option == OPTION_DEPT:
+    #    aLayerMap[ROUTES_PERSON] = ""
 
     #print "createLayer, create to be added: ", aLayerMap
     return aLayerMap
@@ -137,7 +140,11 @@ def analyzeUserTree(option,users):
             appFlows.append(appFlow[0])
 
     # add default values
-    newheader = ROUTES_HEADER_COLUMNS + ROUTES_DEFAULT_VALUES.keys()
+    if option == OPTION_USER:
+        newheader = ROUTES_PERSON_HEADER_COLUMNS + ROUTES_DEFAULT_VALUES.keys()
+    else:
+        newheader = ROUTES_HEADER_COLUMNS + ROUTES_DEFAULT_VALUES.keys()
+
     for aFlow in appFlows:
         for col,defaultvalue in ROUTES_DEFAULT_VALUES.items():
             aFlow[col] = defaultvalue
@@ -151,10 +158,16 @@ def doit(filename, option):
 
     print "loading workflow to DB...."
     print "  flows to import: ", newrows
+
+    if option == OPTION_USER:
+        key_columns = ROUTES_PERSON_KEY_COLUMNS
+    else:
+        key_columns = ROUTES_KEY_COLUMNS
+
     DBHelper.updateDB(  ROUTES_TABLENAME,
                         newheader,
                         newrows,
-                        ROUTES_KEY_COLUMNS )
+                        key_columns )
 
 def usage():
     print "usage: ", sys.argv[0], "<path_to_usertable.csv> <user or dept>"

@@ -1,5 +1,5 @@
 #! /bin/sh
-
+. env.sh
 cd $SCRIPTROOT
 python $SCRIPTROOT/convXlsSchemaToSql.py $SCHEMAPATH users           > $SQLPATH/_users.sql
 python $SCRIPTROOT/convXlsSchemaToSql.py $SCHEMAPATH routes          > $SQLPATH/_routes.sql

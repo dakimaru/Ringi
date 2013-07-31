@@ -36,7 +36,7 @@
 						</p>
 					</div>
 					<div class="span5 paddingTop">
-						<h4 href="#"><?php echo $name; ?></h4>
+						<h4 href="#"><?php echo $name; if($usertype==1) echo ' (Admin)'; ?></h4>
 						<h5 href=#><?php echo $title; echo " ";echo $department; ?></h5>
 					</div>
 					
@@ -127,28 +127,33 @@
 			</div>
 		</div>
 		<div class="span7" >
+			
+			<?php
+			if($usertype == 0){
+			echo '
                         <div class="well">
                                 <div align="left" class=" paddingLeft paddingTop">
-                                        <h3 ">Password</h3>
+                                        <h3>Password</h3>
                                         <h5 style="font-weight:normal;">Change your password or recover your current one.</h5>
                                 </div>
                                 <hr>
-				<form class="form-horizontal" action="/Ringi/Users/password_change" method="post" accept-charset="utf-8">
+				<form class="form-horizontal" action="/Ringi/Users/password_change" method="post" onsubmit="return inputCheck()" accept-charset="utf-8">
 					<fieldset class="control-group">
 						<label class="control-label">Current Password</label>
 						<div class="controls">
-							<input type="password" name="currentPassword" id="currentPassword"></td>
+							<input type="password" name="currentPassword" id="currentPassword">
 						</div>
 					</fieldset>
 					<fieldset class="control-group">
 						<label class="control-label">New Password</label>
 						<div class="controls">
-							<input type="password"  name="newPassword" id="newPassword"></td>
+							<input type="password"  name="newPassword" id="newPassword">
 						</div>
-					</fieldset><fieldset class="control-group">
+					</fieldset>
+					<fieldset class="control-group">
 						<label class="control-label">Verify Password</label>
 						<div class="controls">
-							<input type="password" name="verifyPassword" id="verifyPassword"></td>
+							<input type="password" name="verifyPassword" id="verifyPassword">
 						</div>
 					</fieldset>
                                         
@@ -158,19 +163,124 @@
                                                         <input type="checkbox">Let others find me by my email address
                                                 </label>-->
 					
-					<input type="hidden" name="resourceflag" value="User" id="resourceflag">
+					<input type="hidden" name="resourceflag" value="user" id="resourceflag">
 					<hr>
 					<div class="form-actions">
 						<button class="btn btn-primary" type="submit">Save Changes</button>
 					</div>
 				</form>
-				
-		
                         </div>
+			';
+			}?>
+			
+			<?php
+			if ($usertype == 1){
+			echo '
+			<div class="well">
+                                <div align="left" class=" paddingLeft paddingTop">
+                                        <h3>Password</h3>
+                                        <h5 style="font-weight:normal;">Change your password or recover your current one.</h5>
+                                </div>
+                                <hr>
+				<form class="form-horizontal" action="/Ringi/Users/password_change" method="post" onsubmit="return inputCheck()" accept-charset="utf-8">
+					<fieldset class="control-group">
+						<label class="control-label">Username</label>
+						<div class="controls">
+							<select name="users" id="users" onchange="UpdateInput();">';
+								if($userCount>0){
+									for ($i = 0; $i < $userCount; $i++){
+										echo '<option ';
+										if ($username == $allUsername[$i]){
+											echo 'selected ';
+										}
+										echo 'value="'.$allUsername[$i].'">'.$allUsername[$i].'</option>';
+									}
+								}
+							echo '
+							</select>
+							
+						</div>
+					</fieldset>
+					<fieldset class="control-group">
+						<label class="control-label">New Password</label>
+						<div class="controls">
+							<input type="password"  name="newPassword" id="newPassword">
+						</div>
+					</fieldset>
+					<fieldset class="control-group">
+						<label class="control-label">Verify Password</label>
+						<div class="controls">
+							<input type="password" name="verifyPassword" id="verifyPassword">
+						</div>
+					</fieldset>
+                                        
+                                        
+                                        
+                                                <!--<label class="checkbox">
+                                                        <input type="checkbox">Let others find me by my email address
+                                                </label>-->
+					
+					<input type="hidden" name="resourceflag" value="admin" id="resourceflag">
+					<hr>
+					<div class="form-actions">
+						<button class="btn btn-primary" type="submit">Save Changes</button>
+					</div>
+				</form>
+                        </div>
+			';
+			}
+			?>
+			
+			
 		</div>
 	</div>
 	
 </div>
 </div>
 
+<script type="text/javascript" charset="utf-8">
+	
+function inputCheck(){
+	var flag = true;
+	flag &= nullCheck("verifyPassword");
+	flag &= nullCheck("newPassword");
+	if (flag == false) {
+		alert("Fill out all necessary fields");
+		return false;
+	}
+	flag &= matchCheck("newPassword", "verifyPassword");
+	if (flag == false) {
+		alert("Password don't match");
+		return false;
+	}
+	return true;
+}
 
+function nullCheck(var1){
+
+	var x=document.getElementById(var1).value;
+	if (x==null || x=="") {
+		document.getElementById(var1).style.border = "2px solid #ff0000";
+		document.getElementById(var1).focus();
+		document.getElementById(var1).select();
+		return false;
+	}
+	return true;
+}
+
+function matchCheck(var1, var2){
+	var x = document.getElementById(var1).value;
+	var y = document.getElementById(var2).value;
+	if (x === y) {
+		return true;
+	}
+	else {
+		document.getElementById(var1).style.border = "2px solid #ff0000";
+		document.getElementById(var1).focus();
+		document.getElementById(var1).select();
+		document.getElementById(var2).style.border = "2px solid #ff0000";
+		return false;
+	}
+}
+
+</script>

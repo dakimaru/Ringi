@@ -1,4 +1,5 @@
 #! /bin/sh
+. env.sh
 
 cd $SCRIPTROOT
 

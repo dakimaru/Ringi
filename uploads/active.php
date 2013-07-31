@@ -4,7 +4,7 @@
   <head>
 	  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
 	  <title>Untitled Spreadsheet</title>
-	  <meta name="author" content="Unknown Creator" />
+	  <meta name="author" content="Eric Zheng" />
 	  <meta name="title" content="Untitled Spreadsheet" />
 	  <meta name="company" content="Microsoft Corporation" />
   </head>

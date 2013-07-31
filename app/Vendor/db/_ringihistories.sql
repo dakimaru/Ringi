@@ -5,11 +5,11 @@ primary key auto_increment
 not null  
 ,
 ringino 
-varchar(255) 
+int(10) 
 not null  
 ,
 ringiseq 
-bool 
+int(3) 
 not null  
 ,
 processerid 
@@ -21,7 +21,7 @@ date
 not null  
 ,
 approverlayer 
-bool 
+int(3) 
 not null  
 ,
 ringiaction 
@@ -43,7 +43,7 @@ varchar(255)
 updated_at 
 datetime 
 ,UNIQUE KEY compUniqDummy (
-ringiNo
+ringino
 ,
 ringiseq
 )
