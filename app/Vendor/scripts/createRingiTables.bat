@@ -1,7 +1,9 @@
 @ECHO OFF
 
+cd %SCRIPTROOT%
 call env_win.cmd
 
+%MYSQLPATH%\mysql -u root                <  %SQLPATH%\dropringidata.sql
 %PYTHONROOT%\python %SCRIPTROOT%\convXlsSchemaToSql.py %SCHEMAPATH% users           > %SQLPATH%\_users.sql
 %PYTHONROOT%\python %SCRIPTROOT%\convXlsSchemaToSql.py %SCHEMAPATH% routes          > %SQLPATH%\_routes.sql
 %PYTHONROOT%\python %SCRIPTROOT%\convXlsSchemaToSql.py %SCHEMAPATH% names           > %SQLPATH%\_names.sql

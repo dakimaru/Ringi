@@ -45,9 +45,9 @@ class RingiController extends AppController {
 
 		require_once("../Config/uploads.ctp");
 
-		$setup_script_path=$_SERVER['DOCUMENT_ROOT']."/Ringi/app/Vendor/scripts";
-		$exec1 = exec("cd $setup_script_path ; $scr_create_ringi_tables  2>&1");
-		$exec2 = exec("cd $setup_script_path ; $scr_import_ad_to_mysql 	 2>&1");
+		print_r($scr_create_ringi_tables);
+		$exec1 = exec("$scr_create_ringi_tables  2>&1");
+		$exec2 = exec("$scr_import_ad_to_mysql 	 2>&1");
 		echo "$exec1";
 		echo "$exec2";
 		if ( (!$exec1) && (!$exec2)) {
@@ -79,10 +79,16 @@ class RingiController extends AppController {
 		$this->set('title', $array['title']);
 				
 		//editing number
+		$sql = "SELECT count(1) count
+                        From attributes
+                        where applicantid = '$username' ".
+                        "and ringistatus = '001'";
+		print_r($sql);
 		$editquery = mysql_query("SELECT count(1) count
 			From attributes 
 			where applicantid = '$username' ".
 			"and ringistatus = '001'");
+		print_r($editquery);
 		$clean = mysql_fetch_assoc($editquery);
 		$editcount=$clean['count'];
 
@@ -650,17 +656,17 @@ class RingiController extends AppController {
             <table class="table table-bordered table-hover">
                     <tr class="success">
                         <td width="20%">No</td>
-                        <td>Applicant/Approver</td>
+                        <td>Layer</td>
                         <td>Department</td>
                         <td>Title</td>
                         <td>Approver ID</td>
                     </tr>
                 <tbody>
-                    <tr> <td>1</td> <td>MYNAME</td>         <td>MYDEPT        </td> <td>MYTITLE        </td> <td>MYID</td> </tr>
-                    <tr> <td>2</td> <td>APPROVERNAME_1</td> <td>APPROVERDEPT_1</td> <td>APPROVERTITLE_1</td> <td>APPROVERID_1</td> </tr>
-                    <tr> <td>3</td> <td>APPROVERNAME_2</td> <td>APPROVERDEPT_2</td> <td>APPROVERTITLE_2</td> <td>APPROVERID_2</td> </tr>
-                    <tr> <td>4</td> <td>APPROVERNAME_3</td> <td>APPROVERDEPT_3</td> <td>APPROVERTITLE_3</td> <td>APPROVERID_3</td> </tr>
-                    <tr> <td>5</td> <td>APPROVERNAME_4</td> <td>APPROVERDEPT_4</td> <td>APPROVERTITLE_4</td> <td>APPROVERID_4</td> </tr>
+                    <tr> <td>1</td> <td>Applicant</td>         <td>MYDEPT        </td> <td>MYTITLE        </td> <td>MYID</td> </tr>
+                    <tr> <td>2</td> <td>Approver 1</td> <td>APPROVERDEPT_1</td> <td>APPROVERTITLE_1</td> <td>APPROVERID_1</td> </tr>
+                    <tr> <td>3</td> <td>Approver 2</td> <td>APPROVERDEPT_2</td> <td>APPROVERTITLE_2</td> <td>APPROVERID_2</td> </tr>
+                    <tr> <td>4</td> <td>Approver 3</td> <td>APPROVERDEPT_3</td> <td>APPROVERTITLE_3</td> <td>APPROVERID_3</td> </tr>
+                    <tr> <td>5</td> <td>Approver 4</td> <td>APPROVERDEPT_4</td> <td>APPROVERTITLE_4</td> <td>APPROVERID_4</td> </tr>
                 </tbody>
             </table>
         ';
@@ -888,31 +894,43 @@ class RingiController extends AppController {
 		return $doc;
 	
     }
-	
-    private function _saveRingiRoutes($ringino) {
+
+   private function _saveRingiRoutes($ringino) {
+
+        echo "**** _saveRingiRoutes() ";
 
         // FIXME
         $MAXLAYER = 5;
-        $TABLENAME = 'ringiroutes';
-		$username = $this->Auth->user('username');
+        $TABLENAME = 'Ringiroute';
+        $username = $this->Auth->user('username');
 
-        //save self
-        $row[$TABLENAME]['ringino'] = $ringino;
-        $row[$TABLENAME]['approverlayer'] = 0;
-        $row[$TABLENAME]['approverid'] = $username;
-        $this->Ringiroute->save($row);
+        //print_r($this->data);
+        //echo " ****";
+
+        // save arrays to save
+        $rowsToSave = array();
+
+        $row = array();
+        $row['ringino']         = $ringino;
+        $row['approverlayer']   = 0;
+        $row['approverid']      = $username;
+        $row['created_at']      = date("Y-m-d H:i:s");
+        array_push($rowsToSave, $row);
 
         for( $i=1; $i<=$MAXLAYER; $i++ ){
             $keyToVerify = 'APPROVERID_'. $i;
-
             if( array_key_exists($keyToVerify, $this->data) ){
-                $row[$TABLENAME]['ringino']         = $ringino;
-                $row[$TABLENAME]['approverlayer']   = $i;
-                $row[$TABLENAME]['approverid']      = $username;
-                $this->Ringiroute->save($row);
+                $row = array();
+                $row['ringino']         = $ringino;
+                $row['approverlayer']   = $i;
+                $row['approverid']      = $this->data[$keyToVerify];
+                $row['created_at']      = date("Y-m-d H:i:s");
+                array_push($rowsToSave, $row);
             }
-        } 
-    }
+        }
+
+        $this->Ringiroute->saveAll($rowsToSave);
+    }	
 	
 
 	public function apply_check () {
@@ -999,7 +1017,7 @@ class RingiController extends AppController {
 		//Upload file
 		require_once("../Config/uploads.ctp");
 		$ringino=$Attribute['Attribute']['ringino'];
-		$cmd = "cd $vendorpath ; $scr_create_folder $folderpath $ringino";
+		$cmd = "$scr_create_folder $folderpath $ringino";
 		exec($cmd);
 		
 		if ($_FILES['file']['name']) {

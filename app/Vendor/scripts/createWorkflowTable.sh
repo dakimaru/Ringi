@@ -1,3 +1,4 @@
 #! /bin/sh
 
+cd $SCRIPTROOT
 python loadWorkflow.py $USERINFOPATH/$USERTABLE_CSV_FILENAME $WORKFLOW_OPTION

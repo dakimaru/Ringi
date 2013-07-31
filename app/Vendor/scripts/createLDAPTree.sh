@@ -1,5 +1,7 @@
 #! /bin/sh
 
+cd $SCRIPTROOT
+
 #if [ "$#" -ne 1 ] || ! [ -f "$1" ]; then
 #    echo "Usage: $0 <path to usertable.csv>" >&2
 #    exit 1

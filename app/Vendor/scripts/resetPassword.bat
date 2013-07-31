@@ -1,5 +1,6 @@
 @ECHO OFF
 
+cd %SCRIPTROOT%
 call env_win.cmd
 
 if "%~1"=="" goto ERROR

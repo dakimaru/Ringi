@@ -1,5 +1,6 @@
 @ECHO OFF
 
+cd %SCRIPTROOT%
 call env_win.cmd
 
 %PYTHONROOT%\python %SCRIPTROOT%\convXlsSchemaToSql.py %SCHEMAPATH% budgets > %SQLPATH%\_budgets.sql

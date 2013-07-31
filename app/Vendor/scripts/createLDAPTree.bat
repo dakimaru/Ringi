@@ -1,5 +1,6 @@
 @ECHO OFF
 
+cd %SCRIPTROOT%
 call env_win.cmd
 
 %OPENLDAPROOT%\slapadd -l %OPENLDAPSCHEMAPATH%\core.ldif 

@@ -16,13 +16,12 @@ int(10)
 primary key auto_increment  
 not null  
 ,
-ringstatus 
-bool 
+ringistatus 
+varchar(255) 
 ,
 updated_at 
 datetime 
 ,
 updator_id 
 varchar(255) 
-,
 ) ENGINE=InnoDB;

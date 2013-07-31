@@ -1,5 +1,6 @@
 #! /bin/sh
 
+cd $SCRIPTROOT
 $MYSQLPATH/mysql -u root              < $SQLPATH/dropringidata.sql
 
 ./createRingiTables.sh
