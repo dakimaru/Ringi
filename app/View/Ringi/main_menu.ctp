@@ -258,7 +258,7 @@
 												';
 													}
 													else {
-														echo '';
+														echo ' ';
 													}
 													echo '
 												</div>

@@ -14,8 +14,7 @@ print_r("$doc");
 <script type="text/javascript" charset="utf-8">
 
 function main(){
-	if( nullCheck("ringino") &&
-            nullCheck("linecd") &&
+	if( nullCheck("linecd") &&
             doubleCheck("assetdept","expensedept")&&
             nullCheck("project") &&
             nullCheck("purpose") &&
@@ -32,7 +31,6 @@ function main(){
             typeCheck("expense")&&
             doubleCheck("assetaccountno","expenseaccountno"))
         {
-            alert("Apply succeed!");
             return true;
         }
         else{

@@ -9,7 +9,7 @@
 	
 	$config['directories'] = array(
 		'ScriptRoot' 	=> $_SERVER['DOCUMENT_ROOT']."/Ringi/app/Vendor/scripts/",
-		'FolderPath'	=> $_SERVER['DOCUMENT_ROOT']."/Ringi/uploads/attachments/"
+		'FolderPath'	=> $_SERVER['DOCUMENT_ROOT']."/Ringi/app/attachments/"
 	);
 	
 	$config['scripts'] = array(

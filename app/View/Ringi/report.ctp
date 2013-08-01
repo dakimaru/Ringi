@@ -1,6 +1,61 @@
 <div class="container">
     <h2 align="left">Plan Fixed Asset Budget</h2><br>
-    <form method="post" action="confirm">
+    <form method="post" action="/Ringi/report">
+	<div align="center" class="well row-fluid">
+	    <div style="padding-right:2%;" class="span2">
+		<fieldset class="control-group">
+		    <label class="control-label">Year</label>
+		    <div class="controls">
+			<input style="width:100%;" type="text" name="year" value="" id="year">
+		    </div>
+		</fieldset>
+	    </div>
+	    <div style="padding-right:2%;" class="span2">
+		<fieldset class="control-group">
+		    <label class="control-label">Dept Code</label>
+		    <div class="controls">
+			<input style="width:100%;" type="text" name="deptCode" value="" id="deptCode">
+		    </div>
+		</fieldset>
+	    </div>
+	    <div style="padding-right:2%;" class="span2">
+		<fieldset class="control-group">
+		    <label class="control-label">Line Code</label>
+		    <div class="controls">
+			<input style="width:100%;" type="text" name="lineCode" value="" id="lineCode">
+		    </div>
+		</fieldset>
+	    </div>
+	    <div style="padding-right:2%;" class="span2">
+		<fieldset class="control-group">
+		    <label class="control-label">Project</label>
+		    <div class="controls">
+			<input style="width:100%;" type="text" name="project" value="" id="project">
+		    </div>
+		</fieldset>
+	    </div>
+	    <div style="padding-right:2%;" class="span2">
+		<fieldset class="control-group">
+		    <label class="control-label">Account Code</label>
+		    <div class="controls">
+			<input style="width:100%;" type="text" name="acctCode" value="" id="acctCode">
+		    </div>
+		</fieldset>
+	    </div>
+	    <div style="padding-right:2%;" class="span2">
+		<fieldset class="control-group">
+		    <label class="control-label">Purpose</label>
+		    <div class="controls">
+			<input style="width:100%;" type="text" name="purpose" value="" id="purpose">
+		    </div>
+		</fieldset>
+	    </div>
+	</div>
+	<div align="center" class="well-small " >
+		<button class="btn btn-success" type="submit">Submit</button>
+	</div>
+	
+	
         <div class="pre-scrollable">
 	<table class="table table-bordered table-hover">
 		<tr class="success">
@@ -64,5 +119,6 @@
                 ?>
 	</table>
         </div>
+	
     </form>
 </div>
