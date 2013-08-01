@@ -140,8 +140,7 @@ class RingiController extends AppController {
 		$this->set('approverTitle', $approverTitle);
 
 		//Applications
-		$sql="SELECT ringino, ringiname, project, purpose, applydate, applicantid, asset+expense
-		 			application, assetremain+expenseremain remain, ringistatus
+		$sql="SELECT ringino, ringiname, project, purpose, applydate, applicantid, IFNull(asset,0)+IFNull(expense,0) application, IFNull(assetremain,0)+IFNull(expenseremain,0) remain, ringistatus
 					From attributes
 					where applicantid='$username'";
 			
@@ -200,6 +199,235 @@ class RingiController extends AppController {
 		*/	
 	}
 		
+	public function task() {
+		$connection=$this->openSQLconnection();
+		$username = $this->Auth->user('username');
+		//$ringino = $this->data['ringino'];
+		//Get current ringiseq from ringihistories
+		//$sql="SELECT * from attributes where ringino='$ringino'";
+		$sql="SELECT department, title, name FROM users WHERE username = '$username'";
+		$query = mysql_query("$sql");
+		$array = mysql_fetch_assoc($query);
+		$this->set('name', $array['name']);
+		$this->set('department', $array['department']);
+		$this->set('title', $array['title']);
+		$sql="SELECT count(1) count
+			FROM attributes a, ringiroutes b
+			WHERE a.ringino =  b.ringino
+				and b.approverid = '$username'
+				and a.ringistatus = '002'
+				and (a.ringino,b.approverlayer)
+			IN  (select ringino,min(approverlayer) approverlayer 
+			        FROM ringiroutes 
+			        WHERE approvedate is NULL  and approverlayer >0
+				GROUP BY ringino)";
+		$query = mysql_query("$sql");
+		$array = mysql_fetch_assoc($query);
+		$this->set('taskLeft', $array['count']);
+
+		$sql = "SELECT approverdept, approvertitle,approverid 
+			From routes, users
+			WHERE routes.department = users.department
+				and routes.approveRouteType = '0'
+				and routes.person is NULL
+				and users.username = '$username'
+			ORDER BY routes.approverlayer";
+		$query = mysql_query("$sql");
+		$approverCount = mysql_num_rows($query);
+		$this->set('approverCount', $approverCount);
+		if ($approverCount > 0){
+			for ($i = 0; $i < $approverCount; $i ++){
+				$array = mysql_fetch_assoc($query);
+				$approverId[$i] = $array['approverid'];
+				$approverDept[$i] = $array['approverdept'];
+				$approverTitle[$i] = $array['approvertitle'];
+			}
+			$this->set('approverId', $approverId);
+			$this->set('approverDept', $approverDept);
+			$this->set('approverTitle', $approverTitle);
+		}
+		$sql="SELECT a.ringino, a.ringiname, a.project, a.purpose, a.applydate, a.applicantid, IFNull(a.asset,0)+IFNull(a.expense,0) application, IFNull(a.assetremain,0)+IFNull(expenseremain,0) remain
+			FROM attributes a, ringiroutes b
+			WHERE a.ringino =  b.ringino 
+				and b.approverid = '$username'
+				and a.ringistatus = '002'
+				and (a.ringino,b.approverlayer)
+			IN  (select ringino,min(approverlayer) approverlayer 
+                                FROM ringiroutes 
+                                WHERE approvedate is NULL
+					and approverlayer >0
+				GROUP BY ringino)";
+		$query = mysql_query("$sql");
+		$applicationCount = mysql_num_rows($query);
+		$this->set('applicationCount', $applicationCount);
+		if ($applicationCount > 0){
+			for ($i = 0; $i < $applicationCount; $i ++){
+			$array = mysql_fetch_assoc($query);
+			$ringiNo[$i] = $array['ringino'];
+			$ringiName[$i] = $array['ringiname'];
+			$project[$i] = $array['project'];
+			$purpose[$i] = $array['purpose'];
+			$applyDate[$i] = $array['applydate'];
+			$applicantId[$i] = $array['applicantid'];
+			$application[$i] = $array['application'];
+			$remain[$i] = $array['remain'];
+			}
+			$this->set('ringiNo', $ringiNo);
+			$this->set('ringiName', $ringiName);
+			$this->set('project', $project);
+			$this->set('purpose', $purpose);
+			$this->set('applyDate', $applyDate);
+			$this->set('applicantId', $applicantId);
+			$this->set('application', $application);
+			$this->set('remain', $remain);
+		}
+	}
+
+	public function other() {
+		$connection=$this->openSQLconnection();
+		$username = $this->Auth->user('username');
+		//$ringino = $this->data['ringino'];
+		//Get current ringiseq from ringihistories
+		//$sql="SELECT * from attributes where ringino='$ringino'";
+		$sql="SELECT department, title, name FROM users WHERE username = '$username'";
+		$query = mysql_query("$sql");
+		$array = mysql_fetch_assoc($query);
+		$this->set('name', $array['name']);
+		$this->set('department', $array['department']);
+		$this->set('title', $array['title']);
+
+		$sql = "SELECT count(1) count
+			FROM attributes,ringiroutes 
+			WHERE ringiroutes.ringino = attributes.ringino 
+				and ringiroutes.approverid = '$username'
+				and attributes.ringistatus not in ('001', '005')
+				and ringiroutes.approverlayer >0";
+		$query = mysql_query("$sql");
+		$array = mysql_fetch_assoc($query);
+		$this->set('appCount', $array['count']);
+
+		$sql = "SELECT count(1) count
+			FROM attributes,ringiroutes 
+			WHERE ringiroutes.ringino = attributes.ringino 
+				and ringiroutes.approverid = '$username'
+				and attributes.ringistatus = '003'";
+		$query = mysql_query("$sql");
+		$array = mysql_fetch_assoc($query);
+		$this->set('accCount', $array['count']);			
+
+		$sql = "SELECT count(1) count
+			FROM attributes, ringiroutes 
+			WHERE ringiroutes.ringino = attributes.ringino 
+				and ringiroutes.approverid = '$username'
+				and attributes.ringistatus = '002'";
+		$query = mysql_query("$sql");
+		$array = mysql_fetch_assoc($query);
+		$this->set('inProCount', $array['count']);
+
+		$sql = "SELECT approverdept, approvertitle,approverid 
+			From routes, users
+			WHERE routes.department = users.department
+				and routes.approveRouteType = '0'
+				and routes.person is NULL
+				and users.username = '$username'
+			ORDER BY routes.approverlayer";
+		$query = mysql_query("$sql");
+		$approverCount = mysql_num_rows($query);
+		$this->set('approverCount', $approverCount);
+		if ($approverCount > 0){
+			for ($i = 0; $i < $approverCount; $i ++){
+				$array = mysql_fetch_assoc($query);
+				$approverId[$i] = $array['approverid'];
+				$approverDept[$i] = $array['approverdept'];
+				$approverTitle[$i] = $array['approvertitle'];
+			}
+			$this->set('approverId', $approverId);
+			$this->set('approverDept', $approverDept);
+			$this->set('approverTitle', $approverTitle);
+		}
+
+		$sql="SELECT a.ringino, a.ringiname, a.project, a.purpose, a.applydate, a.applicantid, IFNull(a.asset,0)+IFNull(a.expense,0) application, IFNull(a.assetremain,0)+IFNull(expenseremain,0) remain, a.ringistatus
+			FROM attributes a, ringiroutes b
+			WHERE a.ringino =  b.ringino 
+				  and b.approverid = '$username'
+				  and b.approverlayer >0
+				  and (a.ringino,b.approverlayer)
+			NOT IN  (SELECT ringino,min(approverlayer) approverlayer 
+                                FROM ringiroutes 
+                                WHERE approvedate is NULL
+					AND approverlayer >0
+	    		        Group by ringino)";
+		$query = mysql_query("$sql");
+		$applicationCount = mysql_num_rows($query);
+		$this->set('applicationCount', $applicationCount);
+		if ($applicationCount > 0){
+			for ($i = 0; $i < $applicationCount; $i ++){
+			$array = mysql_fetch_assoc($query);
+			$ringiNo[$i] = $array['ringino'];
+			$ringiName[$i] = $array['ringiname'];
+			$project[$i] = $array['project'];
+			$purpose[$i] = $array['purpose'];
+			$applyDate[$i] = $array['applydate'];
+			$applicantId[$i] = $array['applicantid'];
+			$application[$i] = $array['application'];
+			$remain[$i] = $array['remain'];
+			$ringiStatus[$i] = $array['ringistatus'];
+			$ringiStatusName[$i] =$this->Convertor($array['ringistatus'],'RingiStatus');
+			}
+			$this->set('ringiNo', $ringiNo);
+			$this->set('ringiName', $ringiName);
+			$this->set('project', $project);
+			$this->set('purpose', $purpose);
+			$this->set('applyDate', $applyDate);
+			$this->set('applicantId', $applicantId);
+			$this->set('application', $application);
+			$this->set('remain', $remain);
+			$this->set('ringiStatus', $ringiStatus);
+			$this->set('ringiStatusName', $ringiStatusName);
+		}
+	}
+	
+	public function report(){
+		$connection=$this->openSQLconnection();
+		$sql = "SELECT A.year, A.department, A.linecd, A.project, A.accountno, A.purpose, A.month,sum(A.budget) budget, Sum(A.application) application 
+			FROM (SELECT year,department, linecd,project,accountno,purpose,month,budget,0 application,benefit
+				FROM budgets
+				UNION ALL SELECT Year(applydate) year,assetdept department, linecd,project,assetaccountno accountno,purpose,month(applydate) month,0,asset application,Null benefit
+					  FROM attributes where ringistatus = '003' and asset is not null 
+					  UNION SELECT Year(applydate) year,expensedept department, linecd,project,expenseaccountno accountno,purpose,month(applydate) month,0,expense application,Null benefit
+					  FROM attributes where ringistatus = '003' and expense is not null ) A
+			GROUP BY A.year, A.department, A.linecd, A.project, A.accountno, A.purpose, A.month";
+		$count = -1;
+		$query = mysql_query("$sql");
+		if ($query != NULL){
+			$count = mysql_num_rows($query)/12;
+		}
+		$this->set('count', $count);
+		if ($count > 0){
+			for ($entry = 0; $entry < $count; $entry++){
+				for ($month = 0 ; $month < 12; $month++){
+					$array = mysql_fetch_assoc($query);
+					$budget[$entry][$month] = $array['budget'];
+					$application[$entry][$month] = $array['application'];
+				}
+				$year[$entry] = $array['year'];
+				$department[$entry] = $array['department'];
+				$linecd[$entry] = $array['linecd'];
+				$project[$entry] = $array['project'];
+				$accountno[$entry] = $array['accountno'];
+				$purpose[$entry] = $array['purpose'];
+			}
+			$this->set('year', $year);
+			$this->set('department', $department);
+			$this->set('linecd', $linecd);
+			$this->set('project', $project);
+			$this->set('accountno', $accountno);
+			$this->set('purpose', $purpose);
+			$this->set('budget', $budget);
+			$this->set('application', $application);
+		}
+	}
+	
 	public function upload_layout() {}
 	
 	public function preview() {
@@ -805,12 +1033,7 @@ class RingiController extends AppController {
         }
         $optionsHTML = $dom->saveHTML();
 
-		// replace remainig APPROVER_X with selectable options
-	/*
-		$wfparam = Configure::read('workflow');
-        for( $i=1; $i<=$wfparam['MaxLayer']; $i++ ){	
-	*/
-		// TODO
+	// TODO
         // FIXME remove additional user lists
         //$dom = new DOMDocument;
         //$dom->loadHTML($optionsHTML);
@@ -946,8 +1169,7 @@ class RingiController extends AppController {
 
 	// save approver
 		$wfparam = Configure::read('workflow');
-        
-        for( $i=1; $i<=$wfparam['MaxLayer']; $i++ ){
+		for( $i=1; $i<=$wfparam['MaxLayer']; $i++ ){
             $keyToVerify = 'APPROVERID_'. $i;
             if( array_key_exists($keyToVerify, $this->data) ){
                 $row = array();
@@ -1247,7 +1469,8 @@ class RingiController extends AppController {
 	        }
 		}
 		
-		echo "<a href=file://".$folderpath.$ringino.">Link to Uploads</a>";
+		//echo "<a href=file://".$folderpath.$ringino.">Link to Uploads</a>";
+		$this->redirect(array('action' => 'main_menu'));
 		
  }
 
@@ -1258,51 +1481,39 @@ class RingiController extends AppController {
 		$ringino = $this->data['ringino'];
 		//Get current ringiseq from ringihistories 
 		$query = mysql_query("SELECT max(ringiseq) maxringino 
-		                        from ringihistories 
-		                       where ringino = $ringino 
-		                    group by ringino");
-		$array = mysql_fetch_assoc($query);
-		$ringiseq=$array['maxringino'];
+			from ringihistories 
+			where ringino = $ringino 
+		group by ringino");
+	$array = mysql_fetch_assoc($query);
+	$ringiseq=$array['maxringino'];
 
-		$sql1="UPDATE attributes
-		    Set  ringistatus = '005',
-		           updator_id = '".$username."',
-		           updated_at = now()
-			where ringino = $ringino";
+	$sql1="UPDATE attributes
+		Set  ringistatus = '005',
+	updator_id = '".$username."',
+	updated_at = now()
+		where ringino = $ringino";
 
-    	$Ringihistory['Ringihistory']['ringino'] = $this->data['ringino'];
-    	$Ringihistory['Ringihistory']['ringiseq'] = $ringiseq+1;
-    	$Ringihistory['Ringihistory']['approverlayer'] = 0;
-    	$Ringihistory['Ringihistory']['processerid'] = $this->Auth->user('username');
-    	$Ringihistory['Ringihistory']['processdate'] = date("Y-m-d H:i:s");
-    	$Ringihistory['Ringihistory']['ringiaction'] = '005';
-    	$Ringihistory['Ringihistory']['creator_id'] = $this->Auth->user('username');
-    	$Ringihistory['Ringihistory']['created_at'] = date("Y-m-d H:i:s");
+	$Ringihistory['Ringihistory']['ringino'] = $this->data['ringino'];
+	$Ringihistory['Ringihistory']['ringiseq'] = $ringiseq+1;
+	$Ringihistory['Ringihistory']['approverlayer'] = 0;
+	$Ringihistory['Ringihistory']['processerid'] = $this->Auth->user('username');
+	$Ringihistory['Ringihistory']['processdate'] = date("Y-m-d H:i:s");
+	$Ringihistory['Ringihistory']['ringiaction'] = '005';
+	$Ringihistory['Ringihistory']['creator_id'] = $this->Auth->user('username');
+	$Ringihistory['Ringihistory']['created_at'] = date("Y-m-d H:i:s");
 
-		if ($connection) {
-			$query = mysql_query($sql1) or die(mysql_error());
-	    	$this->Ringihistory->save($Ringihistory);
+	if ($connection) {
+		$query = mysql_query($sql1) or die(mysql_error());
+		$this->Ringihistory->save($Ringihistory);
+
+	} else {
+		echo "Application delete is failure when update the data into database";
+	}
 	
-		} else {
-			echo "Application delete is failure when update the data into database";
-		}
+	//echo "<a href=file://".$folderpath.$ringino.">Link to Uploads</a>";
+	$this->redirect(array('controller' => 'Ringi', 'action' => 'main_menu'));
 
-		//Upload file
-		$ringino=$Attribute['Attribute']['ringino'];
-		$this->exec_in_vendorpath('CreateFolder', $folderpath, $ringino);
-		
-		if ($_FILES['file']['name']) {
-			$count=0;
-			foreach ($_FILES['file']['name'] as $filename) 
-	        {
-				move_uploaded_file( $_FILES['file']['tmp_name'][$count], $folderpath.$ringino."/".$_FILES['file']['name'][$count]);
-				$count++;
-	        }
-		}
-		
-		echo "<a href=file://".$folderpath.$ringino.">Link to Uploads</a>";
-		
- }
+	}
 
 // add by Tei 2013/07/28 End	
 	
@@ -1354,6 +1565,7 @@ class RingiController extends AppController {
 		} else {
 			echo "Approve is failure when update the data into database";
 		}
+		$this->redirect(array('action' => 'task'));
 	}
 	
 	public function accept() {	
@@ -1412,6 +1624,7 @@ class RingiController extends AppController {
 		} else {
 			echo "Accept is failure when update the data into database";
 		}
+		$this->redirect(array('action' => 'task'));
 	}
 	
 	public function reject() {	
@@ -1470,6 +1683,7 @@ class RingiController extends AppController {
 		} else {
 			echo "Reject is failure when update the data into database";
 		}
+		$this->redirect(array('action' => 'task'));
 	}
 	
 	public function hold() {	
@@ -1528,6 +1742,7 @@ class RingiController extends AppController {
 		} else {
 			echo "Hold is failure when update the data into database";
 		}
+		$this->redirect(array('action' => 'task'));
 	}
 	
 	public function passback() {	
@@ -1622,6 +1837,7 @@ class RingiController extends AppController {
 				echo "Passback by higher approver is failure when update the data into database";
 			}
 		}
+		$this->redirect(array('action' => 'task'));
 
 	}
 	
@@ -1681,6 +1897,7 @@ class RingiController extends AppController {
 		} else {
 			echo "Reopen is failure when update the data into database";
 		}
+		$this->redirect(array('action' => 'other'));
 	}
 	
 	public function cancel1() {
@@ -1725,6 +1942,7 @@ class RingiController extends AppController {
 		} else {
 			echo "Applicantion cancelation is failure when update the data into database";
 		}
+		$this->redirect(array('action' => 'main_menu'));
 	}
 	
 	public function cancel2() {	
@@ -1775,237 +1993,22 @@ class RingiController extends AppController {
 			} else {
 				echo "Approver Cancel is failure when update the data into database";
 			}
+			$this->redirect(array('action' => 'other'));
 	
 	}
+
 	
-	public function task() {
-		$connection=$this->openSQLconnection();
-		$username = $this->Auth->user('username');
-		//$ringino = $this->data['ringino'];
-		//Get current ringiseq from ringihistories
-		//$sql="SELECT * from attributes where ringino='$ringino'";
-		$sql="SELECT department, title, name FROM users WHERE username = '$username'";
-		$query = mysql_query("$sql");
-		$array = mysql_fetch_assoc($query);
-		$this->set('name', $array['name']);
-		$this->set('department', $array['department']);
-		$this->set('title', $array['title']);
-		$sql="SELECT count(1) count
-			FROM attributes a, ringiroutes b
-			WHERE a.ringino =  b.ringino
-				and b.approverid = '$username'
-				and a.ringistatus = '002'
-				and (a.ringino,b.approverlayer)
-			IN  (select ringino,min(approverlayer) approverlayer 
-			        FROM ringiroutes 
-			        WHERE approvedate is NULL  and approverlayer >0
-				GROUP BY ringino)";
-		$query = mysql_query("$sql");
-		$array = mysql_fetch_assoc($query);
-		$this->set('taskLeft', $array['count']);
-
-		$sql = "SELECT approverdept, approvertitle,approverid 
-			From routes, users
-			WHERE routes.department = users.department
-				and routes.approveRouteType = '0'
-				and routes.person is NULL
-				and users.username = '$username'
-			ORDER BY routes.approverlayer";
-		$query = mysql_query("$sql");
-		$approverCount = mysql_num_rows($query);
-		$this->set('approverCount', $approverCount);
-		if ($approverCount > 0){
-			for ($i = 0; $i < $approverCount; $i ++){
-				$array = mysql_fetch_assoc($query);
-				$approverId[$i] = $array['approverid'];
-				$approverDept[$i] = $array['approverdept'];
-				$approverTitle[$i] = $array['approvertitle'];
-			}
-			$this->set('approverId', $approverId);
-			$this->set('approverDept', $approverDept);
-			$this->set('approverTitle', $approverTitle);
-		}
-		$sql="Select a.ringino, a.ringiname, a.project, a.purpose, a.applydate, a.applicantid, a.asset+a.expense application, a.assetremain+expenseremain remain
-			FROM attributes a, ringiroutes b
-			WHERE a.ringino =  b.ringino 
-				and b.approverid = '$username'
-				and a.ringistatus = '002'
-				and (a.ringino,b.approverlayer)
-			IN  (select ringino,min(approverlayer) approverlayer 
-                                FROM ringiroutes 
-                                WHERE approvedate is NULL
-					and approverlayer >0
-				GROUP BY ringino)";
-		$query = mysql_query("$sql");
-		$applicationCount = mysql_num_rows($query);
-		$this->set('applicationCount', $applicationCount);
-		if ($applicationCount > 0){
-			for ($i = 0; $i < $applicationCount; $i ++){
-			$array = mysql_fetch_assoc($query);
-			$ringiNo[$i] = $array['ringino'];
-			$ringiName[$i] = $array['ringiname'];
-			$project[$i] = $array['project'];
-			$purpose[$i] = $array['purpose'];
-			$applyDate[$i] = $array['applydate'];
-			$applicantId[$i] = $array['applicantid'];
-			$application[$i] = $array['application'];
-			$remain[$i] = $array['remain'];
-			}
-			$this->set('ringiNo', $ringiNo);
-			$this->set('ringiName', $ringiName);
-			$this->set('project', $project);
-			$this->set('purpose', $purpose);
-			$this->set('applyDate', $applyDate);
-			$this->set('applicantId', $applicantId);
-			$this->set('application', $application);
-			$this->set('remain', $remain);
-		}
+	public function download(){
+		$this->viewClass = 'Media';
+		        // Download app/outside_webroot_dir/example.zip
+		        $params = array(
+		            'id'        => 'example.zip',
+		            'name'      => 'example',
+		            'download'  => true,
+		            'extension' => 'zip',
+		            'path'      => APP . 'outside_webroot_dir' . DS
+		        );
+		$this->set($params);
 	}
-
-	public function other() {
-		$connection=$this->openSQLconnection();
-		$username = $this->Auth->user('username');
-		//$ringino = $this->data['ringino'];
-		//Get current ringiseq from ringihistories
-		//$sql="SELECT * from attributes where ringino='$ringino'";
-		$sql="SELECT department, title, name FROM users WHERE username = '$username'";
-		$query = mysql_query("$sql");
-		$array = mysql_fetch_assoc($query);
-		$this->set('name', $array['name']);
-		$this->set('department', $array['department']);
-		$this->set('title', $array['title']);
-
-		$sql = "SELECT count(1) count
-			FROM attributes,ringiroutes 
-			WHERE ringiroutes.ringino = attributes.ringino 
-				and ringiroutes.approverid = '$username'
-				and attributes.ringistatus not in ('001', '005')
-				and ringiroutes.approverlayer >0";
-		$query = mysql_query("$sql");
-		$array = mysql_fetch_assoc($query);
-		$this->set('appCount', $array['count']);
-
-		$sql = "SELECT count(1) count
-			FROM attributes,ringiroutes 
-			WHERE ringiroutes.ringino = attributes.ringino 
-				and ringiroutes.approverid = '$username'
-				and attributes.ringistatus = '003'";
-		$query = mysql_query("$sql");
-		$array = mysql_fetch_assoc($query);
-		$this->set('accCount', $array['count']);			
-
-		$sql = "SELECT count(1) count
-			FROM attributes, ringiroutes 
-			WHERE ringiroutes.ringino = attributes.ringino 
-				and ringiroutes.approverid = '$username'
-				and attributes.ringistatus = '002'";
-		$query = mysql_query("$sql");
-		$array = mysql_fetch_assoc($query);
-		$this->set('inProCount', $array['count']);
-
-		$sql = "SELECT approverdept, approvertitle,approverid 
-			From routes, users
-			WHERE routes.department = users.department
-				and routes.approveRouteType = '0'
-				and routes.person is NULL
-				and users.username = '$username'
-			ORDER BY routes.approverlayer";
-		$query = mysql_query("$sql");
-		$approverCount = mysql_num_rows($query);
-		$this->set('approverCount', $approverCount);
-		if ($approverCount > 0){
-			for ($i = 0; $i < $approverCount; $i ++){
-				$array = mysql_fetch_assoc($query);
-				$approverId[$i] = $array['approverid'];
-				$approverDept[$i] = $array['approverdept'];
-				$approverTitle[$i] = $array['approvertitle'];
-			}
-			$this->set('approverId', $approverId);
-			$this->set('approverDept', $approverDept);
-			$this->set('approverTitle', $approverTitle);
-		}
-
-		$sql="SELECT a.ringino, a.ringiname, a.project, a.purpose, a.applydate, a.applicantid, a.asset+a.expense application, a.assetremain+expenseremain remain, a.ringistatus
-			FROM attributes a, ringiroutes b
-			WHERE a.ringino =  b.ringino 
-				  and b.approverid = '$username'
-				  and b.approverlayer >0
-				  and (a.ringino,b.approverlayer)
-			NOT IN  (SELECT ringino,min(approverlayer) approverlayer 
-                                FROM ringiroutes 
-                                WHERE approvedate is NULL
-					AND approverlayer >0
-	    		        Group by ringino)";
-		$query = mysql_query("$sql");
-		$applicationCount = mysql_num_rows($query);
-		$this->set('applicationCount', $applicationCount);
-		if ($applicationCount > 0){
-			for ($i = 0; $i < $applicationCount; $i ++){
-			$array = mysql_fetch_assoc($query);
-			$ringiNo[$i] = $array['ringino'];
-			$ringiName[$i] = $array['ringiname'];
-			$project[$i] = $array['project'];
-			$purpose[$i] = $array['purpose'];
-			$applyDate[$i] = $array['applydate'];
-			$applicantId[$i] = $array['applicantid'];
-			$application[$i] = $array['application'];
-			$remain[$i] = $array['remain'];
-			$ringiStatus[$i] = $array['ringistatus'];
-			$ringiStatusName[$i] =$this->Convertor($array['ringistatus'],'RingiStatus');
-			}
-			$this->set('ringiNo', $ringiNo);
-			$this->set('ringiName', $ringiName);
-			$this->set('project', $project);
-			$this->set('purpose', $purpose);
-			$this->set('applyDate', $applyDate);
-			$this->set('applicantId', $applicantId);
-			$this->set('application', $application);
-			$this->set('remain', $remain);
-			$this->set('ringiStatus', $ringiStatus);
-			$this->set('ringiStatusName', $ringiStatusName);
-		}
-	}
-	
-	public function report(){
-		$connection=$this->openSQLconnection();
-		$sql = "SELECT A.year, A.department, A.linecd, A.project, A.accountno, A.purpose, A.month,sum(A.budget) budget, Sum(A.application) application 
-			FROM (SELECT year,department, linecd,project,accountno,purpose,month,budget,0 application,benefit
-				FROM budgets
-				UNION ALL SELECT Year(applydate) year,assetdept department, linecd,project,assetaccountno accountno,purpose,month(applydate) month,0,asset application,Null benefit
-					  FROM attributes where ringistatus = '003' and asset is not null 
-					  UNION SELECT Year(applydate) year,expensedept department, linecd,project,expenseaccountno accountno,purpose,month(applydate) month,0,expense application,Null benefit
-					  FROM attributes where ringistatus = '003' and expense is not null ) A
-			GROUP BY A.year, A.department, A.linecd, A.project, A.accountno, A.purpose, A.month";
-		$count = -1;
-		$query = mysql_query("$sql");
-		if ($query != NULL){
-			$count = mysql_num_rows($query)/12;
-		}
-		$this->set('count', $count);
-		if ($count > 0){
-			for ($entry = 0; $entry < $count; $entry++){
-				for ($month = 0 ; $month < 12; $month++){
-					$array = mysql_fetch_assoc($query);
-					$budget[$entry][$month] = $array['budget'];
-					$application[$entry][$month] = $array['application'];
-				}
-				$year[$entry] = $array['year'];
-				$department[$entry] = $array['department'];
-				$linecd[$entry] = $array['linecd'];
-				$project[$entry] = $array['project'];
-				$accountno[$entry] = $array['accountno'];
-				$purpose[$entry] = $array['purpose'];
-			}
-			$this->set('year', $year);
-			$this->set('department', $department);
-			$this->set('linecd', $linecd);
-			$this->set('project', $project);
-			$this->set('accountno', $accountno);
-			$this->set('purpose', $purpose);
-			$this->set('budget', $budget);
-			$this->set('application', $application);
-		}
-	}
-	
 	
 }
