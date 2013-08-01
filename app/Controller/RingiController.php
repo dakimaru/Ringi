@@ -45,7 +45,7 @@ class RingiController extends AppController {
 
 		require_once("../Config/uploads.ctp");
 
-		print_r($scr_create_ringi_tables);
+		//print_r($scr_create_ringi_tables);
 		$exec1 = exec("$scr_create_ringi_tables  2>&1");
 		$exec2 = exec("$scr_import_ad_to_mysql 	 2>&1");
 		echo "$exec1";
@@ -440,13 +440,17 @@ class RingiController extends AppController {
 		$this->openSQLconnection();
 		$layoutpath = $_SERVER['DOCUMENT_ROOT']."/Ringi/uploads/";
 		$doc = file_get_contents($layoutpath."active.php");
-		
+
 		while (preg_match('/input:.+:.+/', $doc, $matches) == 1) {
 			$temp = preg_split('/[:]/',$matches[0]);
 			$query = mysql_db_query('ringidata', "SELECT $temp[1] FROM attributes WHERE ringino=$ringino");
 			$fix = mysql_fetch_assoc($query);
 			$doc = preg_replace('/input:(.+):.+/', $fix[$temp[1]], $doc, 1);
 		}
+		$username = $this->Auth->user('username');
+		$approvalFlow = $this->_genApproverFlowHtmlWithId($username, $ringino);
+		$doc = $doc. $approvalFlow;
+
 		$this->set('doc',$doc);
 	}
 
@@ -618,10 +622,23 @@ class RingiController extends AppController {
         //echo '**** _nonEditable begin: existingRoute =';
         //print_r($existingRoute);
         //echo '_nonEditable end****';
+	$title = "dummyTitle";
+	$id = "dummyId";
+	$approverLines = "";
+        //print_r($existingRoute);
         foreach( $existingRoute as $approver ){
-            $title = "dummyTitle";
-            $id = "dummyId";
-            $approverLines = "<tr> <td>". $row. "</td> <td>". $approver['approverid']. "</td> <td>". $title. "</td> <td>". $id. "</td> </tr>\n";
+        	//print_r($approver);
+        	$query = "select * from users where username = '". $approver['approverid']. "'";
+        	//print_r($query);
+        	$queryRes = mysql_query($query); 
+        	while($tmp = mysql_fetch_assoc($queryRes)){
+		    $department = $tmp['department'];
+		    $title = $tmp['title'];
+		    $id = $tmp['username'];
+		}
+		$approverLayer = "Approver ". $row;
+            	$approverLines = $approverLines.  "<tr> <td>". $row++. "</td> <td>". $approverLayer. "</td> <td>". $department. "</td> <td>". $title. "</td> <td>". $id. "</td> </tr>\n";
+		//print_r($approverLines);
         }
 
         $msg =  $source_html_begin. $approverLines. $source_html_end;
@@ -708,6 +725,7 @@ class RingiController extends AppController {
             //echo $query;
             $queryRes = mysql_query($query);
             $arrayToAdd = array();
+            array_push($arrayToAdd, "");
             while($tmp = mysql_fetch_assoc($queryRes)){
                 array_push($arrayToAdd, $tmp[strtolower($colname)]);
             }
@@ -791,6 +809,7 @@ class RingiController extends AppController {
         }
         $optionsHTML = $dom->saveHTML();
 
+	// TODO
         // FIXME remove additional user lists
         //$dom = new DOMDocument;
         //$dom->loadHTML($optionsHTML);
@@ -893,27 +912,40 @@ class RingiController extends AppController {
 	
     }
 
-   private function _saveRingiRoutes($ringino) {
-
-
-        // FIXME
-        $MAXLAYER = 5;
-        $TABLENAME = 'Ringiroute';
+    private function _create_applicant_with_datefield($ringino){
         $username = $this->Auth->user('username');
-
-        //print_r($this->data);
-        //echo " ****";
-
-        // save arrays to save
-        $rowsToSave = array();
 
         $row = array();
         $row['ringino']         = $ringino;
         $row['approverlayer']   = 0;
         $row['approverid']      = $username;
-        $row['created_at']      = date("Y-m-d H:i:s");
-        array_push($rowsToSave, $row);
+        $row['ringistatus']     = "001";
+        $row['approvedate']     = date("Y-m-d H:i:s");
+        $row['created_at']     	= date("Y-m-d H:i:s");
 
+	return $row;
+    }
+	
+    private function _saveRingiRoutes($ringino) {
+	$this->openSQLconnection();
+	$rowsToSave = array();
+
+	// create applicant at apply
+	// update updated_at when reapply
+	$conditions = array( 	'Ringiroute.ringino' => $ringino,
+				'Ringiroute.approverlayer' => 0 );
+	if ($this->Ringiroute->hasAny($conditions) ){
+		$updateColumn = array(  'Ringiroute.approvedate' => "'". date("Y-m-d H:i:s"). "'",
+					'Ringiroute.ringistatus' => "'012'" );
+        	$this->Ringiroute->UpdateAll($updateColumn, $conditions);
+	    	return;
+	}
+	$applicant = $this->_create_applicant_with_datefield($ringino);
+        array_push($rowsToSave, $applicant);
+
+	// save approver
+        // FIXME
+        $MAXLAYER = 5;
         for( $i=1; $i<=$MAXLAYER; $i++ ){
             $keyToVerify = 'APPROVERID_'. $i;
             if( array_key_exists($keyToVerify, $this->data) ){
@@ -1152,6 +1184,13 @@ class RingiController extends AppController {
 			}
 		}
 		
+		//Get current ringiseq from ringihistories 
+		$query = mysql_query("SELECT max(ringiseq) maxringino 
+		                        from ringihistories 
+		                       where ringino = $ringino 
+		                    group by ringino");
+		$array = mysql_fetch_assoc($query);
+		$ringiseq=$array['maxringino'];
 		
 		//storing non-excel items
 		//attributes
@@ -1168,7 +1207,7 @@ class RingiController extends AppController {
 		//ringihistories
 		
 		$Ringihistory['Ringihistory']['ringino'] = $ringino;
-		$Ringihistory['Ringihistory']['ringiseq'] = 1;
+		$Ringihistory['Ringihistory']['ringiseq'] = $ringiseq+1;
 		$Ringihistory['Ringihistory']['approverlayer'] = 0;
 		$Ringihistory['Ringihistory']['processerid'] = $username;
 		$Ringihistory['Ringihistory']['processdate'] = date("Y-m-d H:i:s");
