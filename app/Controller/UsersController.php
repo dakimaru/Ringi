@@ -63,7 +63,7 @@ class UsersController extends AppController {
 			}	
 			else {
 				
-				$this->Session->setFlash(__('Invalid username or password, try again'));
+				$this->Session->setFlash(__('Invalid username or password, try again. If you forget your username or password, please ask administrator for help!'));
 			}
 		}
 	}
@@ -89,36 +89,96 @@ class UsersController extends AppController {
 		$this->set('user', $this->User->read(null, $id));
 	}
 
-		public function add() {
+	public function add() {
+		$connection=$this->openSQLconnection();
+		$username = $this->Auth->user('username');
 		if ($this->request->is('post')) {
 			$this->User->create();
-			
+
 			$link = $this->openSQLconnection();
-			$newusername = $this->data['User']['username'];
-			$sql = "SELECT username FROM users WHERE username='".$newusername."'";
-			$query=mysql_query($sql);
-			$existing = mysql_fetch_assoc($query);
-			if ($existing==NULL) {
+			//$sql = "SELECT username FROM users WHERE username='".$newusername."'";
+			//$query=mysql_query($sql);
+			//$existing = mysql_fetch_assoc($query);
+			//if ($existing==NULL) {
+			//	
+			$user = $this->data['username'];
+			$usertype = isset($this->data['usertype'])?1:0;
+			$fullname = $this->data['name'];
+			$email = $this->data['email'];
+			$department = $this->data['department'];
+			$title = $this->data['title'];
+			$manager = $this->data['manager'];
+			$activeflag = isset($this->data['activeFlag'])?1:0;
+			
+			$sql = "INSERT INTO users (usertype, name, username, mail, department, title, manager, activeflag, creator_id, created_at)
+				VALUES ('$usertype','$fullname','$user','$email', '$department', '$title', '$manager', '$activeflag', '$username', now());";	
+
+			$query = mysql_query($sql);
+			if ($query != NULL)
+			{
+				$newPassword = $_POST['newPassword'];
+				$salted_pass = $this->Auth->password($newPassword);			//put salt on password
+				$querynewpass = "UPDATE users SET password='$salted_pass' WHERE username='$user'";
+				//mysql_query($querynewpass) or die(mysql_error());	//overwrite password
 				
-				$user=$this->request->data;
-				$user['User']['usertype'] = $this;
-				$user['User']['activeflag'] = 1;
-				if ($this->Auth->user('username')!==NULL) {
-					$user['User']['creator_id'] = $this->Auth->user('username');
-				}
-				$user['User']['created_at'] = DboSource::expression('NOW()');	
-
-				$this->User->save($user);
-
-				if ($this->Auth->login()) {
-					$this->Session->setFlash(__('The user has been saved'));
-					return $this->redirect(array('controller' => 'Ringi', 'action' => 'main_menu'));
-				}
-			} 
-			else {
-				$this->Session->setFlash(__('A user with this username already exists'));
+				//$sql="SELECT DN FROM users WHERE username='$user'";
+				//$query = mysql_query($sql);
+				//$userDN = mysql_fetch_assoc($query);
+							
+				//require_once("../Config/uploads.ctp");
+				//exec('cd ../Vendor/scripts ; $scr_reset_password "' .$userDN['DN'].'" '.$newPassword);
+				$this->Session->setFlash(__("The user was created successfully"));
+			}
+			else{
+				$this->Session->setFlash(__("Oops! Create Failed!"));
 			}
 		}
+		
+		//Name, title, departement
+		$sql="SELECT usertype, name, department, title,  manager, mail, activeflag FROM users WHERE username = '$username'";
+		//$sql="SELECT usertype, username, name, department, title, manager, email, activeflag,
+		//	FROM users
+		//	where username= admin direct username from pulldown";
+		$query = mysql_query("$sql");
+		$array = mysql_fetch_assoc($query);
+		$this->set('usertype', $array['usertype']);
+		$this->set('username', $username);
+		$this->set('email', $array['mail']);
+		$this->set('name', $array['name']);
+		$this->set('department', $array['department']);
+		$this->set('title', $array['title']);
+		$this->set('manager', $array['manager']);
+		$this->set('activeflag', $array['activeflag']);
+		
+		
+		$sql="SELECT usertype, username, name, department, title, manager, mail, activeflag From users ORDER BY username";
+		$query = mysql_query("$sql");
+		if ($query != NULL){
+			$userCount = mysql_num_rows($query);
+		}
+		$this->set('userCount', $userCount);
+		if ($userCount > 0){
+			for ($i = 0 ; $i < $userCount; $i++){
+				$array = mysql_fetch_assoc($query);
+				$allUsertype[$i] = $array['usertype'];
+				$allUserame[$i] = $array['username'];
+				$allName[$i] = $array['name'];
+				$allDepartment[$i] = $array['department'];
+				$allTitle[$i] = $array['title'];
+				$allManager[$i] = $array['manager'];
+				$allEmail[$i] = $array['mail'];
+				$allActiveFlag[$i] = $array['activeflag'];
+			}
+			$this->set('allUsertype', $allUsertype);
+			$this->set('allUsername', $allUserame);
+			$this->set('allName', $allName);
+			$this->set('allDepartment', $allDepartment);
+			$this->set('allTitle', $allTitle);
+			$this->set('allManager', $allManager);
+			$this->set('allEmail', $allEmail);
+			$this->set('allActiveFlag', $allActiveFlag);
+		}
+		
 	}
 
 	public function edit($id = null) {
@@ -184,7 +244,7 @@ class UsersController extends AppController {
 				}	
 				else {
 					
-					$this->Session->setFlash(__('Invalid password, try again'));
+					$this->Session->setFlash(__('Invalid password, try again. If you forget your password, please ask administrator to reset!'));
 				}
 			}
 			elseif ($resourceflag == 'admin'){

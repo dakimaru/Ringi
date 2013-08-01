@@ -78,6 +78,11 @@
 	<p><a href="/Ringi/other" class="btn btn-success">Go Back</a></p>
 	';
     }
+    elseif ($resourceflag == 'task'){
+	echo'
+	<p><a href="/Ringi/task" class="btn btn-success">Go Back</a></p>
+	';
+    }
     else{
 	echo'
 	<p><a href="/Ringi/main_menu" class="btn btn-success">Go Back</a></p>
