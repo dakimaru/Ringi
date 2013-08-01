@@ -1,27 +1,4 @@
-<!--<div class="container">
 
-	<div class="surface">
-		<div class="account-content">
-			<form method="post" action="../users/password_change">
-
-				<h2 class="form-signin-heading">Change password</h2>
-				<p>New Password</p>
-
-				<input type="text" placeholder="New pass" name="newpass"><br>
-
-				<p>Retype Password</p>
-
-				<input type="text" placeholder="Retype" name="confirmpass"><br>
-
-				<button class="btn btn-primary" type="submit">Submit</button>
-
-			</form>
-		</div>
-	</div>
-
-</div>
-
--->
 
 <div class="container">
 
@@ -58,54 +35,20 @@
                                             <i class="icon-chevron-right"></i>
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="span11">
-                                                Mobile
+				    <?php
+					if($usertype == 1){
+					echo '
+				    <li>
+                                        <a href="/Ringi/Users/add">
+                                            <div align="left" class="span11">
+                                                Add User
                                             </div>
                                             <i class="icon-chevron-right"></i>
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="span11">
-                                                Email Notifications
-                                            </div>
-                                            <i class="icon-chevron-right"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="span11">
-                                                Profile
-                                            </div>
-                                            <i class="icon-chevron-right"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="span11">
-                                                Design
-                                            </div>
-                                            <i class="icon-chevron-right"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="span11">
-                                                Apps
-                                            </div>
-                                            <i class="icon-chevron-right"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="span11">
-                                                Widgets
-                                            </div>
-                                            <i class="icon-chevron-right"></i>
-                                        </a>
-                                    </li>
+				    ';
+					}
+				    ?>
                                 </ul>
 			</div>
 			<div class="well">
@@ -134,7 +77,7 @@
                         <div class="well">
                                 <div align="left" class=" paddingLeft paddingTop">
                                         <h3>Password</h3>
-                                        <h5 style="font-weight:normal;">Change your password or recover your current one.</h5>
+                                        <h5 style="font-weight:normal;">Change Your Password</h5>
                                 </div>
                                 <hr>
 				<form class="form-horizontal" action="/Ringi/Users/password_change" method="post" onsubmit="return inputCheck()" accept-charset="utf-8">
@@ -156,13 +99,6 @@
 							<input type="password" name="verifyPassword" id="verifyPassword">
 						</div>
 					</fieldset>
-                                        
-                                        
-                                        
-                                                <!--<label class="checkbox">
-                                                        <input type="checkbox">Let others find me by my email address
-                                                </label>-->
-					
 					<input type="hidden" name="resourceflag" value="user" id="resourceflag">
 					<hr>
 					<div class="form-actions">
@@ -179,7 +115,7 @@
 			<div class="well">
                                 <div align="left" class=" paddingLeft paddingTop">
                                         <h3>Password</h3>
-                                        <h5 style="font-weight:normal;">Change your password or recover your current one.</h5>
+                                        <h5 style="font-weight:normal;">Reset Password for User.</h5>
                                 </div>
                                 <hr>
 				<form class="form-horizontal" action="/Ringi/Users/password_change" method="post" onsubmit="return inputCheck()" accept-charset="utf-8">

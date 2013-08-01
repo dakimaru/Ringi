@@ -140,14 +140,15 @@
 			<div class="well">
 				<div class="row-fluid paddingTop paddingBottom">
 					<div class="span4 offset1">
-						<a href="/Ringi/Users/password_reset" class="btn" style="font-weight:normal">Password Reset</a>
+						<a href="/Ringi/Users/password_change" class="btn" style="font-weight:normal">Password Reset</a>
 					</div> 
 					<div class="span3">
 						<a href="/Ringi/upload_layout" class="btn" style="font-weight:normal">Upload Excel</a>
 					</div>
 					<div class="span3">
-						<a href="#" class="btn" style="font-weight:normal">Budget</a>
+						<a href="/Ringi/Users/add"class="btn" style="font-weight:normal">Add User</a>
 					</div>
+					
 				</div>
 				<div class="row-fluid paddingBottom">
 					<div class="span4 offset1">
@@ -157,7 +158,7 @@
 						<a href="#" class="btn" style="font-weight:normal">Japanese2</a>
 					</div>
 					<div class="span3">
-						<a href="/Ringi/Users/add"class="btn" style="font-weight:normal">Add User</a>
+						<a href="#" class="btn" style="font-weight:normal">Budget</a>
 					</div>
 				</div>
 			</div>

@@ -413,7 +413,7 @@
 				}
                                 ?>	
 					</div>
-					<div class="tab-pane active" id="tab4">
+					<div class="tab-pane" id="tab4">
 						<?php
 					for ($i = 0 ; $i < $applicationCount; $i++){
 						if ($ringiStatus[$i] == '004') {
@@ -495,7 +495,7 @@
 				}
                                 ?>	
 					</div>
-					<div class="tab-pane active" id="tab5">
+					<div class="tab-pane" id="tab5">
 						<?php
 					for ($i = 0 ; $i < $applicationCount; $i++){
 						if ($ringiStatus[$i] == '006') {

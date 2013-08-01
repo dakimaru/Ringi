@@ -185,13 +185,14 @@
 									<form action="pattern3" method="post" accept-charset="utf-8">
                                                                         <input type="hidden" name="ringi_number" value="'.$ringiNo[$i].'">
                                                                         <input type="hidden" name="status" value="002">
-                                                                        <input type="hidden" name="resourceflag" value="task">
+                                                                        <input type="hidden" name="resourceflag" value="task"  id="resourceflag">
                                                                         <button class="btn btn-small">Process</button>
                                                                         </form>
 								</div>
                                                                 <div class="span2">
 									<form action="application_details" method="post" accept-charset="utf-8">
                                                                                 <input type="hidden" name="ringiNo" value="'.$ringiNo[$i].'">
+										<input type="hidden" name="resourceflag" value="task" id="resourceflag">
                                                                                 <button class="btn btn-small">Detail</button>
                                                                         </form>
 								</div>

@@ -54,54 +54,20 @@ if ($usertype ==1){
                                             <i class="icon-chevron-right"></i>
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="span11">
-                                                Mobile
+                                    <?php
+					if($usertype == 1){
+					echo '
+				    <li>
+                                        <a href="/Ringi/Users/add">
+                                            <div align="left" class="span11">
+                                                Add User
                                             </div>
                                             <i class="icon-chevron-right"></i>
                                         </a>
                                     </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="span11">
-                                                Email Notifications
-                                            </div>
-                                            <i class="icon-chevron-right"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="span11">
-                                                Profile
-                                            </div>
-                                            <i class="icon-chevron-right"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="span11">
-                                                Design
-                                            </div>
-                                            <i class="icon-chevron-right"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="span11">
-                                                Apps
-                                            </div>
-                                            <i class="icon-chevron-right"></i>
-                                        </a>
-                                    </li>
-                                    <li>
-                                        <a href="#">
-                                            <div class="span11">
-                                                Widgets
-                                            </div>
-                                            <i class="icon-chevron-right"></i>
-                                        </a>
-                                    </li>
+				    ';
+					}
+				    ?>
                                 </ul>
 			</div>
 			<div class="well">
@@ -129,7 +95,7 @@ if ($usertype ==1){
 			<div class="well">
                                 <div align="left" class=" paddingLeft paddingTop">
                                         <h3 ">Account</h3>
-                                        <h5 style="font-weight:normal;">Change your Name and Email Address.</h5>
+                                        <h5 style="font-weight:normal;">Change Your Name and Email Address.</h5>
                                 </div>
                                 <hr>
 				<form class="form-horizontal" action="/Ringi/Users/user_setting" method="post" onsubmit="return inputCheckUser()" accept-charset="utf-8">
@@ -175,7 +141,7 @@ if ($usertype ==1){
 			<div class="well">
 				<div align="left" class=" paddingLeft paddingTop">
                                         <h3 ">Account</h3>
-                                        <h5 style="font-weight:normal;">Change Profile for All Users</h5>
+                                        <h5 style="font-weight:normal;">Change Profile for Users</h5>
                                 </div>
                                 <hr>
 				<form class="form-horizontal" action="/Ringi/Users/user_setting" method="post" onsubmit="return inputCheckAdmin()" accept-charset="utf-8">
