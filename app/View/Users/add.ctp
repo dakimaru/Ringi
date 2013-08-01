@@ -78,7 +78,7 @@ echo '
 			<div class="well">
                                 <div align="left" class=" paddingLeft paddingTop">
                                         <h3>Add User</h3>
-                                        <h5 style="font-weight:normal;">Add user to the system.</h5>
+                                        <h5 style="font-weight:normal;">Add New User to System.</h5>
                                 </div>
                                 <hr>
 				<form class="form-horizontal" action="/Ringi/Users/add" method="post" onsubmit="return inputCheck()" accept-charset="utf-8">

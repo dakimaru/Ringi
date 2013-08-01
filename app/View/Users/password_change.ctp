@@ -115,7 +115,7 @@
 			<div class="well">
                                 <div align="left" class=" paddingLeft paddingTop">
                                         <h3>Password</h3>
-                                        <h5 style="font-weight:normal;">Reset Password for User.</h5>
+                                        <h5 style="font-weight:normal;">Reset Password for Users.</h5>
                                 </div>
                                 <hr>
 				<form class="form-horizontal" action="/Ringi/Users/password_change" method="post" onsubmit="return inputCheck()" accept-charset="utf-8">

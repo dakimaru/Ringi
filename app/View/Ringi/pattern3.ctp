@@ -1,9 +1,17 @@
 <div class="text-center" style="padding-left: 1em;">
-	<form method="post" action="" name="commentform">
-		<?php echo $doc ?>
+	<?php echo $doc ?>
+	
+	<form action="uploads" method="post">
+		<input type="hidden" name="ringino" value=<?php echo $ringino ?> id="ringino">
+		<p><input type="submit" value="View Attachments"></p>
+	</form>
+	
+	<form method="post" action="" name="commentform">	
 		<textarea class="span9" style="resize: none; font-size:20px;" 
 		placeholder = "Enter comment here" rows="8" name="comment"></textarea>
 		<?php echo ("<input type='hidden' name='ringino' value="."$ringino"." id='ringino'>") ?>
+		<br>
+		<a href="uploads">Uploaded Files</a>
 		<br>
 		
 		<?php 

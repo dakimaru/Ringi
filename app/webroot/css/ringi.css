@@ -223,6 +223,7 @@ max-height: 600px;
 overflow-y: scroll;
 }
 
+
 .table-hover tbody tr:hover > td,
 .table-hover tbody tr:hover > th {
   background-color: #ffffff;
@@ -231,6 +232,7 @@ overflow-y: scroll;
 
 .table tbody tr.success > td {
   background-color: #dff0d8;
+  
 }
 
 .table-hover tbody tr.success:hover > td {
@@ -238,5 +240,11 @@ overflow-y: scroll;
 }
 
 
+
+form div {
+margin-bottom: 0;
+padding: .5em;
+vertical-align: text-top;
+}
 
 

@@ -394,9 +394,47 @@ class RingiController extends AppController {
 				FROM budgets
 				UNION ALL SELECT Year(applydate) year,assetdept department, linecd,project,assetaccountno accountno,purpose,month(applydate) month,0,asset application,Null benefit
 					  FROM attributes where ringistatus = '003' and asset is not null 
-					  UNION SELECT Year(applydate) year,expensedept department, linecd,project,expenseaccountno accountno,purpose,month(applydate) month,0,expense application,Null benefit
-					  FROM attributes where ringistatus = '003' and expense is not null ) A
-			GROUP BY A.year, A.department, A.linecd, A.project, A.accountno, A.purpose, A.month";
+					  UNION ALL SELECT Year(applydate) year,expensedept department, linecd,project,expenseaccountno accountno,purpose,month(applydate) month,0,expense application,Null benefit
+					  FROM attributes where ringistatus = '003' and expense is not null ) A";
+		if ($this->request->is('post')) {
+			$isFirst = true;
+			if($this->data['year'] != ""){
+				$yearCondition = $this->data['year'];
+				$sql = $isFirst?($sql." WHERE A.year = '$yearCondition'") : ($sql." AND A.year = '$yearCondition'");
+				$isFirst = false;
+			}
+			if($this->data['deptCode'] != ""){
+				$deptCondition = $this->data['deptCode'];
+				$sql = $isFirst?($sql." WHERE A.department = '$deptCondition'") : ($sql." AND A.department = '$deptCondition'");
+				$isFirst = false;
+			}
+			if($this->data['lineCode'] != ""){
+				$lineCondition = $this->data['lineCode'];
+				$sql = $isFirst?($sql." WHERE A.linecd = '$lineCondition'") : ($sql." AND A.linecd = '$lineCondition'");
+				$isFirst = false;
+			}
+			if($this->data['project'] != ""){
+				$projCondition = $this->data['project'];
+				$sql = $isFirst?($sql." WHERE A.project = '$projCondition'") : ($sql." AND A.project = '$projCondition'");
+				$isFirst = false;
+			}
+			if($this->data['acctCode'] != ""){
+				$acctCondition = $this->data['acctCode'];
+				$sql = $isFirst?($sql." WHERE A.accountno = '$acctCondition'") : ($sql." AND A.accountno = '$acctCondition'");
+				$isFirst = false;
+			}
+			if($this->data['purpose'] != ""){
+				$purpCondition = $this->data['purpose'];
+				$sql = $isFirst?($sql." WHERE A.purpose = '$purpCondition'") : ($sql." AND A.purpose = '$purpCondition'");
+				$isFirst = false;
+			}
+			
+			
+				
+			
+		}
+		
+		$sql = $sql." GROUP BY A.year, A.department, A.linecd, A.project, A.accountno, A.purpose, A.month";
 		$count = -1;
 		$query = mysql_query("$sql");
 		if ($query != NULL){
@@ -416,6 +454,7 @@ class RingiController extends AppController {
 				$project[$entry] = $array['project'];
 				$accountno[$entry] = $array['accountno'];
 				$purpose[$entry] = $array['purpose'];
+				
 			}
 			$this->set('year', $year);
 			$this->set('department', $department);
@@ -651,10 +690,10 @@ class RingiController extends AppController {
 	
 	public function pattern3 () {
 		if (isset($this->data['ringi_number'])) {
-			$this->set('status',$this->data['status']);
-			$this->set('ringino',$this->data['ringi_number']);
-			$this->set('resourceflag',$this->data['resourceflag']);
 			$ringino=$this->data['ringi_number'];
+			$this->set('status',$this->data['status']);
+			$this->set('ringino',$ringino);
+			$this->set('resourceflag',$this->data['resourceflag']);
 			$this->displayApplication($ringino);
 		}
 		else {
@@ -1033,35 +1072,57 @@ class RingiController extends AppController {
         }
         $optionsHTML = $dom->saveHTML();
 
-	// TODO
-        // FIXME remove additional user lists
-        //$dom = new DOMDocument;
-        //$dom->loadHTML($optionsHTML);
-        //foreach ($dom->getElementsByTagName('td') as $elem){
-        //    // remove extra rows
-        //    $pdKey = 'APPROVER'. '[a-ZA-Z]+'. '_'. $i;
-        //    $regEx = '/'. $pdKey. '/';
-        //    echo $regEx;
-        //    if( preg_match($regEx, $elem->textContent, $matched ) ){
-        //        $row = $elem->parentNode;
-        //        $table = $row->parentNode;
-        //        $table->removeChild($row);
-        //    }
-        //}
-        //$optionsHTML = $dom->saveHTML();
+	 // replace remainig APPROVER_X with selectable options
+        $wfparam = Configure::read('workflow');
+        $dom = new DOMDocument;
+        $dom->loadHTML($optionsHTML);
+        foreach ($dom->getElementsByTagName('td') as $elem){
+            for( $i=$layer; $i<=$wfparam['MaxLayer']; $i++ ){
+                $pdKey = 'APPROVER'. '[A-Z]*'. '_'. $i;
+                $regEx = '/'. $pdKey. '/';
+                //echo $regEx, $elem->textContent;
+                if( preg_match($regEx, $elem->textContent, $matchedArray ) ){
+                    //print_r($matched);
+                    foreach( $options as $optionKey=>$optionValues ){
+                        $matched = $matchedArray[0];
+                        if( $matched == $optionKey. '_'. $i ){
+
+                            $pulldown = $dom->createElement('select');
+                            $pulldown->setAttribute('name', $matched);
+                            $pulldown->setAttribute('id', $matched);
+
+                            for($j=0; $j<count($optionValues); $j++){
+                                $option = $dom->createElement('option');
+                                $option->setAttribute('value',$optionValues[$j]);
+                                $option->nodeValue = $optionValues[$j];
+                                $pulldown->appendChild($option);
+                            }
+
+                            // create TD as container
+                            $td = $dom->createElement('td');
+                            $td->appendChild($pulldown);
+
+                            // replace DOM's TD with the container
+                            $elem->parentNode->replaceChild($td, $elem);
+                        }
+                    }
+                }
+            }
+        }
+        $optionsHTML = $dom->saveHTML();
 
         return $optionsHTML;
     }	
 
     public function apply() {
         //echo "calling apply()";
-		$connection=$this->openSQLconnection();
+	$connection=$this->openSQLconnection();
         //echo "***Auth Begin:";
         //print_r($this->Auth);
         //echo "Auth END:***";
 
         // FIXME
-		$username = $this->Auth->user('username');
+	$username = $this->Auth->user('username');
 
         $optionsHTML = $this->_genApproverFlowHtml($username);
         // $optionsHTML = $dom->saveHTML();
@@ -1107,16 +1168,19 @@ class RingiController extends AppController {
         $optionsHTML.
 		'    </div>
 		</form>';
-	
 		//if input:...is found
 		while (preg_match('/input:.+:.+/', $doc, $matches) == 1) {	//strpos($doc, 'input:'.':') ==false
-		
 			//$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none;" id='. findcolname($doc) .' name='. findcolname($doc) .'></textarea>' , $doc);
 		
 			$temp = preg_split('/[:]/',$matches[0]);
-		
-			 $doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none; background-color:white;" id='. $temp[1] .' name='. $temp[1] .'></textarea>' , $doc, 1);
-		
+			if ($temp[1] == "ringino")
+			{
+				$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none; background-color:white;" id='. $temp[1] .' name='. $temp[1] .' readonly="true"></textarea>' , $doc, 1);
+
+			}
+			else {
+				$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none; background-color:white;" id='. $temp[1] .' name='. $temp[1] .'></textarea>' , $doc, 1);
+			}
 		}
 		
 		//if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -1129,7 +1193,6 @@ class RingiController extends AppController {
 			//	$this->set('ringiunique',$ringiunique);
 		//	}
 	//	}
-
 		$this->set('doc',$doc);
 		
 		return $doc;
@@ -1185,7 +1248,7 @@ class RingiController extends AppController {
     }	
 	
 
-	public function apply_check () {
+	public function apply_check() {
 		require_once("../Config/uploads.ctp");
 		
 		//Deleted by tei 0730
@@ -1267,16 +1330,18 @@ class RingiController extends AppController {
 		$this->Ringihistory->save($Ringihistory);
 		
 		//Upload file
+		$folderpath = Configure::load('parameters');
+		$dirConfig = Configure::read('directories');
+		$folderpath = $dirConfig['FolderPath'];
 		$ringino=$Attribute['Attribute']['ringino'];
-		$this->exec_in_vendorpath('CreateFolder', $folderpath, $ringino);
-		
+		$this->exec_in_vendorpath('CreateFolder',$folderpath, $ringino);
+
 		if ($_FILES['file']['name']) {
-			$count=0;
-			foreach ($_FILES['file']['name'] as $filename) 
-			{
-				move_uploaded_file( $_FILES['file']['tmp_name'][$count], $folderpath.$ringino."/".$_FILES['file']['name'][$count]);
-				$count++;
-			}
+		$count=0;
+		foreach ($_FILES['file']['name'] as $filename) { 
+		move_uploaded_file($_FILES['file']['tmp_name'][$count],$folderpath.$ringino."/".$_FILES['file']['name'][$count]);
+		                $count++;
+		        }
 		}
 		//echo "<a href=file://".$folderpath.$ringino.">Link to Uploads</a>";
 		$this->redirect(array('action' => 'main_menu'));
@@ -2011,4 +2076,20 @@ class RingiController extends AppController {
 		$this->set($params);
 	}
 	
+	public function uploads(){
+		$ringino=$this->data['ringino'];
+		$this->viewClass = 'Media';
+		        // Download app/outside_webroot_dir/example.zip
+		        $params = array(
+		            'id'        => 'test.png',
+		            'name'      => 'uploads',
+		            'download'  => true,
+		            'extension' => 'zip',
+		            'path'      => APP . 'attachments/'.$ringino . DS
+		        );
+		$this->set($params);
+	}
+	
 }
+
+?>
