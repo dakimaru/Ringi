@@ -1,7 +1,7 @@
 @ECHO OFF
 
-cd %SCRIPTROOT%
 call env_win.cmd
+cd %SCRIPTROOT%
 
 %OPENLDAPROOT%\slapadd -l %OPENLDAPSCHEMAPATH%\core.ldif 
 %OPENLDAPROOT%\ClientTools\ldapmodify -a -h localhost -x -D "%LDAPADMINUSER%" -w %LDAPADMINPASSWORD% -f %USERINFOPATH%\Customer.ldif

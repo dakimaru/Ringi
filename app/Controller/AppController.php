@@ -23,6 +23,8 @@
 App::uses('Controller', 'Controller');
 App::uses('Folder', 'Utility');
 App::uses('File', 'Utility');
+App::uses('PhpReader', 'Configure');
+
 //PHPExcel
 App::import('Vendor','PHPExcel',array('file' => 'excel/phpexcel.php'));
 App::import('Vendor','IOFactory',array('file' => 'excel/PHPExcel/IOFactory.php'));
@@ -77,6 +79,7 @@ class AppController extends Controller {
 
     public function beforeFilter() {
         //$this->Auth->allow();
+		Configure::load('parameters');    
     }
 
     public function isAuthorized($user) {
@@ -87,4 +90,24 @@ class AppController extends Controller {
     //Reject author management
         return false;
     }
+
+	protected function exec_in_vendorpath($command, $arg1='', $arg2=''){
+		
+		//print_r("**exec_in_vendorpath with ". $command );
+		
+		$confDirectory = Configure::read('directories');
+		$working_dir = $confDirectory['ScriptRoot'];
+		
+		$confScript = Configure::read('scripts');
+		$script_to_run = $confScript[$command];
+		$script_to_run = $script_to_run. " ". $arg1. " ". $arg2;
+
+		//print_r( $script_to_run );
+		//print_r( '\n' );
+		
+		chdir( $working_dir );
+		$retval = exec( $script_to_run );
+		
+		return $retval;	
+	}
 }

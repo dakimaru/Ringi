@@ -1,13 +1,13 @@
-@ECHO OFF
+ECHO OFF
 
 call env_win.cmd
-
 cd %SCRIPTROOT%
+
 %MYSQLPATH%\mysql -u root              < %SQLPATH%\dropringidata.sql
 
-createRingiTables.bat
-createUserTable.bat
-createBudgetTables.bat
-createWorkflowTable.bat
-createMasterTable.bat
+cmd /c createRingiTables.bat
+cmd /c createUserTable.bat
+cmd /c createBudgetTables.bat
+cmd /c createWorkflowTable.bat
+cmd /c createMasterTable.bat
 

@@ -1,8 +1,8 @@
 @ECHO OFF
 
-cd %SCRIPTROOT%
 call env_win.cmd
+cd %SCRIPTROOT%
 
 %PYTHONROOT%\python loadUser.py %USERINFOPATH%\%USERTABLE_CSV_FILENAME%
-%SCRIPTROOT%\createLDAPTree.bat
+cmd /c %SCRIPTROOT%\createLDAPTree.bat
 
