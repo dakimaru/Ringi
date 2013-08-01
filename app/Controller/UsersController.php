@@ -245,8 +245,7 @@ class UsersController extends AppController {
 				$userDN = mysql_fetch_assoc($query);
 				
 				$newpassword=$_POST["newpass"];
-				require_once("../Config/uploads.ctp");
-				exec('cd ../Vendor/scripts ; $scr_reset_password "' .$userDN['DN'].'" '.$newpassword);
+				$this->exec_in_vendorpath('ResetPassword', '" '. $userDN['DN']. '"', $newpassword);
 				$this->Session->setFlash(__("The password of ".$_POST["selection"]." was updated successfully"));
 				$this->redirect(array('controller' => 'Ringi', 'action' => 'main_menu'));	
 				

@@ -43,11 +43,9 @@ class RingiController extends AppController {
 	
 	public function setup() {
 
-		require_once("../Config/uploads.ctp");
-
 		//print_r($scr_create_ringi_tables);
-		$exec1 = exec("$scr_create_ringi_tables  2>&1");
-		$exec2 = exec("$scr_import_ad_to_mysql 	 2>&1");
+		$exec1 = $this->exec_in_vendorpath('CreateRingiTable', 	"2>&1");
+		$exec2 = $this->exec_in_vendorpath('LoadUser',			"2>&1");
 		echo "$exec1";
 		echo "$exec2";
 		if ( (!$exec1) && (!$exec2)) {
@@ -663,8 +661,6 @@ class RingiController extends AppController {
 
     // mode=apply or edit
     private function _genApproverFlowHtml($username, $ringiId=null) {
-        // FIXME: specify these as global params
-        $MAX_LAYER = 5;
 
         // generate HTML for options
         $source_html = '
@@ -809,7 +805,12 @@ class RingiController extends AppController {
         }
         $optionsHTML = $dom->saveHTML();
 
-	// TODO
+		// replace remainig APPROVER_X with selectable options
+	/*
+		$wfparam = Configure::read('workflow');
+        for( $i=1; $i<=$wfparam['MaxLayer']; $i++ ){	
+	*/
+		// TODO
         // FIXME remove additional user lists
         //$dom = new DOMDocument;
         //$dom->loadHTML($optionsHTML);
@@ -912,7 +913,7 @@ class RingiController extends AppController {
 	
     }
 
-    private function _create_applicant_with_datefield($ringino){
+    private function _create_applicant($ringino){
         $username = $this->Auth->user('username');
 
         $row = array();
@@ -940,13 +941,13 @@ class RingiController extends AppController {
         	$this->Ringiroute->UpdateAll($updateColumn, $conditions);
 	    	return;
 	}
-	$applicant = $this->_create_applicant_with_datefield($ringino);
+	$applicant = $this->_create_applicant($ringino);
         array_push($rowsToSave, $applicant);
 
 	// save approver
-        // FIXME
-        $MAXLAYER = 5;
-        for( $i=1; $i<=$MAXLAYER; $i++ ){
+		$wfparam = Configure::read('workflow');
+        
+        for( $i=1; $i<=$wfparam['MaxLayer']; $i++ ){
             $keyToVerify = 'APPROVERID_'. $i;
             if( array_key_exists($keyToVerify, $this->data) ){
                 $row = array();
@@ -1044,10 +1045,8 @@ class RingiController extends AppController {
 		$this->Ringihistory->save($Ringihistory);
 		
 		//Upload file
-		require_once("../Config/uploads.ctp");
 		$ringino=$Attribute['Attribute']['ringino'];
-		$cmd = "$scr_create_folder $folderpath $ringino";
-		exec($cmd);
+		$this->exec_in_vendorpath('CreateFolder', $folderpath, $ringino);
 		
 		if ($_FILES['file']['name']) {
 			$count=0;
@@ -1236,10 +1235,8 @@ class RingiController extends AppController {
 		}
 
 		//Upload file
-		require_once("../Config/uploads.ctp");
 		$ringino=$Attribute['Attribute']['ringino'];
-		$cmd = "cd $vendorpath ; $scr_create_folder $folderpath $ringino";
-		exec($cmd);
+		$this->exec_in_vendorpath('CreateFolder', $folderpath, $ringino);
 		
 		if ($_FILES['file']['name']) {
 			$count=0;
@@ -1291,10 +1288,8 @@ class RingiController extends AppController {
 		}
 
 		//Upload file
-		require_once("../Config/uploads.ctp");
 		$ringino=$Attribute['Attribute']['ringino'];
-		$cmd = "cd $vendorpath ; $scr_create_folder  $folderpath $ringino";
-		exec($cmd);
+		$this->exec_in_vendorpath('CreateFolder', $folderpath, $ringino);
 		
 		if ($_FILES['file']['name']) {
 			$count=0;

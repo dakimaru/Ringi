@@ -1,7 +1,7 @@
 @ECHO OFF
 
-cd %SCRIPTROOT%
 call env_win.cmd
+cd %SCRIPTROOT%
 
 %PYTHONROOT%\python %SCRIPTROOT%\convXlsSchemaToSql.py %SCHEMAPATH% budgets > %SQLPATH%\_budgets.sql
 %MYSQLPATH%\mysql -u root              < %SQLPATH%\createdb.sql

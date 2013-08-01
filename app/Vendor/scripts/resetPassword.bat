@@ -1,7 +1,7 @@
 @ECHO OFF
 
-cd %SCRIPTROOT%
 call env_win.cmd
+cd %SCRIPTROOT%
 
 if "%~1"=="" goto ERROR
 if "%~2"=="" goto ERROR
