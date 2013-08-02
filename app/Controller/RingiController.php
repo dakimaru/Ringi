@@ -1088,6 +1088,9 @@ class RingiController extends AppController {
                         if( $matched == $optionKey. '_'. $i ){
 
                             $pulldown = $dom->createElement('select');
+                        	foreach( $selectAttr as $attr=>$val ){
+                            	$pulldown->setAttribute($attr, $val);
+				}
                             $pulldown->setAttribute('name', $matched);
                             $pulldown->setAttribute('id', $matched);
 
@@ -1234,7 +1237,7 @@ class RingiController extends AppController {
 		$wfparam = Configure::read('workflow');
 		for( $i=1; $i<=$wfparam['MaxLayer']; $i++ ){
             $keyToVerify = 'APPROVERID_'. $i;
-            if( array_key_exists($keyToVerify, $this->data) ){
+            if( array_key_exists($keyToVerify, $this->data) && $this->data[$keyToVerify]!="" ){
                 $row = array();
                 $row['ringino']         = $ringino;
                 $row['approverlayer']   = $i;
