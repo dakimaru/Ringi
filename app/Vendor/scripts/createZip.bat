@@ -3,7 +3,11 @@
 call env_win.cmd
 cd %SCRIPTROOT%
 
-compress -R *.* 
+IF EXIST $2\%ATTACHMENT_FILENAME%. (
+    del $2\%ATTACHMENT_FILENAME%.
+)
+
+CScript zip.vbs $1 $2\%ATTACHMENT_FILENAME%
 
 
 

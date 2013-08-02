@@ -6,6 +6,10 @@
 		$shellname = "c:\WINDOWS\system32\cmd.exe /c ";
 		$ext = ".bat";
 	}
+	$config['ldap'] = array(
+		'DefaultDC' 	=> "dc=enspirea,dc=com",
+		'Hostname'		=> "localhost"
+	);
 	
 	$config['directories'] = array(
 		'ScriptRoot' 	=> $_SERVER['DOCUMENT_ROOT']."/Ringi/app/Vendor/scripts/",
@@ -19,7 +23,8 @@
 		'CreateRingiTable'	=> $shellname. "createRingiTables". $ext,
 		'CreateZip'	        => $shellname. "createZip". $ext,
 		'LoadUser'			=> $shellname. "importADToMySql".$ext,
-		'ResetPassword'		=> $shellname. "ResetPassword".$ext
+		'ResetPassword'		=> $shellname. "ResetPassword".$ext,
+		'SynchronizeUser'	=> $shellname. "SynchronizeUser"
 	);
 
 	$config['workflow'] = array(

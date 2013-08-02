@@ -16,6 +16,7 @@ REM data source file names
 set BUDGET_CSV_FILENAME=budget.csv
 set BUDGET_XLS_FILENAME=FAB2012.xlsx
 set USERTABLE_CSV_FILENAME=usertable.csv
+set ATTACHMENT_FILENAME=attachment.zip
 
 REM default system account and passwords
 set DEFAULT_USER_PASSWORD=root
