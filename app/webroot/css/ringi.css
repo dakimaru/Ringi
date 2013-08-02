@@ -239,12 +239,13 @@ overflow-y: scroll;
   background-color: #d0e9c6;
 }
 
-
-
 form div {
 margin-bottom: 0;
-padding: .5em;
+padding: 0;
 vertical-align: text-top;
 }
 
-
+.span3 {  
+    height: 500px !important;
+    overflow: scroll;
+}​

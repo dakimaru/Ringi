@@ -15,6 +15,7 @@ function delet()
 function reapply()
 {
 document.applyForm.action = "reapply";
+
 }
 
 function main(){

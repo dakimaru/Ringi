@@ -66,6 +66,7 @@
 	Router::connect('/user_setting', array('controller' => 'Users', 'action' => 'user_setting', 'user_setting'));
     Router::connect('/report', array('controller' => 'Ringi', 'action' => 'report', 'report'));
     Router::connect('/download', array('controller' => 'Ringi', 'action' => 'download', 'download'));
+	Router::connect('/export', array('controller' => 'Ringi', 'action' => 'export', 'export'));
 
 
 /**
