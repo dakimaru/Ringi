@@ -55,6 +55,7 @@
 			<button class="btn btn-success" type="submit">Submit</button>
 		</div>
 
+		<div class="pre-scrollable">
 		<table class="table table-bordered table-hover" style="margin:0; ">
 			<tr class="success">
 				<td rowspan="2">Year</td>
@@ -80,11 +81,7 @@
 				<td>Nov</td>
 				<td>Dec</td>
 			</tr>
-		</table>
-		<div class="pre-scrollable">
-
-
-			<table class="table table-bordered table-hover">
+			
 				<?php
 			if ($count > 0){
 				for ($entry = 0; $entry < $count; $entry++){
