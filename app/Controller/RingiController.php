@@ -436,31 +436,37 @@ class RingiController extends AppController {
 			$isFirst = true;
 			if($this->data['year'] != ""){
 				$yearCondition = $this->data['year'];
+				$this->set('yearCondition', $yearCondition);
 				$sql = $isFirst?($sql." WHERE A.year = '$yearCondition'") : ($sql." AND A.year = '$yearCondition'");
 				$isFirst = false;
 			}
 			if($this->data['deptCode'] != ""){
 				$deptCondition = $this->data['deptCode'];
+				$this->set('deptCondition', $deptCondition);
 				$sql = $isFirst?($sql." WHERE A.department = '$deptCondition'") : ($sql." AND A.department = '$deptCondition'");
 				$isFirst = false;
 			}
 			if($this->data['lineCode'] != ""){
 				$lineCondition = $this->data['lineCode'];
+				$this->set('lineCondition', $lineCondition);
 				$sql = $isFirst?($sql." WHERE A.linecd = '$lineCondition'") : ($sql." AND A.linecd = '$lineCondition'");
 				$isFirst = false;
 			}
 			if($this->data['project'] != ""){
 				$projCondition = $this->data['project'];
+				$this->set('projCondition', $projCondition);
 				$sql = $isFirst?($sql." WHERE A.project = '$projCondition'") : ($sql." AND A.project = '$projCondition'");
 				$isFirst = false;
 			}
 			if($this->data['acctCode'] != ""){
 				$acctCondition = $this->data['acctCode'];
+				$this->set('acctCondition', $acctCondition);
 				$sql = $isFirst?($sql." WHERE A.accountno = '$acctCondition'") : ($sql." AND A.accountno = '$acctCondition'");
 				$isFirst = false;
 			}
 			if($this->data['purpose'] != ""){
 				$purpCondition = $this->data['purpose'];
+				$this->set('purpCondition', $purpCondition);
 				$sql = $isFirst?($sql." WHERE A.purpose = '$purpCondition'") : ($sql." AND A.purpose = '$purpCondition'");
 				$isFirst = false;
 			}

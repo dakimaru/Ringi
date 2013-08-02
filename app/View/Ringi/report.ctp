@@ -1,12 +1,12 @@
 <div class="container">
 	<h2 align="left">Plan Fixed Asset Budget</h2><br>
-	<form method="post" action="/Ringi/report">
+	<form method="post" action="" name="report" id="report">
 		<div align="center" class="well row-fluid">
 			<div style="padding-right:2%;" class="span2">
 				<fieldset class="control-group">
 					<label class="control-label">Year</label>
 					<div class="controls">
-						<input style="width:100%;" type="text" name="year" value="" id="year">
+						<input style="width:100%;" type="text" name="year" value="<?php if(isset($yearCondition)) echo $yearCondition; ?>" id="year">
 					</div>
 				</fieldset>
 			</div>
@@ -14,7 +14,7 @@
 				<fieldset class="control-group">
 					<label class="control-label">Dept Code</label>
 					<div class="controls">
-						<input style="width:100%;" type="text" name="deptCode" value="" id="deptCode">
+						<input style="width:100%;" type="text" name="deptCode" value="<?php if(isset($deptCondition)) echo $deptCondition; ?>" id="deptCode">
 					</div>
 				</fieldset>
 			</div>
@@ -22,7 +22,7 @@
 				<fieldset class="control-group">
 					<label class="control-label">Line Code</label>
 					<div class="controls">
-						<input style="width:100%;" type="text" name="lineCode" value="" id="lineCode">
+						<input style="width:100%;" type="text" name="lineCode" value="<?php if(isset($lineCondition)) echo $lineCondition; ?>" id="lineCode">
 					</div>
 				</fieldset>
 			</div>
@@ -30,7 +30,7 @@
 				<fieldset class="control-group">
 					<label class="control-label">Project</label>
 					<div class="controls">
-						<input style="width:100%;" type="text" name="project" value="" id="project">
+						<input style="width:100%;" type="text" name="project" value="<?php if(isset($projCondition)) echo $projCondition; ?>" id="project">
 					</div>
 				</fieldset>
 			</div>
@@ -38,7 +38,7 @@
 				<fieldset class="control-group">
 					<label class="control-label">Account Code</label>
 					<div class="controls">
-						<input style="width:100%;" type="text" name="acctCode" value="" id="acctCode">
+						<input style="width:100%;" type="text" name="acctCode" value="<?php if(isset($acctCondition)) echo $acctCondition; ?>" id="acctCode">
 					</div>
 				</fieldset>
 			</div>
@@ -46,15 +46,16 @@
 				<fieldset class="control-group">
 					<label class="control-label">Purpose</label>
 					<div class="controls">
-						<input style="width:100%;" type="text" name="purpose" value="" id="purpose">
+						<input style="width:100%;" type="text" name="purpose" value="<?php if(isset($purpCondition)) echo $purpCondition; ?>" id="purpose">
 					</div>
 				</fieldset>
 			</div>
 		</div>
 		<div align="center" class="well-small " >
-			<button class="btn btn-success" type="submit">Submit</button>
+			<button class="btn btn-success" onclick="Submit()" type="submit">Submit</button>
 		</div>
 
+		<div class="pre-scrollable">
 		<table class="table table-bordered table-hover" style="margin:0; ">
 			<tr class="success">
 				<td rowspan="2">Year</td>
@@ -80,11 +81,7 @@
 				<td>Nov</td>
 				<td>Dec</td>
 			</tr>
-		</table>
-		<div class="pre-scrollable">
-
-
-			<table class="table table-bordered table-hover">
+			
 				<?php
 			if ($count > 0){
 				for ($entry = 0; $entry < $count; $entry++){
@@ -121,11 +118,25 @@
 		</tbody>
 	</table>
 </div>
-
+    <p><input type="submit" onclick="Export()" value="Export"></p>
 </form>
 
-<form action="export" method="get" accept-charset="utf-8">
-	<p><input type="submit" value="Export"></p>
-</form>
 
 </div>
+
+
+<script type="text/javascript" charset="utf-8">
+
+function Export()
+{
+ document.report.action ="export";
+
+}
+
+function Submit()
+{
+document.report.action = "report";
+
+}
+
+</script>
