@@ -8,7 +8,7 @@
 	}
 	$config['ldap'] = array(
 		'DefaultDC' 		=> "dc=enspirea,dc=com",
-		'Hostname'			=> "localhost",
+		'Hostname'			=> "192.168.1.3", // "localhost",
 		'BindDN'			=> 'cn=Manager,dc=enspirea,dc=com',
 		'BindPassword' 		=> '820davis'
 	);

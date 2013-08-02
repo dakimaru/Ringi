@@ -91,7 +91,7 @@ class AppController extends Controller {
         return false;
     }
 
-	protected function exec_in_vendorpath($command, $arg1='', $arg2=''){
+	protected function exec_in_vendorpath($command, $arg1='', $arg2='', $arg3='', $arg4=''){
 		
 		//print_r("**exec_in_vendorpath with ". $command );
 		
@@ -100,7 +100,7 @@ class AppController extends Controller {
 		
 		$confScript = Configure::read('scripts');
 		$script_to_run = $confScript[$command];
-		$script_to_run = $script_to_run. " ". $arg1. " ". $arg2;
+		$script_to_run = $script_to_run. " ". $arg1. " ". $arg2. " ". $arg3. " ". $arg4;
 
 		//print_r( $script_to_run );
 		//print_r( '\n' );

@@ -11,6 +11,6 @@ if "%~3"=="" goto ERROR
 goto END
 
 :ERROR
-echo usage: resetpassword.bat hostname "<DN>" "<new_password>"
+echo usage: resetpassword.bat hostname "DN" "new_password"
 
 :END
