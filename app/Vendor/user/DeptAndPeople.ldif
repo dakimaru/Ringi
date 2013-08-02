@@ -87,3 +87,91 @@ sn: Dimitri Akimaru
 givenName: Dimitri Akimaru
 mail: dakimaru@enspirea.com
 
+dn: uid=test2,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: test2
+cn: test test
+sn: test test
+givenName: test test
+mail: hoge@enspirea.com
+
+dn: uid=test10,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: test10
+cn: test10
+sn: test10
+givenName: test10
+mail: yono@enspirea.com
+
+dn: uid=test3,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: test3
+cn: Test Test
+sn: Test Test
+givenName: Test Test
+mail: test@enspirea.com
+
+dn: uid=test4,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: test4
+cn: test test
+sn: test test
+givenName: test test
+mail: test@enspirea.com
+
+dn: uid=test5,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: test5
+cn: test test
+sn: test test
+givenName: test test
+mail: test@enspirea.com
+
+dn: uid=test11,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: test11
+cn: test test
+sn: test test
+givenName: test test
+mail: test@enspirea.com
+
+dn: uid=ono11,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: ono11
+cn: Test Test
+sn: Test Test
+givenName: Test Test
+mail: test@enspirea.com
+
+dn: uid=ono12,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: ono12
+cn: test test
+sn: test test
+givenName: test test
+mail: test@enspirea.com
+
