@@ -17,8 +17,9 @@
 		'CreateFolder' 		=> $shellname. "createFolder". $ext,
 		'CreateLdap'		=> $shellname. "createLDAPTree". $ext,
 		'CreateRingiTable'	=> $shellname. "createRingiTables". $ext,
+		'CreateZip'	        => $shellname. "createZip". $ext,
 		'LoadUser'			=> $shellname. "importADToMySql".$ext,
-		'ResetPassword'		=> $shellname. "ResetPassworc".$ext
+		'ResetPassword'		=> $shellname. "ResetPassword".$ext
 	);
 
 	$config['workflow'] = array(
