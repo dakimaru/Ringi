@@ -9,7 +9,7 @@ cd $SCRIPTROOT
 #fi
 
 slapadd -l $OPENLDAPSCHEMADIR/core.ldif 
-ldapadd -h localhost -x -D "$LDAPADMINUSER" -w $LDAPADMINPASSWORD -f $USERINFODIR/Customer.ldif
-python convUsertableToLdif.py $USERINFOPATH/$USERTABLE_CSV_FILENAME > $USERINFODIR/DeptAndPeople.ldif
-ldapadd -h localhost -x -w $LDAPADMINPASSWORD -D "$LDAPADMINUSER" -f $USERINFODIR/DeptAndPeople.ldif
+ldapadd -c -h localhost -x -D "$LDAPADMINUSER" -w $LDAPADMINPASSWORD -f $USERINFOPATH/Customer.ldif
+python convUsertableToLdif.py $USERINFOPATH/$USERTABLE_CSV_FILENAME > $USERINFOPATH/DeptAndPeople.ldif
+ldapadd -c -h localhost -x -w $LDAPADMINPASSWORD -D "$LDAPADMINUSER" -f $USERINFOPATH/DeptAndPeople.ldif
 

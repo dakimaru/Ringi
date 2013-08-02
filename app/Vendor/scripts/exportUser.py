@@ -1,3 +1,6 @@
+import codecs
+codecs.register(lambda name: codecs.lookup('utf-8') if name == 'cp65001' else None)
+
 import sys
 import CSVHelper
 import DBHelper
@@ -33,6 +36,6 @@ def usage():
 if len(sys.argv) != 1:
     usage()
     exit()
-
+	
 doit(USERS_TABLENAME, USERS_COLUMNS)
 

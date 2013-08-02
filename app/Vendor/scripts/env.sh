@@ -12,6 +12,7 @@ USERINFOPATH=../user
 SQLPATH=../db
 
 ### data source file names
+ATTACHMENT_FILENAME=attachment.zip
 BUDGET_CSV_FILENAME=budget.csv
 BUDGET_XLS_FILENAME=FAB2012.xlsx
 USERTABLE_CSV_FILENAME=usertable.csv

@@ -88,7 +88,28 @@ class UsersController extends AppController {
 		}
 		$this->set('user', $this->User->read(null, $id));
 	}
-
+	
+	private function get_user_DN($fullname, $department){
+		$ldapConf = Configure::read('ldap');
+		$userDN = 	'CN='. $fullname. 
+					','.
+					'ou='. 	$department. 
+					','.
+					$ldapConf['DefaultDC'];
+		return $userDN;
+	}
+	
+	private function get_manager_DN($managerid){
+		$sql = "SELECT DN FROM users WHERE username='".$managerid."'";
+		$query=mysql_query($sql);
+		$manager = mysql_fetch_assoc($query);
+		if( $manager == NULL ){
+			// this should not happen
+			return 'DN_NOT_FOUND_FOR_THIS_MANAGER';
+		}
+		return $manager['DN'];
+	}
+	
 	public function add() {
 		$connection=$this->openSQLconnection();
 		$username = $this->Auth->user('username');
@@ -107,26 +128,28 @@ class UsersController extends AppController {
 			$email = $this->data['email'];
 			$department = $this->data['department'];
 			$title = $this->data['title'];
-			$manager = $this->data['manager'];
+			$manager = $this->get_manager_DN($this->data['manager']);
 			$activeflag = isset($this->data['activeFlag'])?1:0;
+			$userdn = $this->get_user_DN($fullname, $department);			
 			
-			$sql = "INSERT INTO users (usertype, name, username, mail, department, title, manager, activeflag, creator_id, created_at)
-				VALUES ('$usertype','$fullname','$user','$email', '$department', '$title', '$manager', '$activeflag', '$username', now());";	
+			$sql = "INSERT INTO users (DN, usertype, name, username, mail, department, title, manager, activeflag, creator_id, created_at)
+				VALUES ('$userdn','$usertype','$fullname','$user','$email', '$department', '$title', '$manager', '$activeflag', '$username', now());";	
 
 			$query = mysql_query($sql);
 			if ($query != NULL)
 			{
+				// synchronize user table with LDAP, usertable.csv
+				$this->exec_in_vendorpath('SynchronizeUser');
+				
 				$newPassword = $_POST['newPassword'];
 				$salted_pass = $this->Auth->password($newPassword);			//put salt on password
 				$querynewpass = "UPDATE users SET password='$salted_pass' WHERE username='$user'";
 				//mysql_query($querynewpass) or die(mysql_error());	//overwrite password
 				
-				//$sql="SELECT DN FROM users WHERE username='$user'";
-				//$query = mysql_query($sql);
-				//$userDN = mysql_fetch_assoc($query);
-							
-				//require_once("../Config/uploads.ctp");
-				//exec('cd ../Vendor/scripts ; $scr_reset_password "' .$userDN['DN'].'" '.$newPassword);
+				$ldapConfig = Configure::read('ldap');
+				$ldapHost = $ldapConfig['Hostname'];
+				$this->exec_in_vendorpath('ResetPassword', $ldapHost, '" '. $userdn. '"', $newPassword);
+				
 				$this->Session->setFlash(__("The user was created successfully"));
 			}
 			else{
@@ -233,12 +256,13 @@ class UsersController extends AppController {
 					$querynewpass = "UPDATE users SET password='$salted_pass' WHERE username='$username'"; 
 					//mysql_query($querynewpass) or die(mysql_error());	//overwrite password
 						
-					//$sql="SELECT DN FROM users WHERE username='$username'";
-					//$query = mysql_query($sql);
-					//$userDN = mysql_fetch_assoc($query);
+					$sql="SELECT DN FROM users WHERE username='$username'";
+					$query = mysql_query($sql);
+					$userdn = mysql_fetch_assoc($query);
+					$ldapConfig = Configure::read('ldap');
+					$ldapHost = $ldapConfig['Hostname'];
+					$this->exec_in_vendorpath('ResetPassword', $ldapHost, '" '. $userdn. '"', $newPassword);
 					
-					//require_once("../Config/uploads.ctp");
-					//exec('cd ../Vendor/scripts ; $scr_reset_password "' .$userDN['DN'].'" '.$newPassword);
 					$this->Session->setFlash(__("Your password was updated successfully"));
 					//$this->redirect(array('controller' => 'Users', 'action' => 'password_change'));	
 				}	
@@ -254,12 +278,13 @@ class UsersController extends AppController {
 				$querynewpass = "UPDATE users SET password='$salted_pass' WHERE username='$user'";
 				//mysql_query($querynewpass) or die(mysql_error());	//overwrite password
 				
-				//$sql="SELECT DN FROM users WHERE username='$user'";
-				//$query = mysql_query($sql);
-				//$userDN = mysql_fetch_assoc($query);
-							
-				//require_once("../Config/uploads.ctp");
-				//exec('cd ../Vendor/scripts ; $scr_reset_password "' .$userDN['DN'].'" '.$newPassword);
+				$sql="SELECT DN FROM users WHERE username='$user'";
+				$query = mysql_query($sql);
+				$userdn = mysql_fetch_assoc($query);
+				$ldapConfig = Configure::read('ldap');
+				$ldapHost = $ldapConfig['Hostname'];
+				$this->exec_in_vendorpath('ResetPassword', $ldapHost, '" '. $userdn. '"', $newPassword);
+				
 				$this->Session->setFlash(__("Your password was updated successfully"));
 			}
 		}
@@ -304,8 +329,11 @@ class UsersController extends AppController {
 				$query = mysql_query($sql);
 				$userDN = mysql_fetch_assoc($query);
 				
-				$newpassword=$_POST["newpass"];
-				$this->exec_in_vendorpath('ResetPassword', '" '. $userDN['DN']. '"', $newpassword);
+				$newPassword=$_POST["newpass"];
+				$userdn = $userDN['DN'];
+				$ldapConfig = Configure::read('ldap');
+				$ldapHost = $ldapConfig['Hostname'];
+				$this->exec_in_vendorpath('ResetPassword', $ldapHost, '" '. $userdn . '"', $newPassword);				
 				$this->Session->setFlash(__("The password of ".$_POST["selection"]." was updated successfully"));
 				$this->redirect(array('controller' => 'Ringi', 'action' => 'main_menu'));	
 				

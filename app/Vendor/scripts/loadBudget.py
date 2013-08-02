@@ -149,7 +149,11 @@ def convertKeyToDB(rows,fy):
         for ex,db in BUDGET_EXCEL_TO_DB_CONV.items():
             newrow[db] = row[ex]
         for monStr,monDigit in MASTER_EX_MONTHS.items():
-            newrow[BUDGET_DB_YEAR]   = fy
+            // for Jan-Mar, use actual calendar year
+            if monDigit in [1,2,3]:
+                newrow[BUDGET_DB_YEAR]   = fy + 1
+            else:
+                newrow[BUDGET_DB_YEAR]   = fy
             newrow[BUDGET_DB_MONTH]  = monDigit
             newrow[BUDGET_DB_BUDGET] = row[monStr]
             #print newrow
