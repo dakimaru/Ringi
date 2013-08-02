@@ -695,29 +695,10 @@ class RingiController extends AppController {
 			$this->set('ringino',$ringino);
 			$this->set('resourceflag',$this->data['resourceflag']);
 			$this->displayApplication($ringino);
-			$dir = APP . 'attachments/'.$ringino . DS;
-			if ($this->is_dir_empty($dir)) {
-			  $attachmentflag = 1;
-			}
-			else{
-			  $attachmentflag = 0;
-			}
-			$this->set('attachmentflag',$attachmentflag);
 		}
 		else {
 			$this->redirect(array('action' => 'main_menu'));
 		}
-	}
-
-	public function is_dir_empty($dir) {
-	  if (!is_readable($dir)) return NULL; 
-	  $handle = opendir($dir);
-	  while (false !== ($entry = readdir($handle))) {
-	    if ($entry != "." && $entry != "..") {
-	      return FALSE;
-	    }
-	  }
-	  return TRUE;
 	}
 
 	public function displayApplication($ringino) {
@@ -1107,17 +1088,9 @@ class RingiController extends AppController {
                         if( $matched == $optionKey. '_'. $i ){
 
                             $pulldown = $dom->createElement('select');
-<<<<<<< HEAD
-							
-                        	foreach( $selectAttr as $attr=>$val ){
-                            	$pulldown->setAttribute($attr, $val);
-							}
-							
-=======
                         	foreach( $selectAttr as $attr=>$val ){
                             	$pulldown->setAttribute($attr, $val);
 				}
->>>>>>> a1c61b5d59a77fd47a94328f5501404193c838ec
                             $pulldown->setAttribute('name', $matched);
                             $pulldown->setAttribute('id', $matched);
 
@@ -1860,6 +1833,7 @@ class RingiController extends AppController {
 		  						 and approverID = '".$username."'");
 		$array2 = mysql_fetch_assoc($query2) or die("approverlayer get failure: ". mysql_error());
 		$approverlayer=$array2['approverLayer'];
+		echo "username:".$username." and approverlater: ".$approverlayer;
 		
 		//if layer=1, which means it passed back by first approver -> set back to editing 
 		if ( $approverlayer == 1) {
@@ -2091,22 +2065,34 @@ class RingiController extends AppController {
 	
 	}
 
+	
 	public function download(){
-		$ringino=$this->data['ringino'];
-		$attachment_path = APP . 'attachments/'.$ringino . DS;
-		$this->exec_in_vendorpath('CreateZip', $attachment_path);
-				
-				$this->viewClass = 'Media';
-				        // Download app/outside_webroot_dir/example.zip
-				        $params = array(
-				            'id'        => 'attachment.zip',
-				            'name'      => $ringino.'download',
-				            'download'  => true,
-				            'extension' => 'zip',
-				            'path'      => APP . 'attachments/'.$ringino . DS
-				        );
-				$this->set($params);
+		$this->viewClass = 'Media';
+		        // Download app/outside_webroot_dir/example.zip
+		        $params = array(
+		            'id'        => 'example.zip',
+		            'name'      => 'example',
+		            'download'  => true,
+		            'extension' => 'zip',
+		            'path'      => APP . 'outside_webroot_dir' . DS
+		        );
+		$this->set($params);
 	}
+	
+	public function uploads(){
+		$ringino=$this->data['ringino'];
+		$this->viewClass = 'Media';
+		        // Download app/outside_webroot_dir/example.zip
+		        $params = array(
+		            'id'        => 'test.png',
+		            'name'      => 'uploads',
+		            'download'  => true,
+		            'extension' => 'zip',
+		            'path'      => APP . 'attachments/'.$ringino . DS
+		        );
+		$this->set($params);
+	}
+	
 }
 
 ?>

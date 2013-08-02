@@ -3,9 +3,10 @@
 function authenticate($user, $pass) {
 	
 	//ldap credentials
-	$ldap_host = "192.168.1.3";
-	$ldapuser      = 'cn=Manager,dc=enspirea,dc=com';  
-	$ldappass     = '820davis';
+	$ldapConfig 	= Configure::read('ldap');
+	$ldap_host 		= $ldapConfig['Hostname'];
+	$ldapuser  		= $ldapConfig['BindDN']; 
+	$ldappass  		= $ldapConfig['BindPassword'];
 	
 	//MySQL credentials
 	$host = 'localhost';

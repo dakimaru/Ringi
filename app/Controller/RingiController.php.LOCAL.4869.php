@@ -1107,17 +1107,11 @@ class RingiController extends AppController {
                         if( $matched == $optionKey. '_'. $i ){
 
                             $pulldown = $dom->createElement('select');
-<<<<<<< HEAD
 							
                         	foreach( $selectAttr as $attr=>$val ){
                             	$pulldown->setAttribute($attr, $val);
 							}
 							
-=======
-                        	foreach( $selectAttr as $attr=>$val ){
-                            	$pulldown->setAttribute($attr, $val);
-				}
->>>>>>> a1c61b5d59a77fd47a94328f5501404193c838ec
                             $pulldown->setAttribute('name', $matched);
                             $pulldown->setAttribute('id', $matched);
 

@@ -7,8 +7,10 @@
 		$ext = ".bat";
 	}
 	$config['ldap'] = array(
-		'DefaultDC' 	=> "dc=enspirea,dc=com",
-		'Hostname'		=> "localhost"
+		'DefaultDC' 		=> "dc=enspirea,dc=com",
+		'Hostname'			=> "localhost",
+		'BindDN'			=> 'cn=Manager,dc=enspirea,dc=com',
+		'BindPassword' 		=> '820davis'
 	);
 	
 	$config['directories'] = array(
