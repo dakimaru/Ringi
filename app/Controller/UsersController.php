@@ -280,11 +280,16 @@ class UsersController extends AppController {
 				
 				$sql="SELECT DN FROM users WHERE username='$user'";
 				$query = mysql_query($sql);
-				$userdn = mysql_fetch_assoc($query);
+				$user = mysql_fetch_assoc($query);
+				$userdn = $user['DN'];
 				$ldapConfig = Configure::read('ldap');
 				$ldapHost = $ldapConfig['Hostname'];
-				$this->exec_in_vendorpath('ResetPassword', $ldapHost, '" '. $userdn. '"', $newPassword);
 				
+				$return = $this->exec_in_vendorpath('ResetPassword', 
+													'"'. $ldapHost. '"', 
+													'"'. $userdn. '"', 
+													'"'. $newPassword. '"');
+				print_r($return);
 				$this->Session->setFlash(__("Your password was updated successfully"));
 			}
 		}
