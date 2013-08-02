@@ -7,12 +7,12 @@
 
 function delet()
 {
- document.applyForm.action ="ringi/delete";
+ document.applyForm.action ="delete";
 }
 
 function reapply()
 {
-document.applyForm.action = "ringi/reapply";
+document.applyForm.action = "reapply";
 document.applyForm.onsubmit="return main()";		//was deleted but not saved
 }
 

@@ -388,6 +388,42 @@ class RingiController extends AppController {
 	}
 	
 	public function report(){
+		$query=$this->reportQuery();
+		$count = -1;
+		if ($query != NULL){
+			$count = mysql_num_rows($query)/12;
+		}
+				
+		$this->set('count', $count);
+		if ($count > 0){
+			for ($entry = 0; $entry < $count; $entry++){
+				for ($month = 0 ; $month < 12; $month++){
+					$array = mysql_fetch_assoc($query);
+					$budget[$entry][$month] = $array['budget'];
+					$application[$entry][$month] = $array['application'];
+				}
+				$year[$entry] = $array['year'];
+				$department[$entry] = $array['department'];
+				$linecd[$entry] = $array['linecd'];
+				$project[$entry] = $array['project'];
+				$accountno[$entry] = $array['accountno'];
+				$purpose[$entry] = $array['purpose'];
+				
+			}
+			$this->set('year', $year);
+			$this->set('department', $department);
+			$this->set('linecd', $linecd);
+			$this->set('project', $project);
+			$this->set('accountno', $accountno);
+			$this->set('purpose', $purpose);
+			$this->set('budget', $budget);
+			$this->set('application', $application);
+			$this->set('query',$query);
+		}
+
+	}
+	
+	public function reportQuery(){
 		$connection=$this->openSQLconnection();
 		$sql = "SELECT A.year, A.department, A.linecd, A.project, A.accountno, A.purpose, A.month,sum(A.budget) budget, Sum(A.application) application 
 			FROM (SELECT year,department, linecd,project,accountno,purpose,month,budget,0 application,benefit
@@ -430,41 +466,52 @@ class RingiController extends AppController {
 			}
 			
 			
-				
-			
 		}
 		
 		$sql = $sql." GROUP BY A.year, A.department, A.linecd, A.project, A.accountno, A.purpose, A.month";
 		$count = -1;
 		$query = mysql_query("$sql");
-		if ($query != NULL){
-			$count = mysql_num_rows($query)/12;
+		return $query;
+		
+	}
+	
+	public function export (){
+		$query=$this->reportQuery();
+		$count = 2;
+		$objPHPExcel = new PHPExcel();
+
+		$objPHPExcel->setActiveSheetIndex(0)
+		            ->setCellValue('A1', 'Year')
+		            ->setCellValue('B1', 'Department')
+		            ->setCellValue('C1', 'Line Code')
+		            ->setCellValue('D1', 'Project')
+					->setCellValue('E1', 'Account No')
+					->setCellValue('F1', 'Purpose')
+		            ->setCellValue('G1', 'Month')
+		            ->setCellValue('H1', 'Budget')
+		            ->setCellValue('I1', 'Application');
+
+		while($tmp = mysql_fetch_assoc($query)){
+					$objPHPExcel->getActiveSheet()->setCellValue("A$count", "$tmp[year]");
+					$objPHPExcel->getActiveSheet()->setCellValue("B$count", "$tmp[department]");
+					$objPHPExcel->getActiveSheet()->setCellValue("C$count", "$tmp[linecd]");
+					$objPHPExcel->getActiveSheet()->setCellValue("D$count", "$tmp[project]");
+					$objPHPExcel->getActiveSheet()->setCellValue("E$count", "$tmp[accountno]");
+					$objPHPExcel->getActiveSheet()->setCellValue("F$count", "$tmp[purpose]");
+					$objPHPExcel->getActiveSheet()->setCellValue("G$count", "$tmp[month]");
+					$objPHPExcel->getActiveSheet()->setCellValue("H$count", "$tmp[budget]");
+					$objPHPExcel->getActiveSheet()->setCellValue("I$count", "$tmp[application]");
+					$count++;
 		}
-		$this->set('count', $count);
-		if ($count > 0){
-			for ($entry = 0; $entry < $count; $entry++){
-				for ($month = 0 ; $month < 12; $month++){
-					$array = mysql_fetch_assoc($query);
-					$budget[$entry][$month] = $array['budget'];
-					$application[$entry][$month] = $array['application'];
-				}
-				$year[$entry] = $array['year'];
-				$department[$entry] = $array['department'];
-				$linecd[$entry] = $array['linecd'];
-				$project[$entry] = $array['project'];
-				$accountno[$entry] = $array['accountno'];
-				$purpose[$entry] = $array['purpose'];
-				
-			}
-			$this->set('year', $year);
-			$this->set('department', $department);
-			$this->set('linecd', $linecd);
-			$this->set('project', $project);
-			$this->set('accountno', $accountno);
-			$this->set('purpose', $purpose);
-			$this->set('budget', $budget);
-			$this->set('application', $application);
-		}
+
+
+		header('Content-Type: application/vnd.ms-excel');
+		header('Content-Disposition: attachment;filename="Export.xls"');
+		header('Cache-Control: max-age=0');
+
+		$objWriter = PHPExcel_IOFactory::createWriter($objPHPExcel, 'Excel5');
+		$objWriter->save('php://output');
+		exit;
 	}
 	
 	public function upload_layout() {}
