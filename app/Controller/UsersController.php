@@ -89,9 +89,9 @@ class UsersController extends AppController {
 		$this->set('user', $this->User->read(null, $id));
 	}
 	
-	private function get_user_DN($fullname, $department){
+	private function get_user_DN($username, $department){
 		$ldapConf = Configure::read('ldap');
-		$userDN = 	'CN='. $fullname. 
+		$userDN = 	'uid='. $username. 
 					','.
 					'ou='. 	$department. 
 					','.
@@ -130,7 +130,7 @@ class UsersController extends AppController {
 			$title = $this->data['title'];
 			$manager = $this->get_manager_DN($this->data['manager']);
 			$activeflag = isset($this->data['activeFlag'])?1:0;
-			$userdn = $this->get_user_DN($fullname, $department);			
+			$userdn = $this->get_user_DN($user, $department);			
 			
 			$sql = "INSERT INTO users (DN, usertype, name, username, mail, department, title, manager, activeflag, creator_id, created_at)
 				VALUES ('$userdn','$usertype','$fullname','$user','$email', '$department', '$title', '$manager', '$activeflag', '$username', now());";	
@@ -139,7 +139,10 @@ class UsersController extends AppController {
 			if ($query != NULL)
 			{
 				// synchronize user table with LDAP, usertable.csv
-				$this->exec_in_vendorpath('SynchronizeUser');
+				$ldapConfig = Configure::read('ldap');
+				$ldapHost = $ldapConfig['Hostname'];		
+				$retval = $this->exec_in_vendorpath('SynchronizeUser', $ldapHost);
+				print_r($retval);
 				
 				$newPassword = $_POST['newPassword'];
 				$salted_pass = $this->Auth->password($newPassword);			//put salt on password
