@@ -7,17 +7,19 @@
 
 function delet()
 {
- document.applyForm.action ="ringi/delete";
+ document.applyForm.action ="delete";
+ document.applyForm.onsubmit="";		//was deleted but not saved
+
 }
 
 function reapply()
 {
-document.applyForm.action = "ringi/reapply";
-document.applyForm.onsubmit="return main()";		//was deleted but not saved
+document.applyForm.action = "reapply";
 }
 
 function main(){
-	return (nullCheck("ringino") &&
+	return (
+                nullCheck("ringino") &&
                 nullCheck("linecd") &&
                 doubleCheck("assetdept","expensedept")&&
                 nullCheck("project") &&
@@ -33,7 +35,8 @@ function main(){
                 doubleCheck("asset","expense")&&
                 typeCheck("asset")&&
                 typeCheck("expense")&&
-        	doubleCheck("assetaccountno","expenseaccountno"));
+        	doubleCheck("assetaccountno","expenseaccountno") &&
+                nullCheck("APPROVERID_1"));
 }	
 function nullCheck(var1){
 	//var input = ["ringino","linecd","project","purpose"];
@@ -42,7 +45,7 @@ function nullCheck(var1){
 	if (x==null || x=="") {
 		document.getElementById(var1).style.border = "2px solid #ff0000";
 		document.getElementById(var1).focus();
-		document.getElementById(var1).select();
+		//document.getElementById(var1).select();
                 
 		alert("Fill out all necessary fields");
 		return false;

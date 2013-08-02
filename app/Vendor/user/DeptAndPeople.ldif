@@ -87,91 +87,102 @@ sn: Dimitri Akimaru
 givenName: Dimitri Akimaru
 mail: dakimaru@enspirea.com
 
-dn: uid=test2,ou=Enspirea_IL,dc=enspirea,dc=com
+dn: uid=eeee,ou=Enspirea_IL,dc=enspirea,dc=com
 objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-uid: test2
-cn: test test
-sn: test test
-givenName: test test
-mail: hoge@enspirea.com
+uid: eeee
+cn: eeee
+sn: eeee
+givenName: eeee
+mail: eeee
 
-dn: uid=test10,ou=Enspirea_IL,dc=enspirea,dc=com
+dn: uid=6666,ou=Enspirea_IL,dc=enspirea,dc=com
 objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-uid: test10
-cn: test10
-sn: test10
-givenName: test10
-mail: yono@enspirea.com
+uid: 6666
+cn: 6666
+sn: 6666
+givenName: 6666
+mail: 6666
 
-dn: uid=test3,ou=Enspirea_IL,dc=enspirea,dc=com
+dn: uid=newuser_ono,ou=Enspirea_IL,dc=enspirea,dc=com
 objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-uid: test3
-cn: Test Test
-sn: Test Test
-givenName: Test Test
-mail: test@enspirea.com
-
-dn: uid=test4,ou=Enspirea_IL,dc=enspirea,dc=com
-objectClass: top
-objectClass: person
-objectClass: organizationalPerson
-objectClass: inetOrgPerson
-uid: test4
+uid: newuser_ono
 cn: test test
 sn: test test
 givenName: test test
 mail: test@enspirea.com
 
-dn: uid=test5,ou=Enspirea_IL,dc=enspirea,dc=com
+dn: uid=newuser_ono,ou=Enspirea_IL,dc=enspirea,dc=com
 objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-uid: test5
+uid: newuser_ono
 cn: test test
 sn: test test
 givenName: test test
 mail: test@enspirea.com
 
-dn: uid=test11,ou=Enspirea_IL,dc=enspirea,dc=com
+dn: uid=onotest111,ou=Enspirea_IL,dc=enspirea,dc=com
 objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-uid: test11
+uid: onotest111
 cn: test test
 sn: test test
 givenName: test test
 mail: test@enspirea.com
 
-dn: uid=ono11,ou=Enspirea_IL,dc=enspirea,dc=com
+dn: uid=3333,ou=Enspirea_IL,dc=enspirea,dc=com
 objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-uid: ono11
-cn: Test Test
-sn: Test Test
-givenName: Test Test
-mail: test@enspirea.com
+uid: 3333
+cn: 3333
+sn: 3333
+givenName: 3333
+mail: 3333
 
-dn: uid=ono12,ou=Enspirea_IL,dc=enspirea,dc=com
+dn: uid=7777,ou=Enspirea_IL,dc=enspirea,dc=com
 objectClass: top
 objectClass: person
 objectClass: organizationalPerson
 objectClass: inetOrgPerson
-uid: ono12
-cn: test test
-sn: test test
-givenName: test test
-mail: test@enspirea.com
+uid: 7777
+cn: 7777
+sn: 7777
+givenName: 7777
+mail: 7777
+
+dn: uid=7777,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: 7777
+cn: 7777
+sn: 7777
+givenName: 7777
+mail: 7777
+
+dn: uid=9999,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: 9999
+cn: 9999
+sn: 9999
+givenName: 9999
+mail: 9999
 

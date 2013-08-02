@@ -1,6 +1,6 @@
 REM third party location
 set MYSQLPATH=C:\xampp\mysql\bin
-set PYTHONROOT="C:\Program Files (x86)\python27"
+set PYTHONROOT=C:\python27
 set OPENLDAPROOT=C:\OpenLDAP
 
 REM ringi configuration

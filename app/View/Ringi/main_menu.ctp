@@ -320,7 +320,7 @@
 											if ($ringiStatus[$i]=="001") {
 												echo '
 												<form action="edit" method="post" accept-charset="utf-8">
-													<input type="hidden" name="ringi_number" value="$ringino[$i]" id="ringi_number">
+													<input type="hidden" name="ringi_number" value="'.$ringino[$i].'" id="ringi_number">
 													<button class="btn btn-small">Continue</button>
 												</form>
 											';
@@ -398,7 +398,7 @@
 											if ($ringiStatus[$i]=="001") {
 												echo '
 												<form action="edit" method="post" accept-charset="utf-8">
-													<input type="hidden" name="ringi_number" value="$ringino[$i]" id="ringi_number">
+													<input type="hidden" name="ringi_number" value="'.$ringino[$i].'" id="ringi_number">
 													<button class="btn btn-small">Continue</button>
 												</form>
 											';
@@ -475,7 +475,7 @@
 											if ($ringiStatus[$i]=="001") {
 												echo '
 												<form action="edit" method="post" accept-charset="utf-8">
-													<input type="hidden" name="ringi_number" value="$ringino[$i]" id="ringi_number">
+													<input type="hidden" name="ringi_number" value="'.$ringino[$i].'" id="ringi_number">
 													<button class="btn btn-small">Continue</button>
 												</form>
 											';
@@ -552,7 +552,7 @@
 											if ($ringiStatus[$i]=="001") {
 												echo '
 												<form action="edit" method="post" accept-charset="utf-8">
-													<input type="hidden" name="ringi_number" value="$ringino[$i]" id="ringi_number">
+													<input type="hidden" name="ringi_number" value="'.$ringino[$i].'" id="ringi_number">
 													<button class="btn btn-small">Continue</button>
 												</form>
 											';
@@ -629,7 +629,7 @@
 											if ($ringiStatus[$i]=="001") {
 												echo '
 												<form action="edit" method="post" accept-charset="utf-8">
-													<input type="hidden" name="ringi_number" value="$ringino[$i]" id="ringi_number">
+													<input type="hidden" name="ringi_number" value="'.$ringino[$i].'" id="ringi_number">
 													<button class="btn btn-small">Continue</button>
 												</form>
 											';
@@ -706,7 +706,7 @@
 											if ($ringiStatus[$i]=="001") {
 												echo '
 												<form action="edit" method="post" accept-charset="utf-8">
-													<input type="hidden" name="ringi_number" value="$ringino[$i]" id="ringi_number">
+													<input type="hidden" name="ringi_number" value="'.$ringino[$i].'" id="ringi_number">
 													<button class="btn btn-small">Continue</button>
 												</form>
 											';

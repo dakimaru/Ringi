@@ -1376,6 +1376,7 @@ class RingiController extends AppController {
 	public function edit() {
 
 		$ringino = $this->data['ringi_number'];
+		echo $ringino;
 		$username = $this->Auth->user('username');
 		$this->set('ringino',$ringino);
 		$this->set('status',$this->Auth->user('status'));
@@ -1384,7 +1385,6 @@ class RingiController extends AppController {
 
 
         // FIXME
-        echo $ringino;
         $query = "SELECT * FROM ATTRIBUTES WHERE ringino = $ringino";
         $sql = mysql_query($query);
         $array = mysql_fetch_assoc($sql);
@@ -1427,7 +1427,7 @@ class RingiController extends AppController {
         }
 		$approvalFlow = $this->_genApproverFlowHtmlWithId($username, $ringino);
 		
-        $formstart = '<form name="applyForm" method="post" action="" onsubmit="" enctype="multipart/form-data">';
+        $formstart = '<form name="applyForm" method="post" action="" onsubmit="return main()"" enctype="multipart/form-data">';
 
         $doc =  $formstart .
                 $dom->saveHTML().

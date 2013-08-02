@@ -29,7 +29,8 @@ function main(){
             doubleCheck("asset","expense")&&
             typeCheck("asset")&&
             typeCheck("expense")&&
-            doubleCheck("assetaccountno","expenseaccountno"))
+            doubleCheck("assetaccountno","expenseaccountno") &&
+            nullCheck("APPROVERID_1"))
         {
             return true;
         }
@@ -45,7 +46,7 @@ function nullCheck(var1){
 	if (x==null || x=="") {
 		document.getElementById(var1).style.border = "2px solid #ff0000";
 		document.getElementById(var1).focus();
-		document.getElementById(var1).select();
+		//document.getElementById(var1).select();
 		alert("Fill out all necessary fields");
 		return false;
 	}
