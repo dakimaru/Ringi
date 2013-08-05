@@ -1,0 +1,1 @@
+<p class="well alert alert-success"><?php echo $message;?></p>
