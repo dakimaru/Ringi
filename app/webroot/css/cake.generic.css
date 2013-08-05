@@ -5,7 +5,7 @@
 html,body {
 	/*min-width:256px;*/
 	height:100%; /*needed because otherwise the footer will not work properly. If you just leave out, will not work for safari.*/
-	
+	background-color:#96D2D6;
 	/*
 	background-repeat: repeat;
 	background-image:url('header/body_texture.jpg');
@@ -36,7 +36,9 @@ pre {
 }
 
 .wrapper {
-	background-image:url('/Ringi/app/webroot/img/clouds.png');
+	background-image:url('/Ringi/app/webroot/img/backgrounds.png');
+	background-size:100%;
+	background-repeat: no-repeat;
 	min-height: 100%;
 	height: auto !important;
 	height: 100%;
@@ -725,3 +727,4 @@ pre {
 #url-rewriting-warning {
 	display:none;
 }
+

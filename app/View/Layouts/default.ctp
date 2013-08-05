@@ -37,12 +37,12 @@
 						<span class="icon-bar"></span>
 						<span class="icon-bar"></span>
 					</button>
-					<a class="brand" href="/Ringi/main_menu"><strong><i>Home</i></strong></a>
+					<a class="brand" href="/Ringi/main_menu"><strong><img class="" src="/Ringi/app/webroot/img/home_btn.png" width="30%"><i>Home</i></strong></a>
 					<div class="nav-collapse collapse" >
 						<ul class="nav" >					
-							<li ><a href="/Ringi/task"><strong>@Task</strong></a></li>
-							<li ><a href="/Ringi/other"><strong>&Other</strong></a></li>
-							<li ><a href="/Ringi/report"><strong>#Report</strong></a></li>
+							<li ><a href="/Ringi/task"><strong><img class="" src="/Ringi/app/webroot/img/task.png" width="30%">Task</strong></a></li>
+							<li ><a href="/Ringi/other"><strong><img class="" src="/Ringi/app/webroot/img/other.png" width="28%">Other</strong></a></li>
+							<li ><a href="/Ringi/report"><strong><img class="" src="/Ringi/app/webroot/img/report.png" width="30%">Report</strong></a></li>
 						</ul>
 					</div>
 					<ul class="nav pull-right">
@@ -50,6 +50,7 @@
 							<input type="text" class="search-query" placeholder="Search">
 						</form>
 						<a class="btn btn-inverse dropdown-toggle" data-toggle="dropdown" href="#">
+							<img src="/Ringi/app/webroot/img/gear.jpg" width="25">
 							<span class="caret"></span>
 						</a>
 
@@ -79,21 +80,24 @@
 								echo('<a tabindex="-1" href="/Ringi/users/login">Login</a>');						
 							}
 							?>
-						</li>						
+							</li>						
+						</ul>
+						<a class="create" style="display:inline;" href="/Ringi/apply">
+							<img class="" src="/Ringi/app/webroot/img/create.png" width="30">
+						</a>
+
 					</ul>
-						<a href="/Ringi/apply" class="btn">Create</a>
-				</ul>
+				</div>
 			</div>
 		</div>
+		
+		<div class="container" style="padding:15px;background-color:rgba(255,255,255,0.3);">
+			<div style="height:3em;"></div>
+			<?php echo $this->Session->flash(); ?>
+				<?php echo $content_for_layout; ?>
+		</div>
+		<div class="push"></div>	
 	</div>
-	<div style="height:3em;"></div>
-	<div class="container">
-
-		<?php echo $this->Session->flash(); ?>
-		<?php echo $content_for_layout; ?>
-	</div>
-	<div class="push"></div>	
-</div>
 <footer>
 	<div class="text-center"> &copy 2013 ENSPIREA, LLC</div>
 </footer>

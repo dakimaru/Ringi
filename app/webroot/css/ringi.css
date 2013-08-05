@@ -155,6 +155,13 @@ fixed_width {
   border-Right-color:#eeeeee;
 }
 
+.topBorder
+{
+  border-Top-width:1px;
+  border-Top-style:solid;
+  border-Top-color:#eeeeee;
+}
+
 
 .padding{
   padding:20px
@@ -244,4 +251,71 @@ margin-bottom: 0;
 padding: 0;
 vertical-align: text-top;
 }
+/*
+a.create {background-image:url("/Ringi/app/webroot/img/create_mo.png"); 
+  background-repeat: no-repeat; background-size:100%; background-position: 20 0;}
+a.create:hover img {visibility:hidden;}
+*/
+.nav-tabs>li>a, .nav-pills>li>a {
+padding: 10px 8px;
+margin: 0px;
+color: #ccc;
+font-weight: lighter;
+font-size: 18px;
+}
+.nav-tabs>li>a:hover, .nav-tabs>li>a:focus{
+color: #0C96A6;
+}
+
+
+.nav-tabs>li{
+margin:0px;
+}
+
+.nav-tabs>.active>a, .nav-tabs>.active>a:hover, .nav-tabs>.active>a:focus {
+color: #0C96A6;
+cursor: default;
+background-color: #fff;
+border: 1px solid #ddd;
+border-bottom-color: transparent;
+}
+
+
+ul.nav.nav-tabs{
+border-bottom: none;
+margin: 0;
+}
+
+.application {
+	-moz-box-shadow: 0px 0px 0px -49px #ffffff;
+	-webkit-box-shadow: 0px 0px 0px -49px #ffffff;
+	box-shadow: 0px 0px 0px -49px #ffffff;
+	background-color:transparent;
+	display:inline-block;
+	color:#000000;
+	font-family:arial;
+	font-size:14px;
+	font-weight:bold;
+	padding:6px 24px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #ffffff;
+}.application:active {
+	position:relative;
+	top:1px;
+}
+
+
+
+button.btn-trans, button.btn-trans:hover, button.btn-trans:focus, button.btn-trans:active{
+  background: transparent;
+  border: none !important;
+  box-shadow: none;
+  color: #0C96A6;
+}
+
+.navbar .nav>li>a {
+ padding: 10px 5px;
+}
+
+
 

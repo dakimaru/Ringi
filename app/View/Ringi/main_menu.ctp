@@ -32,11 +32,13 @@
 						</p>
 					</div>
 					<div class="span5 paddingTop">
-						<h4 href="#"><?php echo $name; ?></h4>
-						<h5 href=#><?php echo $title; echo " ";echo $department; ?></h5>
+						<h4 align="left" href="#"><?php echo $name; ?></h4>
+						<h5 align="left" style="color:#888;" href="#"><?php echo $title; echo " ";echo $department; ?></h5>
 					</div>
 					<div class="span4 paddingTop">
-						<a href="/Ringi/apply" class="btn">Create</a>
+						<a href="/Ringi/apply">
+							<img class="" src="/Ringi/app/webroot/img/create.png" width="50">
+						</a>
 					</div>
 				</div>
 				<div class="bottomBorder row-fluid">
@@ -57,7 +59,7 @@
 							<p>In Progress</p>
 						</div>
 				</div>
-				<div class="row-fluid  paddingTop">
+				<!--<div class="row-fluid  paddingTop">
 					<div class="span4" >
 						<ul class="nav nav-pills">
 							<li>
@@ -109,7 +111,7 @@
 							</li>
 						</ul>
 					</div>
-				</div>
+				</div>-->
 			</div>
 			<div class="well well-large">
 				<div class="row-fluid">
@@ -132,6 +134,18 @@
 									
 								</div>';
 				  ?>
+			</div>
+			<div class="well">
+				<div class="bottomBorder row-fluid">
+					<div class="span3 paddingTop">
+						<p >
+							<img class="" src="/Ringi/app/webroot/img/enspirea.png" width="70">
+						</p>
+					</div>
+					<div class="span7" style="color:#888; padding-top:25px; ">
+						<h4 align="left" style="font-weight:500;">ENSPIREA LLC's APPROVE</h4>
+					</div>
+				</div>
 			</div>
 			<?php 
 			$user = $this->Session->read('Auth.User');
@@ -164,6 +178,7 @@
 			</div>
 			');}
 			?>
+			
 			<div class="well">
 				<ul class="clearfix paddingTop">
 					<li class="inline">&copy 2013 Enspirea</li>
@@ -203,14 +218,11 @@
 				      	<?php for ($i = 0 ; $i < $applicationCount; $i++){
 						if ($ringiStatus[$i] != '005'){
 							echo '
-								<div class="well">
+								
+								<div class="well-small topBorder">
 									<div class="row-fluid">
-										<div class="span2">
-											<div>
-												<img src="/Ringi/app/webroot/img/enspirea.png" width="80">
-											</div>
-										</div>
-										<div class="span10">
+										<div class="span11 offset1">
+											
 											<div>
 												<p>Application Title:'.$ringiName[$i].'</p>
 											</div>
@@ -233,42 +245,45 @@
 													<p>Remaining Budget: $'.$remain[$i].'</p>
 												</div>
 											</div>
+											<div>
+												<p>Status:'.$ringiStatusName[$i].'</p>
+											</div>
 											<div class="row-fluid">
-												<div class="span8">
-													<p>Status:'.$ringiStatusName[$i].'</p>
-												</div>
-												<div class="span2">';
+												<div class="span6">
+													<form action="application_details" method="post" accept-charset="utf-8">
+														<input type="hidden" name="ringiNo" value="'.$ringino[$i].'" id="ringiNo">
+														<input type="hidden" name="resourceflag" value="home" id="resourceflag">
+														<button class="btn btn-trans"><img src="/Ringi/app/webroot/img/detail_icon.png" width="30"> Details</button>
+													</form>
+												</div>';
+												
 													if ($ringiStatus[$i]=="001") {
 														echo '
+												<div class="span5">
 														<form action="edit" method="post" accept-charset="utf-8">
 															<input type="hidden" name="ringi_number" value="'.$ringino[$i].'" id="ringi_number">
-															<button class="btn btn-small">Continue</button>
+															<button class="btn btn-trans"><img src="/Ringi/app/webroot/img/process_icon.png" width="30" > Continue</button>
 														</form>
+												</div>
 												';
 													}
 													elseif ($ringiStatus[$i]=="002" && ($ringiaction[$i]=="001" || $ringiaction[$i]=="012")){
 													
 													echo '
+												<div class="span6">
 													<form action="pattern3" method="post" accept-charset="utf-8">
 														<input type="hidden" name="ringi_number" value="'.$ringino[$i].'" id="ringi_number">
 														<input type="hidden" name="status" value="'.$ringiStatus[$i].'" id="status">
 														<input type="hidden" name="resourceflag" value="home" id="resourceflag">
-														<button class="btn btn-small">Cancel</button>
+														<button class="btn btn-trans" ><img src="/Ringi/app/webroot/img/process_icon.png" width="30" > Cancel</button>
 													</form>
+												</div>
 												';
 													}
 													else {
-														echo ' ';
+														;
 													}
 													echo '
-												</div>
-												<div class="span2">
-													<form action="application_details" method="post" accept-charset="utf-8">
-														<input type="hidden" name="ringiNo" value="'.$ringino[$i].'" id="ringiNo">
-														<input type="hidden" name="resourceflag" value="home" id="resourceflag">
-														<button class="btn btn-small">Details</button>
-													</form>
-												</div>
 											</div>
 										</div>
 									</div>
