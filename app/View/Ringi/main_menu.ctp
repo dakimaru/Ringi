@@ -31,13 +31,13 @@
 							<img class="" src="/Ringi/app/webroot/img/enspirea.png" width="70">
 						</p>
 					</div>
-					<div class="span5 paddingTop">
+					<div class="span6 paddingTop">
 						<h4 align="left" href="#"><?php echo $name; ?></h4>
 						<h5 align="left" style="color:#888;" href="#"><?php echo $title; echo " ";echo $department; ?></h5>
 					</div>
-					<div class="span4 paddingTop">
+					<div class="span3 paddingTop">
 						<a href="/Ringi/apply">
-							<img class="" src="/Ringi/app/webroot/img/create.png" width="50">
+							<img class="" src="/Ringi/app/webroot/img/create.png" width="60">
 						</a>
 					</div>
 				</div>
@@ -154,25 +154,25 @@
 			<div class="well">
 				<div class="row-fluid paddingTop paddingBottom">
 					<div class="span4 offset1">
-						<a href="/Ringi/Users/password_change" class="btn" style="font-weight:normal">Password Reset</a>
+						<a href="/Ringi/Users/password_change" class="btn btn-trans" style="font-weight:normal;color:#888;">Password Reset</a>
 					</div> 
 					<div class="span3">
-						<a href="/Ringi/upload_layout" class="btn" style="font-weight:normal">Upload Excel</a>
+						<a href="/Ringi/upload_layout" class="btn btn-trans" style="font-weight:normal;color:#888;">Upload Excel</a>
 					</div>
 					<div class="span3">
-						<a href="/Ringi/Users/add"class="btn" style="font-weight:normal">Add User</a>
+						<a href="/Ringi/Users/add"class="btn btn-trans" style="font-weight:normal;color:#888;">Add User</a>
 					</div>
 					
 				</div>
 				<div class="row-fluid paddingBottom">
 					<div class="span4 offset1">
-						<a href="#" class="btn" style="font-weight:normal">Japanese1</a>
+						<a href="#" class="btn btn-trans" style="font-weight:normal;color:#888;">Japanese1</a>
 					</div>
 					<div class="span3">
-						<a href="#" class="btn" style="font-weight:normal">Japanese2</a>
+						<a href="#" class="btn btn-trans" style="font-weight:normal;color:#888;">Japanese2</a>
 					</div>
 					<div class="span3">
-						<a href="#" class="btn" style="font-weight:normal">Budget</a>
+						<a href="#" class="btn btn-trans" style="font-weight:normal;color:#888;">Budget</a>
 					</div>
 				</div>
 			</div>

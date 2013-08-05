@@ -269,7 +269,7 @@ color: #0C96A6;
 
 
 .nav-tabs>li{
-margin:0px;
+margin:3px;
 }
 
 .nav-tabs>.active>a, .nav-tabs>.active>a:hover, .nav-tabs>.active>a:focus {
@@ -306,7 +306,7 @@ margin: 0;
 
 
 
-button.btn-trans, button.btn-trans:hover, button.btn-trans:focus, button.btn-trans:active{
+.btn-trans, .btn-trans:hover, .btn-trans:focus, .btn-trans:active{
   background: transparent;
   border: none !important;
   box-shadow: none;
@@ -314,8 +314,31 @@ button.btn-trans, button.btn-trans:hover, button.btn-trans:focus, button.btn-tra
 }
 
 .navbar .nav>li>a {
- padding: 10px 5px;
+ padding: 0px 5px 10px;
+}
+
+.navbar .btn, .navbar .btn-group {
+	margin-top:0;
 }
 
 
+.navbar-inverse .navbar-search .search-query {
+	width:80%;
+}
 
+.navbar-inverse .navbar-inner {
+  background-color: #323232;
+}
+
+#login{
+    top: 50%;
+    left: 50%;
+    width:30em;
+    height:18em;
+    margin-top: -9em; /*set to a negative number 1/2 of your height*/
+    margin-left: -15em; /*set to a negative number 1/2 of your width*/
+    position:absolute;
+    border-left:0px;
+    background-image:url('/Ringi/app/webroot/img/login_enspirea.jpg');
+    background-size:100%; 
+}
