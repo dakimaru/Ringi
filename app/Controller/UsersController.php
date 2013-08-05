@@ -409,11 +409,8 @@ class UsersController extends AppController {
 				$query = mysql_query($sql);
 			}
 			$ldapConfig = Configure::read('ldap');
-			print_r($ldapConfig);
-			$ldapHost = $ldapConfig['Hostname'];		
-			print_r($ldapHost);
+			$ldapHost = $ldapConfig['Hostname'];
 			$retval = $this->exec_in_vendorpath('SynchronizeUser', $ldapHost);
-			print_r($retval);
 			$this->Session->setFlash(__("Your profile was updated successfully"));
 		}
 		//Name, title, departement
