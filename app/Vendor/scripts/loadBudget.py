@@ -151,7 +151,7 @@ def convertKeyToDB(rows,fy):
         for monStr,monDigit in MASTER_EX_MONTHS.items():
             # for Jan-Mar, use actual calendar year
             if monDigit in [1,2,3]:
-                newrow[BUDGET_DB_YEAR]   = fy + 1
+                newrow[BUDGET_DB_YEAR]   = str(int(fy) + 1)
             else:
                 newrow[BUDGET_DB_YEAR]   = fy
             newrow[BUDGET_DB_MONTH]  = monDigit
