@@ -265,7 +265,8 @@ class UsersController extends AppController {
 						
 					$sql="SELECT DN FROM users WHERE username='$username'";
 					$query = mysql_query($sql);
-					$userdn = mysql_fetch_assoc($query);
+					$user = mysql_fetch_assoc($query);
+					$userdn = $user['DN'];
 					$ldapConfig = Configure::read('ldap');
 					$ldapHost = $ldapConfig['Hostname'];
 					$this->exec_in_vendorpath('ResetPassword', $ldapHost, '" '. $userdn. '"', $newPassword);
@@ -383,11 +384,6 @@ class UsersController extends AppController {
 				$email = $this->data['userEmail'];
 				$sql = "UPDATE users Set name = '$name', mail = '$email', updated_at = now(), updator_id  = '$username' WHERE username= '$username'";
 				$query = mysql_query($sql);
-				//$userDN = mysql_fetch_assoc($query);
-				//exec('cd ../Vendor/scripts ; sh resetPassword.sh "' .$userDN['DN'].'" '.$newpassword);
-				$this->Session->setFlash(__("Your profile was updated successfully"));
-				//$this->redirect(array('controller' => 'Users', 'action' => 'user_setting'));	
-				
 			}
 			elseif ($resourceflag == "admin"){
 				$user = $this->data['users'];
@@ -411,9 +407,11 @@ class UsersController extends AppController {
 							updator_id  = '$username'
 					WHERE username= '$user'";
 				$query = mysql_query($sql);
-				$this->Session->setFlash(__("Your profile was updated successfully"));
 			}
-			
+			$ldapConfig = Configure::read('ldap');
+			$ldapHost = $ldapConfig['Hostname'];
+			$retval = $this->exec_in_vendorpath('SynchronizeUser', $ldapHost);
+			$this->Session->setFlash(__("Your profile was updated successfully"));
 		}
 		//Name, title, departement
 		$sql="SELECT usertype, name, department, title,  manager, mail, activeflag FROM users WHERE username = '$username'";

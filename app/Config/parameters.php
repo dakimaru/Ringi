@@ -25,8 +25,8 @@
 		'CreateRingiTable'	=> $shellname. "createRingiTables". $ext,
 		'CreateZip'	        => $shellname. "createZip". $ext,
 		'LoadUser'			=> $shellname. "importADToMySql".$ext,
-		'ResetPassword'		=> $shellname. "ResetPassword".$ext,
-		'SynchronizeUser'	=> $shellname. "SynchronizeUser"
+		'ResetPassword'		=> $shellname. "resetPassword".$ext,
+		'SynchronizeUser'	=> $shellname. "synchronizeUser".$ext
 	);
 
 	$config['workflow'] = array(
