@@ -1,6 +1,6 @@
 #! /bin/sh
 
-./createTable.sh
+./createTables.sh
 
 # change permission of a certain folder
 cd ../..
