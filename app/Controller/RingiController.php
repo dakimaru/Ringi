@@ -2175,7 +2175,6 @@ class RingiController extends AppController {
 		$ringino=$this->data['ringino'];
 		$attachment_path = APP . 'attachments'. DS. $ringino;
 		$this->exec_in_vendorpath('CreateZip', $attachment_path);
-		echo $attachment_path;
 				$this->viewClass = 'Media';
 				        // Download app/outside_webroot_dir/example.zip
 				        $params = array(
@@ -2185,9 +2184,7 @@ class RingiController extends AppController {
 				            'extension' => 'zip',
 				            'path'      => APP . 'attachments/'.$ringino . DS
 				        );
-
 				$this->set($params);
 	}
 }
-
 ?>
