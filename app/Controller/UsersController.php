@@ -56,7 +56,7 @@ class UsersController extends AppController {
 				mysql_query($querynewpass) or die(mysql_error());	//overwrite password
 
 				if ($this->Auth->login()) {
-					$this->Session->setFlash(__('Logged in Successfully!'), 'flash_notification');
+					$this->Session->setFlash(__('Logged in Successfully!'), 'flash_test');
 					//$this->Session->setFlash('Something good.', 'flash_success');
 					
 					//return $this->redirect($this->Auth->redirectUrl());

@@ -1,4 +1,4 @@
-<div id="login";  style="background-image:url('/Ringi/app/webroot/img/login_enspirea.jpg');background-size:100%; "class="users form">
+<div id="login"; class="users form">
 <?php echo $this->Session->flash('auth'); ?>
 <?php echo $this->Form->create('User'); ?>
     <fieldset class="control-group">
