@@ -528,7 +528,7 @@ class RingiController extends AppController {
 		$array = mysql_fetch_assoc($query);
 		
 		if ($array['count'] > 0) {
-			$this->Session->setFlash(__('There are several applications being in progress. The update will affect the current application display. Is that OK? '), 'flash_notification');
+			$this->Session->setFlash(__('There are several applications being in progress. The update will affect the current application display. Is that OK? '), 'flash_warning');
 		}
 
 		//The following piece gets the most recently added file in directory /uploads/
@@ -657,6 +657,9 @@ class RingiController extends AppController {
 		$this->addNewColumns();
 		
 		$this->from_upload_layout();
+
+		$this->Session->setFlash(__('Upload new layout successfully!'), 'flash_success');
+		$this->redirect(array('action' => 'main_menu'));
 	}
 	
 	public function addNewColumns(){
@@ -1419,7 +1422,7 @@ class RingiController extends AppController {
 		                $count++;
 		        }
 		}
-		//echo "<a href=file://".$folderpath.$ringino.">Link to Uploads</a>";
+		$this->Session->setFlash(__('Your application has been successfully submitted, and is currently under review. You could check your application status by clicking the detail button. Thanks!'), 'flash_success');
 		$this->redirect(array('action' => 'main_menu'));
 		
 	}
@@ -1617,7 +1620,8 @@ class RingiController extends AppController {
 			$this->Ringihistory->save($Ringihistory);
 			
 		} else {
-			echo "Application reapply is failure when update the data into database";
+			$this->Session->setFlash(__('Reapplication is failed when updating the data into database. If this happens again, please ask administrator for assistance.'), 'flash_success');
+			$this->redirect(array('action' => 'main_menu'));
 		}
 
 		//Upload file
@@ -1632,8 +1636,7 @@ class RingiController extends AppController {
 				$count++;
 	        }
 		}
-		
-		//echo "<a href=file://".$folderpath.$ringino.">Link to Uploads</a>";
+		$this->Session->setFlash(__('Your application has been successfully submitted, and is currently under review. You could check your application status by clicking the detail button. Thanks!'), 'flash_success');
 		$this->redirect(array('action' => 'main_menu'));
 		
  }
@@ -1671,10 +1674,12 @@ class RingiController extends AppController {
 		$this->Ringihistory->save($Ringihistory);
 
 	} else {
-		echo "Application delete is failure when update the data into database";
+		$this->Session->setFlash(__('Deletion is failed when updating the data into database. If this happens again, please ask administrator for assistance'), 'flash_error');
+		$this->redirect(array('controller' => 'Ringi', 'action' => 'main_menu'));
 	}
 	
 	//echo "<a href=file://".$folderpath.$ringino.">Link to Uploads</a>";
+	$this->Session->setFlash(__('Your application has been deleted. Thanks!'), 'flash_success');
 	$this->redirect(array('controller' => 'Ringi', 'action' => 'main_menu'));
 
 	}
@@ -1727,8 +1732,9 @@ class RingiController extends AppController {
 		if ($connection) {
 			$query = mysql_query($sql2) or die(mysql_error());
 		} else {
-			echo "Approve is failure when update the data into database";
+			$this->Session->setFlash(__('Approval is failed when updating the data into database. If this happens again, please ask administrator for assistance'), 'flash_success');
 		}
+		$this->Session->setFlash(__('You have approved the application. Thanks!'), 'flash_success');
 		$this->redirect(array('action' => 'task'));
 	}
 	
@@ -1786,8 +1792,9 @@ class RingiController extends AppController {
 			$query = mysql_query($sql1) or die(mysql_error());
 			$query = mysql_query($sql2) or die(mysql_error());
 		} else {
-			echo "Accept is failure when update the data into database";
+			$this->Session->setFlash(__('Acceptance is failed when updating the data into database. If this happens again, please ask administrator for assistance'), 'flash_error');
 		}
+		$this->Session->setFlash(__('Your have accepted this application. Thanks!'), 'flash_success');
 		$this->redirect(array('action' => 'task'));
 	}
 	
@@ -2103,8 +2110,10 @@ class RingiController extends AppController {
 			$query = mysql_query($sql1) or die(mysql_error());
 			$query = mysql_query($sql2) or die(mysql_error());
 		} else {
-			echo "Applicantion cancelation is failure when update the data into database";
+			$this->Session->setFlash(__('Cancellation is failed when updating the data into database. If this happens again, please ask administrator for assistance'), 'flash_error');
+			$this->redirect(array('action' => 'main_menu'));
 		}
+		$this->Session->setFlash(__('Your application has been cancelled. You could reapply by clicking the continue button. Thanks!'), 'flash_success');
 		$this->redirect(array('action' => 'main_menu'));
 	}
 	
@@ -2154,8 +2163,10 @@ class RingiController extends AppController {
 			if ($connection) {
 				$query = mysql_query($sql2) or die(mysql_error());
 			} else {
-				echo "Approver Cancel is failure when update the data into database";
+				$this->Session->setFlash(__('Cancellation is failed when updating the data into database. If this happens again, please ask administrator for assistance'), 'flash_error');
+				$this->redirect(array('action' => 'main_menu'));
 			}
+			$this->Session->setFlash(__('You have cancelled your previous approval, please take further action to this application. Thanks!'), 'flash_success');
 			$this->redirect(array('action' => 'other'));
 	
 	}
