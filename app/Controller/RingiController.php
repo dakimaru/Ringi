@@ -1410,8 +1410,8 @@ class RingiController extends AppController {
 		$dirConfig = Configure::read('directories');
 		$folderpath = $dirConfig['FolderPath'];
 		$ringino=$Attribute['Attribute']['ringino'];
-		$this->exec_in_vendorpath('CreateFolder',$folderpath, $ringino);
-
+		$retval = $this->exec_in_vendorpath('CreateFolder',$folderpath, $ringino);
+		
 		if ($_FILES['file']['name']) {
 		$count=0;
 		foreach ($_FILES['file']['name'] as $filename) { 
@@ -2162,9 +2162,9 @@ class RingiController extends AppController {
 
 	public function download(){
 		$ringino=$this->data['ringino'];
-		$attachment_path = APP . 'attachments/'.$ringino . DS;
+		$attachment_path = APP . 'attachments'. DS. $ringino;
 		$this->exec_in_vendorpath('CreateZip', $attachment_path);
-				
+		echo $attachment_path;
 				$this->viewClass = 'Media';
 				        // Download app/outside_webroot_dir/example.zip
 				        $params = array(
@@ -2174,6 +2174,7 @@ class RingiController extends AppController {
 				            'extension' => 'zip',
 				            'path'      => APP . 'attachments/'.$ringino . DS
 				        );
+
 				$this->set($params);
 	}
 }
