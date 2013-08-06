@@ -425,13 +425,15 @@ class RingiController extends AppController {
 	
 	public function reportQuery(){
 		$connection=$this->openSQLconnection();
-		$sql = "SELECT A.year, A.department, A.linecd, A.project, A.accountno, A.purpose, A.month,sum(A.budget) budget, Sum(A.application) application 
+		$sql = "SELECT CASE WHEN A.month<4 THEN A.year-1 ELSE A.year End financial_year, A.department, A.linecd, A.project, A.accountno, A.purpose,CASE WHEN A.month<4 THEN A.month+9 ELSE A.month-3 End financial_month, Sum(A.budget) budget, Sum(A.application) application
 			FROM (SELECT year,department, linecd,project,accountno,purpose,month,budget,0 application,benefit
 				FROM budgets
 				UNION ALL SELECT Year(applydate) year,assetdept department, linecd,project,assetaccountno accountno,purpose,month(applydate) month,0,asset application,Null benefit
-					  FROM attributes where ringistatus = '003' and asset is not null 
-					  UNION ALL SELECT Year(applydate) year,expensedept department, linecd,project,expenseaccountno accountno,purpose,month(applydate) month,0,expense application,Null benefit
-					  FROM attributes where ringistatus = '003' and expense is not null ) A";
+					FROM attributes
+					WHERE ringistatus = '003' and asset is not null
+					UNION ALL SELECT Year(applydate) year,expensedept department, linecd,project,expenseaccountno accountno,purpose,month(applydate) month,0,expense application,Null benefit
+							FROM attributes
+							WHERE ringistatus = '003' and expense is not null ) A";
 		if ($this->request->is('post')) {
 			$isFirst = true;
 			if($this->data['year'] != ""){
@@ -474,7 +476,8 @@ class RingiController extends AppController {
 			
 		}
 		
-		$sql = $sql." GROUP BY A.year, A.department, A.linecd, A.project, A.accountno, A.purpose, A.month";
+		$sql = $sql." Group by A.year, A.department, A.linecd, A.project, A.accountno, A.purpose, A.month";
+		echo $sql;
 		$count = -1;
 		$query = mysql_query("$sql");
 		return $query;

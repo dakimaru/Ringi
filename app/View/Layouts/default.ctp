@@ -44,10 +44,10 @@
 					
 					<div class="nav-collapse collapse" style="margin-top:8px;" >
 						<ul class="nav" >
-							<li ><a class="brand" href="/Ringi/main_menu"><strong><img class="" src="/Ringi/app/webroot/img/home_btn.png" width="46">Home</strong></a></li>
-							<li ><a href="/Ringi/task"><strong><img class="" src="/Ringi/app/webroot/img/task.png" width="30">Task</strong></a></li>
-							<li ><a href="/Ringi/other"><strong><img class="" src="/Ringi/app/webroot/img/other.png" width="30">Other</strong></a></li>
-							<li ><a href="/Ringi/report"><strong><img class="" src="/Ringi/app/webroot/img/report.png" width="52">Report</strong></a></li>
+							<li ><a class="brand" href="/Ringi/main_menu"><strong><img class="" src="/Ringi/app/webroot/img/home_btn.png">Home</strong></a></li>
+							<li ><a href="/Ringi/task"><strong><img class="" src="/Ringi/app/webroot/img/task.png">Task</strong></a></li>
+							<li ><a href="/Ringi/other"><strong><img class="" src="/Ringi/app/webroot/img/other.png" >Other</strong></a></li>
+							<li ><a href="/Ringi/report"><strong><img class="" src="/Ringi/app/webroot/img/report.png" >Report</strong></a></li>
 						</ul>
 					</div>
 					<ul class="nav pull-right">
@@ -55,7 +55,7 @@
 							<input type="text" class="search-query" placeholder="Search">
 						</form>
 						<a class="btn btn-inverse dropdown-toggle" data-toggle="dropdown" href="#">
-							<img src="/Ringi/app/webroot/img/gear.jpg" width="25">
+							<img src="/Ringi/app/webroot/img/gear.jpg">
 							<span class="caret"></span>
 						</a>
 
@@ -80,7 +80,7 @@
 							</li>						
 						</ul>
 						<a class="create" style="display:inline;" href="/Ringi/apply">
-							<strong><img style="padding-top: 0px;" src="/Ringi/app/webroot/img/create.png" width="50"></strong>
+							<strong><img style="padding-top: 0px;" src="/Ringi/app/webroot/img/create_small.png"></strong>
 						</a>
 
 					</ul>

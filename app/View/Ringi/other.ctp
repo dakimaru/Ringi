@@ -62,59 +62,7 @@
                                    
                                     
                                 </div>
-				<div class="row-fluid  paddingTop">
-					<div class="span4" >
-						<ul class="nav nav-pills">
-							<li>
-								<a class="smaller" href="#">Summary</a>
-							</li>
-						</ul>
-					</div>
-					<div class="span4">
-						<ul align="center"  class="nav nav-pills">
-							<li>
-								<a class="smaller" href="#">InProgress</a>
-							</li>
-						</ul>
-					</div>
-					<div class="span4">
-						<ul align="center" class="nav nav-pills">
-							<li>
-								<a class="smaller" href="#">Passback</a>
-							</li>
-						</ul>
-					</div>
-				</div>
-				<div class="row-fluid">
-					<div class="span3 paddingTop">
-						<ul class="nav nav-pills">
-							<li>
-								<a class="smaller" href="#">OnHold</a>
-							</li>
-						</ul>
-					</div>
-					<div class="span3 paddingTop">
-						<ul class="nav nav-pills">
-							<li>
-								<a class="smaller" href="#">Accepted</a>
-							</li>
-						</ul>
-					</div>
-					<div class="span3 paddingTop">
-						<ul class="nav nav-pills">
-							<li>
-								<a class="smaller" href="#">Rejected</a>
-							</li>
-						</ul>
-					</div>
-					<div class="span3 paddingTop">
-						<ul class="nav nav-pills">
-							<li>
-								<a class="smaller" href="#">Confirm</a>
-							</li>
-						</ul>
-					</div>
-				</div>
+				
 			</div>
 			<div class="well well-large">
 				<div class="row-fluid">
@@ -139,7 +87,19 @@
 				
 			</div>
 			<div class="well">
-				<ul class="clearfix">
+				<div class="bottomBorder row-fluid">
+					<div class="span3 paddingTop">
+						<p >
+							<img class="" src="/Ringi/app/webroot/img/enspirea.png" width="70">
+						</p>
+					</div>
+					<div class="span7" style="color:#888; padding-top:25px; ">
+						<h4 align="left" style="font-weight:500;">ENSPIREA LLC's APPROVE</h4>
+					</div>
+				</div>
+			</div>
+			<div class="well">
+				<ul class="clearfix paddingTop">
 					<li class="inline">&copy 2013 Enspirea</li>
 					<li class="inline">
 						<a class="sitefoot" href="#">About</a>

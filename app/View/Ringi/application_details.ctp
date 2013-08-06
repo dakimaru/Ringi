@@ -1,6 +1,8 @@
 
 <div class="container">
-    <h2 align="left">Root Info</h2><br>
+    <h2 >Detail</h2>
+    <div align="center" class="well" style="background:#FBFBFB; border:solid; border-width:thin; border-color: #cccccc; padding:50px;">
+    <h4 align="left">Root Info</h4><br>
     <form method="post" action="confirm" name="confirm2"> 
 	<table class="table table-bordered table-hover">
 		<tr class="success">
@@ -45,7 +47,7 @@
 	</table>
     </form>
     
-    <h2 align="left">History</h2><br>
+    <h4 align="left">History</h4><br>
     <form method="post" action="confirm" name="confirm2"> 
 	<table class="table table-bordered table-hover">
 		<tr class="success">
@@ -89,7 +91,8 @@
 	';
     }
     ?>
-    
+    </div>
+
     
     
     

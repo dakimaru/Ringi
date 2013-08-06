@@ -37,7 +37,7 @@
 					</div>
 					<div class="span3 paddingTop">
 						<a href="/Ringi/apply">
-							<img class="" src="/Ringi/app/webroot/img/create.png" width="60">
+							<img class="" src="/Ringi/app/webroot/img/create.png">
 						</a>
 					</div>
 				</div>
