@@ -1253,7 +1253,7 @@ class RingiController extends AppController {
 			{
 				$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none; background-color:white;" id='. $temp[1] .' name='. $temp[1] .' readonly="true"></textarea>' , $doc, 1);
 			}
-			if (trim($temp[2])=="int") {
+			elseif (trim($temp[2])=="int") {
 				$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none; background-color:white;" id='. $temp[1] .' name='. $temp[1] .' maxlength="9"></textarea>' , $doc, 1);
 			} else if (trim($temp[2])=="double") {
 				$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none; background-color:white;" id='. $temp[1] .' name='. $temp[1] .' maxlength="307"></textarea>' , $doc, 1);
@@ -1424,11 +1424,31 @@ class RingiController extends AppController {
 		
 	}
 
+    private function getMaxLength($type){
+        
+		$typeToMaxlen = array( 
+                        'int'=>9,
+						'double'=>307,
+                        'string'=>254,
+                        'text'=>999999999,
+                        'date'=>10,
+                        );
+		
+		$retval = array_key_exists($type, $typeToMaxlen);
+		
+		if( $retval ){
+           	return $typeToMaxlen[$type];
+		}
+        
+        $defaultMaxLength = 50;
+
+        return $defaultMaxLength;
+
+    }
 	
 	public function edit() {
 
 		$ringino = $this->data['ringi_number'];
-		echo $ringino;
 		$username = $this->Auth->user('username');
 		$this->set('ringino',$ringino);
 		$this->set('status',$this->Auth->user('status'));
@@ -1454,17 +1474,20 @@ class RingiController extends AppController {
         $dom->loadHTML($doc);
 
         foreach ($dom->getElementsByTagName('td') as $text){
-            if( preg_match('/input:.+:.+/',$text->textContent, $matches) ){
+            if( preg_match('/input:.+:[a-zA-Z(0-9)]+/',$text->textContent, $matches) ){
                 //print_r($text);
 
                 $inputMatched = preg_split('/[:]/',$matches[0]);
                 $id = $colname = $inputMatched[1];
-
+                $type = $inputMatched[2];
                 $valFromDB = $array[$colname];
                 $element = $dom->createElement('textarea', $valFromDB);
                 foreach ( $styles as $key=>$value ){
                     $element->setAttribute( $key, $value );
                 }
+                $maxlength = $this->getMaxLength($type);
+                $element->setAttribute( "maxlength",$maxlength );
+
                 $element->setAttribute( 'id', $id );
                 $element->setAttribute( 'name', $colname );
                 if ($colname == 'ringino'){
