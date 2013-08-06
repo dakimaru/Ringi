@@ -25,17 +25,13 @@
 	Router::connect('/secure_login', array('controller' => 'Users', 'action' => 'secure_login', 'secure_login'));
 	Router::connect('/logout', array('controller' => 'Users', 'action' => 'logout', 'logout'));
 	
-	Router::connect('/delete', array('controller' => 'Users', 'action' => 'delete', 'delete'));
-	
-
+	Router::connect('/delete', array('controller' => 'Ringi', 'action' => 'delete', 'delete'));
 	Router::connect('/setup', array('controller' => 'Ringi', 'action' => 'setup', 'setup'));
 	Router::connect('/main_menu', array('controller' => 'Ringi', 'action' => 'main_menu', 'main_menu'));
-        
 	Router::connect('/password_change', array('controller' => 'Users', 'action' => 'password_change', 'password_change'));
 	Router::connect('/password_reset', array('controller' => 'Users', 'action' => 'password_reset', 'password_reset'));
 	Router::connect('/support', array('controller' => 'Ringi', 'action' => 'support', 'support'));
 	Router::connect('/credit', array('controller' => 'Ringi', 'action' => 'credit', 'credit'));
-	
 	Router::connect('/upload_layout', array('controller' => 'Ringi', 'action' => 'upload_layout', 'upload_layout'));
 	Router::connect('/preview', array('controller' => 'Ringi', 'action' => 'preview', 'preview'));
 	Router::connect('/upload_confirmation', array('controller' => 'Ringi', 'action' => 'upload_confirmation', 'upload_confirmation'));
