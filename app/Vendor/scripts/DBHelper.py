@@ -161,7 +161,7 @@ def updateRow(DBconn, dbTable, header, row, keyColNames):
         #print "rows to insert = ", row
         query = getInsertQuery(dbTable, header, row)
 
-    print query
+    #print query
 
     cursor = DBconn.cursor(True)   
     cursor.execute(query)
@@ -227,7 +227,7 @@ def getNextEnumValue(cursor, dbTable, enumColName, incColName, row):
             + dbTable + " WHERE "  \
             + enumColName + "=\'" + row[enumColName] + "\'"
 
-    print query
+    #print query
     cursor.execute(query)
 
     retval = str(ENUM_FIRST_VALUE)
