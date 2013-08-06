@@ -67,7 +67,6 @@ if (!method_exists('Spreadsheet_Excel_Reader', 'dump')) {
  */
 class AppController extends Controller {
 		
-	public $helpers = array('excel');	//enables usage of helpers
     public $components = array(
         'Session',
         'Auth' => array(
@@ -78,7 +77,7 @@ class AppController extends Controller {
 
     public function beforeFilter() {
         //$this->Auth->allow();
-		Configure::load('parameters');    
+		Configure::load('parameters');
     }
 
     public function isAuthorized($user) {
