@@ -32,7 +32,7 @@ class UsersController extends AppController {
 				//$this->redirect(array('controller' => 'Ringi', 'action' => 'main_menu'));
 				return $this->redirect($this->Auth->redirectUrl());
 			} else {
-				$this->Session->setFlash(__('Invalid username or password, try again'));
+				$this->Session->setFlash(__('Invalid username or password, try again'),'flash_error');
 			}
 		}
 	}
@@ -56,7 +56,7 @@ class UsersController extends AppController {
 				mysql_query($querynewpass) or die(mysql_error());	//overwrite password
 
 				if ($this->Auth->login()) {
-					$this->Session->setFlash(__('Logged in Successfully!'), 'flash_notification');
+					$this->Session->setFlash(__('Logged in Successfully!'), 'flash_success');
 					//$this->Session->setFlash('Something good.', 'flash_success');
 					
 					//return $this->redirect($this->Auth->redirectUrl());
@@ -67,7 +67,7 @@ class UsersController extends AppController {
 			}	
 			else {
 				
-				$this->Session->setFlash(__('Invalid username or password, try again. If you forget your username or password, please ask administrator for help!'));
+				$this->Session->setFlash(__('Invalid username or password, try again. If you forget your username or password, please ask administrator for help!'),'flash_error');
 			}
 		}
 	}
@@ -76,7 +76,7 @@ class UsersController extends AppController {
 		if ($this->Auth->logout()) {
 			$this->redirect($this->Auth->logout());
 		} else {
-			$this->Session->setFlash(__('Expired your session'));
+			$this->Session->setFlash(__('Expired your session'),'flash_error');
 		}
 	}
 
@@ -157,10 +157,10 @@ class UsersController extends AppController {
 				$ldapHost = $ldapConfig['Hostname'];
 				$this->exec_in_vendorpath('ResetPassword', $ldapHost, '" '. $userdn. '"', $newPassword);
 				
-				$this->Session->setFlash(__("The user was created successfully"));
+				$this->Session->setFlash(__("The user was created successfully"),'flash_success');
 			}
 			else{
-				$this->Session->setFlash(__("Oops! Create Failed!"));
+				$this->Session->setFlash(__("Oops! Create Failed!"),'flash_error');
 			}
 		}
 		
@@ -259,7 +259,7 @@ class UsersController extends AppController {
 				}	
 				else {
 					
-					$this->Session->setFlash(__('Invalid password, try again. If you forget your password, please ask administrator to reset!'));
+					$this->Session->setFlash(__('Invalid password, try again. If you forget your password, please ask administrator to reset!'),'flash_error');
 				}
 			}
 			elseif ($resourceflag == 'admin'){
@@ -281,7 +281,7 @@ class UsersController extends AppController {
 													'"'. $userdn. '"', 
 													'"'. $newPassword. '"');
 				print_r($return);
-				$this->Session->setFlash(__("Your password was updated successfully"));
+				$this->Session->setFlash(__("Your password was updated successfully"),'flash_success');
 			}
 		}
 		
@@ -335,7 +335,7 @@ class UsersController extends AppController {
 				
 			}
 			else {
-				$this->Session->setFlash(__('Please select an appropriate password!'));
+				$this->Session->setFlash(__('Please select an appropriate password!'),'flash_error');
 			}
 			
 		}
@@ -394,7 +394,7 @@ class UsersController extends AppController {
 			$ldapConfig = Configure::read('ldap');
 			$ldapHost = $ldapConfig['Hostname'];
 			$retval = $this->exec_in_vendorpath('SynchronizeUser', $ldapHost);
-			$this->Session->setFlash(__("Your profile was updated successfully"));
+			$this->Session->setFlash(__("Your profile was updated successfully"),'flash_success');
 		}
 		//Name, title, departement
 		$sql="SELECT usertype, name, department, title,  manager, mail, activeflag FROM users WHERE username = '$username'";

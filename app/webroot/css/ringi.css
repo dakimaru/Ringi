@@ -342,3 +342,8 @@ margin: 0;
     background-image:url('/Ringi/app/webroot/img/login_enspirea.jpg');
     background-size:100%; 
 }
+
+
+img {
+-ms-interpolation-mode: bicubic;
+}
