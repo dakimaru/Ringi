@@ -1,7 +1,7 @@
 REM third party location
 set MYSQLPATH=C:\xampp\mysql\bin
 set PYTHONROOT=C:\python27
-IF EXIST C:\Program Files (x86)\Python27\python.exe. (
+IF EXIST "C:\Program Files (x86)\Python27\python.exe". (
 	set PYTHONROOT="C:\Program Files (x86)\Python27"
 )
 set OPENLDAPROOT=C:\OpenLDAP

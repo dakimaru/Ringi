@@ -1,0 +1,328 @@
+dn: ou=qqqq,dc=enspirea,dc=com
+objectClass: organizationalUnit
+ou: qqqq
+
+dn: ou=Development,dc=enspirea,dc=com
+objectClass: organizationalUnit
+ou: Development
+
+dn: ou=Enspirea,dc=enspirea,dc=com
+objectClass: organizationalUnit
+ou: Enspirea
+
+dn: ou=Enspirea_NC,dc=enspirea,dc=com
+objectClass: organizationalUnit
+ou: Enspirea_NC
+
+dn: ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: organizationalUnit
+ou: Enspirea_IL
+
+dn: uid=yono,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: yono
+cn: Josh Ono
+sn: Josh Ono
+givenName: Josh Ono
+mail: yono@enspirea.com
+
+dn: uid=xhan,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: xhan
+cn: Xu Han
+sn: Xu Han
+givenName: Xu Han
+mail: xhan@enspirea.com
+
+dn: uid=czheng,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: czheng
+cn: Eric Zheng
+sn: Eric Zheng
+givenName: Eric Zheng
+mail: czheng@enspirea.com
+
+dn: uid=watanabe,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: watanabe
+cn: Yuji Watanabe
+sn: Yuji Watanabe
+givenName: Yuji Watanabe
+mail: watanabe@enspirea.com
+
+dn: uid=rymakoshi,ou=Enspirea_NC,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: rymakoshi
+cn: Ryo Yamakoshi
+sn: Ryo Yamakoshi
+givenName: Ryo Yamakoshi
+mail: ryamakoshi@enspirea.com
+
+dn: uid=taira,ou=Enspirea,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: taira
+cn: Aki Taira
+sn: Aki Taira
+givenName: Aki Taira
+mail: taira@enspirea.com
+
+dn: uid=akimaru,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: akimaru
+cn: Dimitri Akimaru
+sn: Dimitri Akimaru
+givenName: Dimitri Akimaru
+mail: dakimaru@enspirea.com
+
+dn: uid=eeee,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: eeee
+cn: eeee
+sn: eeee
+givenName: eeee
+mail: eeee
+
+dn: uid=6666,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: 6666
+cn: 4444
+sn: 4444
+givenName: 4444
+mail: 6666
+
+dn: uid=newuser_ono,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: newuser_ono
+cn: test test
+sn: test test
+givenName: test test
+mail: test@enspirea.com
+
+dn: uid=newuser_ono,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: newuser_ono
+cn: test test
+sn: test test
+givenName: test test
+mail: test@enspirea.com
+
+dn: uid=onotest111,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: onotest111
+cn: test test
+sn: test test
+givenName: test test
+mail: test@enspirea.com
+
+dn: uid=3333,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: 3333
+cn: 3333
+sn: 3333
+givenName: 3333
+mail: 3333
+
+dn: uid=7777,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: 7777
+cn: 7777
+sn: 7777
+givenName: 7777
+mail: 7777
+
+dn: uid=7777,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: 7777
+cn: 7777
+sn: 7777
+givenName: 7777
+mail: 7777
+
+dn: uid=9999,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: 9999
+cn: 9999
+sn: 9999
+givenName: 9999
+mail: 9999
+
+dn: uid=newguy,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: newguy
+cn: New
+sn: New
+givenName: New
+mail: new
+
+dn: uid=nnn,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: nnn
+cn: nnn
+sn: nnn
+givenName: nnn
+mail: nnn
+
+dn: uid=testzheng2,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: testzheng2
+cn: 111111
+sn: 111111
+givenName: 111111
+mail: 111
+
+dn: uid=11111111,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: 11111111
+cn: 1111
+sn: 1111
+givenName: 1111
+mail: 1111
+
+dn: uid=qqqq,ou=qqqq,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: qqqq
+cn: qqqq
+sn: qqqq
+givenName: qqqq
+mail: qqqq
+
+dn: uid=qqqq,ou=qqqq,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: qqqq
+cn: qqqq
+sn: qqqq
+givenName: qqqq
+mail: qqqq
+
+dn: uid=qqqq,ou=qqqq,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: qqqq
+cn: qqqq
+sn: qqqq
+givenName: qqqq
+mail: qqqq
+
+dn: uid=testono101,ou=Development,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: testono101
+cn: testono101
+sn: testono101
+givenName: testono101
+mail: yono@rs.com
+
+dn: uid=testono102,ou=Development,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: testono102
+cn: testono102
+sn: testono102
+givenName: testono102
+mail: yono@rs.com
+
+dn: uid=yono103,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: yono103
+cn: yono103
+sn: yono103
+givenName: yono103
+mail: yono@enspirea.com
+
+dn: uid=yono104,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: yono104
+cn: yono104
+sn: yono104
+givenName: yono104
+mail: yono@enspirea.com
+
+dn: uid=yono105,ou=Enspirea_IL,dc=enspirea,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: yono105
+cn: yono105
+sn: yono105
+givenName: yono105
+mail: yono@enspirea.com
+

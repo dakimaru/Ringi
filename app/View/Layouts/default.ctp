@@ -32,8 +32,8 @@
 		$user = $this->Session->read('Auth.User');
 		echo'
 <body>
-	
-	<div class="wrapper"'; if(empty($user)){echo 'style="background-image:url(/Ringi/app/webroot/img/login_bg.png);"';}echo '>';
+<div class="container">
+	<div class="wrapper"'; if(empty($user)){echo 'style="background-image:url(/Ringi/app/webroot/img/login_bg.png);min-width:1800px;min-height:720px;"';} echo '>';
 		
 		if(!empty($user)) {
 		echo '
@@ -94,30 +94,29 @@
 		</div>
 		
 		<div class="container" style="padding:15px;background-color:rgba(255,255,255,0.3);">
-			<div style="height:3em;"></div>
-			'; echo $this->Session->flash(); 
-				 echo $content_for_layout; echo'
-		</div>';}
+			<div style="height:3em;"></div>';
+			echo $this->Session->flash(); 
+			echo $content_for_layout; echo'
+		</div>'
+		;}
 		else{
 			echo '<div class="container">';
-			echo $this->Session->flash(); echo $content_for_layout;
+			echo $this->Session->flash();
+			echo $content_for_layout;
 			echo '</div>';
 		}
 		echo '
-		
-		
 		<div class="push"></div>
-		
-		
 	</div>
 	';?>
 <footer>
 	<?php
-	if(!empty($user)){
+	
 	echo'
 	<div class="text-center"> &copy 2013 ENSPIREA, LLC</div>';
-	}
+	
 	?>
 </footer>
+</div>
 </body>
 </html>
