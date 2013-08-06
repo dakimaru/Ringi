@@ -1732,7 +1732,8 @@ class RingiController extends AppController {
 		if ($connection) {
 			$query = mysql_query($sql2) or die(mysql_error());
 		} else {
-			$this->Session->setFlash(__('Approval is failed when updating the data into database. If this happens again, please ask administrator for assistance'), 'flash_success');
+			$this->Session->setFlash(__('Approval is failed when updating the data into database. If this happens again, please ask administrator for assistance'), 'flash_error');
+			$this->redirect(array('action' => 'task'));
 		}
 		$this->Session->setFlash(__('You have approved the application. Thanks!'), 'flash_success');
 		$this->redirect(array('action' => 'task'));
@@ -1793,6 +1794,7 @@ class RingiController extends AppController {
 			$query = mysql_query($sql2) or die(mysql_error());
 		} else {
 			$this->Session->setFlash(__('Acceptance is failed when updating the data into database. If this happens again, please ask administrator for assistance'), 'flash_error');
+			$this->redirect(array('action' => 'task'));
 		}
 		$this->Session->setFlash(__('Your have accepted this application. Thanks!'), 'flash_success');
 		$this->redirect(array('action' => 'task'));
@@ -1852,8 +1854,9 @@ class RingiController extends AppController {
 			$query = mysql_query($sql1) or die(mysql_error());
 			$query = mysql_query($sql2) or die(mysql_error());
 		} else {
-			echo "Reject is failure when update the data into database";
+			$this->Session->setFlash(__('Rejection is failed when updating the data into database. If this happens again, please ask administrator for assistance.'), 'flash_error');
 		}
+		$this->Session->setFlash(__('You have rejected the application. Thanks!'), 'flash_success');
 		$this->redirect(array('action' => 'task'));
 	}
 	
@@ -1911,8 +1914,10 @@ class RingiController extends AppController {
 			$query = mysql_query($sql1) or die(mysql_error());
 			$query = mysql_query($sql2) or die(mysql_error());
 		} else {
-			echo "Hold is failure when update the data into database";
+			$this->Session->setFlash(__('Hold is failed when updating the data to database. If this happens again, please ask administrator for assistance.'),'flash_error');
+			$this->redirect(array('action' => 'task'));
 		}
+		$this->Session->setFlash(__('The application has been placed on hold. Please process it later.'),'flash_success');
 		$this->redirect(array('action' => 'task'));
 	}
 	
@@ -1972,7 +1977,8 @@ class RingiController extends AppController {
 				$query = mysql_query($sql1) or die(mysql_error());
 				$query = mysql_query($sql2) or die(mysql_error());
 			} else {
-				echo "Passback by first approver is failure when update the data into database";
+				$this->Session->setFlash(__('Passback is failed when updating the data into database. If this happens again, please ask administrator for assistance', 'flash_error'));
+				$this->redirect(array('action' => 'task'));
 			}			
 		} else  
 		// if layer > 1, which means it passed by 2 and above approver -> set back to previous approver 
@@ -2004,9 +2010,11 @@ class RingiController extends AppController {
 			if ($connection) {
 				$query = mysql_query($sql2) or die(mysql_error());
 			} else {
-				echo "Passback by higher approver is failure when update the data into database";
+				$this->Session->setFlash(__('Passback is failed when updating the data into database. If this happens again, please ask administrator for assistance', 'flash_error'));
+				$this->redirect(array('action' => 'task'));
 			}
 		}
+		$this->Session->setFlash(__('The application has been passed back. Thanks!', 'flash_success'));
 		$this->redirect(array('action' => 'task'));
 
 	}
@@ -2065,8 +2073,10 @@ class RingiController extends AppController {
 			$query = mysql_query($sql1) or die(mysql_error());
 			$query = mysql_query($sql2) or die(mysql_error());
 		} else {
-			echo "Reopen is failure when update the data into database";
+			$this->Session->setFlash(__('Reopen is failed when updating the data into database. If this happens again, please ask administrator for assistance.','flash_error'));
+			$this->redirect(array('action' => 'other'));
 		}
+		$this->Session->setFlash(__('The application has been reopened. Please process it.','flash_success'));
 		$this->redirect(array('action' => 'other'));
 	}
 	
@@ -2110,7 +2120,7 @@ class RingiController extends AppController {
 			$query = mysql_query($sql1) or die(mysql_error());
 			$query = mysql_query($sql2) or die(mysql_error());
 		} else {
-			$this->Session->setFlash(__('Cancellation is failed when updating the data into database. If this happens again, please ask administrator for assistance'), 'flash_error');
+			$this->Session->setFlash(__('Cancel is failed when updating the data into database. If this happens again, please ask administrator for assistance'), 'flash_error');
 			$this->redirect(array('action' => 'main_menu'));
 		}
 		$this->Session->setFlash(__('Your application has been cancelled. You could reapply by clicking the continue button. Thanks!'), 'flash_success');
@@ -2163,7 +2173,7 @@ class RingiController extends AppController {
 			if ($connection) {
 				$query = mysql_query($sql2) or die(mysql_error());
 			} else {
-				$this->Session->setFlash(__('Cancellation is failed when updating the data into database. If this happens again, please ask administrator for assistance'), 'flash_error');
+				$this->Session->setFlash(__('Cancel is failed when updating the data into database. If this happens again, please ask administrator for assistance'), 'flash_error');
 				$this->redirect(array('action' => 'main_menu'));
 			}
 			$this->Session->setFlash(__('You have cancelled your previous approval, please take further action to this application. Thanks!'), 'flash_success');
