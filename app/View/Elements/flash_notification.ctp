@@ -1,4 +1,4 @@
-<div class="alert alert-success">
+<div class="alert alert-info">
   <button type="button" class="close" data-dismiss="alert">&times;</button>
-  <strong>Well done!</strong> <?php echo $message; ?>
+  <h4>Heads up!</h4> <?php echo $message; ?>
 </div>

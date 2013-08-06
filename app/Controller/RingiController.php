@@ -528,7 +528,7 @@ class RingiController extends AppController {
 		$array = mysql_fetch_assoc($query);
 		
 		if ($array['count'] > 0) {
-			$this->Session->setFlash(__('There are several applications being in progress. The update will affect the current application display. Is that OK? '));
+			$this->Session->setFlash(__('There are several applications being in progress. The update will affect the current application display. Is that OK? '), 'flash_notification');
 		}
 
 		//The following piece gets the most recently added file in directory /uploads/
@@ -577,12 +577,12 @@ class RingiController extends AppController {
 				
 			}
 			else {
-				$this->Session->setFlash(__('Invalid file type! Please upload a file with the correct extension.'));
+				$this->Session->setFlash(__('Invalid file type! Please upload a file with the correct extension.'),'flash_error');
 				$this->redirect(array('controller' => 'Ringi', 'action' => 'upload_layout'));				
 			}
 		}
 		else {
-			$this->Session->setFlash(__('Please choose a file to upload'));
+			$this->Session->setFlash(__('Please choose a file to upload'),'flash_error');
 			$this->redirect(array('controller' => 'Ringi', 'action' => 'upload_layout'));		
 		}
 	}
