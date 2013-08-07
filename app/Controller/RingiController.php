@@ -402,7 +402,7 @@ class RingiController extends AppController {
 					$budget[$entry][$month] = $array['budget'];
 					$application[$entry][$month] = $array['application'];
 				}
-				$year[$entry] = $array['year'];
+				$year[$entry] = $array['financial_year'];
 				$department[$entry] = $array['department'];
 				$linecd[$entry] = $array['linecd'];
 				$project[$entry] = $array['project'];
@@ -439,7 +439,7 @@ class RingiController extends AppController {
 			if($this->data['year'] != ""){
 				$yearCondition = $this->data['year'];
 				$this->set('yearCondition', $yearCondition);
-				$sql = $isFirst?($sql." WHERE A.year = '$yearCondition'") : ($sql." AND A.year = '$yearCondition'");
+				$sql = $isFirst?($sql." WHERE CASE WHEN A.month<4 THEN A.year-1 = '$yearCondition' ELSE A.year = '$yearCondition' End ") : ($sql." AND CASE WHEN A.month<4 THEN A.year-1 = '$yearCondition' ELSE A.year = '$yearCondition' End ");
 				$isFirst = false;
 			}
 			if($this->data['deptCode'] != ""){
