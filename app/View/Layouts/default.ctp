@@ -98,7 +98,7 @@ echo '
 ;}
 else{
 	echo '		
-<body style="background-color:#6AA9B0;background-size:auto 720px; background-repeat:repeat-x; background-image:url(/Ringi/app/webroot/img/login_back.jpg);">
+<body style="background-color:#6AA9B0;background-size:142px 720px; background-repeat:repeat-x; background-image:url(/Ringi/app/webroot/img/login_back.jpg);">
 	<div class="wrapper">';
 	
 			echo '<div class="container" style="background-image:url(/Ringi/app/webroot/img/login_test.jpg);width:0px;min-height:720px;min-width:1120px;">';
