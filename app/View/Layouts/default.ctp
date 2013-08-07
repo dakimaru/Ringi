@@ -32,7 +32,6 @@
 		$user = $this->Session->read('Auth.User');
 		echo'
 <body>
-<div class="container">
 	<div class="wrapper"'; if(empty($user)){echo 'style="background-image:url(/Ringi/app/webroot/img/login_bg.png);min-width:1800px;min-height:720px;"';} echo '>';
 		
 		if(!empty($user)) {
@@ -117,6 +116,5 @@
 	
 	?>
 </footer>
-</div>
 </body>
 </html>
