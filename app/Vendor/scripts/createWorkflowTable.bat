@@ -1,6 +1,0 @@
-@ECHO OFF
-
-call env_win.cmd
-cd %SCRIPTROOT%
-
-%PYTHONROOT%\python loadWorkflow.py %USERINFOPATH%\%USERTABLE_CSV_FILENAME% %WORKFLOW_OPTION%
