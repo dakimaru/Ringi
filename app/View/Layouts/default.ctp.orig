@@ -30,10 +30,12 @@
 </head>
 <?php
 		$user = $this->Session->read('Auth.User');
-if(!empty($user)) {
-echo '		
+		echo'
 <body>
-	<div class="wrapper" style="background-image:url(/Ringi/app/webroot/img/backgrounds.png);">
+	<div class="wrapper"'; if(empty($user)){echo 'style="background-image:url(/Ringi/app/webroot/img/login_bg.png);min-width:1800px;min-height:720px;"';} echo '>';
+		
+		if(!empty($user)) {
+		echo '
 		<div class="navbar navbar-static-top navbar-inverse">	<!-- replace with static/fixed -->
 			<div class="navbar-inner">
 				<div class="container">
@@ -95,6 +97,11 @@ echo '
 			echo $this->Session->flash(); 
 			echo $content_for_layout; echo'
 		</div>'
+<<<<<<< HEAD
+		;}
+		else{
+			echo '<div class="container">';
+=======
 ;}
 else{
 	echo '		
@@ -102,6 +109,7 @@ else{
 	<div class="wrapper">';
 	
 			echo '<div class="container" style="background-image:url(/Ringi/app/webroot/img/login_test.jpg);width:0px;min-height:720px;min-width:1120px;">';
+>>>>>>> c7f91acbbf95452cd7b523ad0819abcc3656f6db
 			echo $this->Session->flash();
 			echo $content_for_layout;
 			echo '</div>';
@@ -112,10 +120,9 @@ else{
 	';?>
 <footer>
 	<?php
-	if(!empty($user)) {
-	echo '
+	
+	echo'
 	<div class="text-center"> &copy 2013 ENSPIREA, LLC</div>';
-	}
 	
 	?>
 </footer>
