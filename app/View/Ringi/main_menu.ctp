@@ -220,7 +220,7 @@
 							echo '
 								
 								<div class="well-small topBorder">
-									<div class="row-fluid">
+									<div class="row-fluid ">
 										<div class="span11 offset1">
 											
 											<div>
