@@ -12,7 +12,7 @@
             </div>
     </fieldset>
     <div class="submit">
-        <input  type="submit" value="Login"/>
+        <button class="btn" type="submit" value="Login">Login</button>
     </div>
 </form>
 </div>

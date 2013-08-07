@@ -21,7 +21,8 @@
  * @since         CakePHP(tm) v 0.2.9
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-	Router::connect('/login', array('controller' => 'Users', 'action' => 'login', 'login'));
+        Router::connect('/', array('controller' => 'Users', 'action' => 'login', 'login'));
+	//Router::connect('/login', array('controller' => 'Users', 'action' => 'login', 'login'));
 	Router::connect('/secure_login', array('controller' => 'Users', 'action' => 'secure_login', 'secure_login'));
 	Router::connect('/logout', array('controller' => 'Users', 'action' => 'logout', 'logout'));
 	
