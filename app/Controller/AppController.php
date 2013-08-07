@@ -100,8 +100,8 @@ class AppController extends Controller {
 		$script_to_run = $confScript[$command];
 		$script_to_run = $script_to_run. " ". $arg1. " ". $arg2. " ". $arg3. " ". $arg4;
 
-		echo  $script_to_run;
-		print_r( "\n" );
+		//echo  $script_to_run;
+		//print_r( "\n" );
 		
 		chdir( $working_dir );
 		$retval = exec( $script_to_run );
