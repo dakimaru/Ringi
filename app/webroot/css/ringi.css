@@ -349,3 +349,8 @@ img {
 body {
 background-color: #96D2D6;
 }
+
+table tr td {
+ height: 20px;
+}
+* html tabel tr td{ height:100% }

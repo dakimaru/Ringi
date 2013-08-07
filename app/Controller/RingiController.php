@@ -1257,21 +1257,21 @@ class RingiController extends AppController {
 			$temp = preg_split('/[:]/',$matches[0]);
 			if ($temp[1] == "ringino")
 			{
-				$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none; background-color:white;" id='. $temp[1] .' name='. $temp[1] .' readonly="true"></textarea>' , $doc, 1);
+				$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="margin:0px; padding:0px; width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none; background-color:white;" id='. $temp[1] .' name='. $temp[1] .' readonly="true"></textarea>' , $doc, 1);
 			}
 			elseif (trim($temp[2])=="int") {
-				$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none; background-color:white;" id='. $temp[1] .' name='. $temp[1] .' maxlength="9"></textarea>' , $doc, 1);
+				$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="margin:0px; padding:0px; width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none; background-color:white;" id='. $temp[1] .' name='. $temp[1] .' maxlength="9"></textarea>' , $doc, 1);
 			} else if (trim($temp[2])=="double") {
-				$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none; background-color:white;" id='. $temp[1] .' name='. $temp[1] .' maxlength="307"></textarea>' , $doc, 1);
+				$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="margin:0px; padding:0px; width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none; background-color:white;" id='. $temp[1] .' name='. $temp[1] .' maxlength="307"></textarea>' , $doc, 1);
 			} else if (trim($temp[2])=="string") {
-				$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none; background-color:white;" id='. $temp[1] .' name='. $temp[1] .' maxlength="254"></textarea>' , $doc, 1);
+				$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="margin:0px; padding:0px; width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none; background-color:white;" id='. $temp[1] .' name='. $temp[1] .' maxlength="254"></textarea>' , $doc, 1);
 			} else if ($temp[2] == "text") {
-				$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none; background-color:white;" id='. $temp[1] .' name='. $temp[1] .' maxlength="999999999"></textarea>' , $doc, 1);
+				$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="margin:0px; padding:0px; width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none; background-color:white;" id='. $temp[1] .' name='. $temp[1] .' maxlength="999999999"></textarea>' , $doc, 1);
 			} else if ($temp[2] == "date") {
-				$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none; background-color:white;" id='. $temp[1] .' name='. $temp[1] .' maxlength="10"></textarea>' , $doc, 1);
+				$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="margin:0px; padding:0px; width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none; background-color:white;" id='. $temp[1] .' name='. $temp[1] .' maxlength="10"></textarea>' , $doc, 1);
 			} 
 			else {
-				$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none; background-color:white;" id='. $temp[1] .' name='. $temp[1] .' maxlength="50"></textarea>' , $doc, 1);
+				$doc = preg_replace('/input:(.+):.+/', '<textarea class="replacement" style="margin:0px; padding:0px; width: 100%; height: 100%; min-height:3em; box-sizing: border-box; resize: none; border:none; background-color:white;" id='. $temp[1] .' name='. $temp[1] .' maxlength="50"></textarea>' , $doc, 1);
 			}
 		}
 		

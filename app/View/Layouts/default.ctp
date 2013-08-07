@@ -38,8 +38,6 @@ echo '
 		<div class="navbar navbar-static-top navbar-inverse">	<!-- replace with static/fixed -->
 			<div class="navbar-inner">
 				<div class="container">
-					
-					
 					<div class="nav-collapse collapse" style="margin-top:8px;" >
 						<ul class="nav" >
 							<li ><a class="brand" href="/Ringi/main_menu"><strong><img class="" src="/Ringi/app/webroot/img/home_btn.png">Home</strong></a></li>
@@ -95,7 +93,9 @@ echo '
 			<div style="height:3em;"></div>';
 			echo $this->Session->flash(); 
 			echo $content_for_layout; echo'
-		</div>'
+		</div>
+		<div class="push"></div>
+	</div>'
 ;}
 else{
 	echo '		
@@ -108,7 +108,7 @@ else{
 			echo '</div>';
 		}
 		echo '
-		<div class="push"></div>
+		
 	</div>
 	';?>
 <footer>
