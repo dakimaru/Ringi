@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html lang="en">
+	<?php $user = $this->Session->read('Auth.User');?>
+<html lang="en" <?php if(empty($user)) echo 'style="min-height:720px;"';?>>
 <head>
 	<?php echo $this->Html->charset(); ?>
 	<title>
@@ -29,7 +30,7 @@
 	<link href="assets/css/bootstrap.css" rel="stylesheet">
 </head>
 <?php
-		$user = $this->Session->read('Auth.User');
+		
 if(!empty($user)) {
 echo '		
 <body>
